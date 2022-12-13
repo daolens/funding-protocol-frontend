@@ -16,4 +16,5 @@ export type SupportedSafeInfotype = {
   name: string
   chainId: SupportedNetworkIdType
   rpcURL: string
+  logo: string
 }

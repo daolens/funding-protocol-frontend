@@ -1,11 +1,14 @@
 import CommunityName from '@components/workspace/create/community-name'
+import SourceOfFunding from '@components/workspace/create/source-of-funding'
 import { SupportedNetworkIdType } from '@lib/types/common'
 import { CreateWorkspaceStepType } from '@lib/types/workspace'
 import Image from 'next/image'
 import { useState } from 'react'
 
 const Create = () => {
-  const [activeStep, setActiveStep] = useState<CreateWorkspaceStepType>('name')
+  // TODO: revert the default state
+  const [activeStep, setActiveStep] =
+    useState<CreateWorkspaceStepType>('source-of-funding')
   const [communityName, setCommunityName] = useState('')
   const [multisigWalletAddress, setMultisigWalletAddress] = useState('')
   const [networkId, setNetworkId] = useState<SupportedNetworkIdType | null>(
@@ -31,6 +34,15 @@ const Create = () => {
               communityName={communityName}
               setCommunityName={setCommunityName}
               onNext={() => setActiveStep('source-of-funding')}
+            />
+          )}
+          {activeStep === 'source-of-funding' && (
+            <SourceOfFunding
+              multisigWalletAddress={multisigWalletAddress}
+              setMultisigWalletAddress={setMultisigWalletAddress}
+              networkId={networkId}
+              onNext={() => setActiveStep('success')}
+              setNetworkId={setNetworkId}
             />
           )}
         </div>

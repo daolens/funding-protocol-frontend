@@ -6,4 +6,4 @@ export type WorkspaceType = {
   network: SupportedNetworkIdType
 }
 
-export type CreateWorkspaceStepType = 'name' | 'source-of-funding'
+export type CreateWorkspaceStepType = 'name' | 'source-of-funding' | 'success'
