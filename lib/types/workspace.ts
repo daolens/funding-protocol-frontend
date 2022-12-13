@@ -1,3 +1,4 @@
+import { WORKSPACE_STEPS } from '@lib/constants/workspace'
 import { SupportedNetworkIdType } from '@lib/types/common'
 
 export type WorkspaceType = {
@@ -6,4 +7,4 @@ export type WorkspaceType = {
   network: SupportedNetworkIdType
 }
 
-export type CreateWorkspaceStepType = 'name' | 'source-of-funding' | 'success'
+export type CreateWorkspaceStepType = typeof WORKSPACE_STEPS[number]
