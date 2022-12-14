@@ -26,7 +26,7 @@ export default function NetworkDropdwon({
       {({ open }) => (
         <>
           <div className="relative mt-1">
-            <Listbox.Button className="relative w-full cursor-default rounded-xl bg-gray-800 py-3 pl-3 pr-10 text-left shadow-sm focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 sm:text-sm text-gray-200">
+            <Listbox.Button className="relative w-full cursor-default rounded-xl bg-gray-800 py-3 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm text-gray-200">
               <span className="flex items-center">
                 <Image
                   src={selected?.logo as string}
@@ -58,7 +58,7 @@ export default function NetworkDropdwon({
                     key={safe.chainId}
                     className={({ active }) =>
                       classNames(
-                        active ? 'text-white bg-purple-600' : 'text-gray-200',
+                        active ? 'text-white bg-indigo-600' : 'text-gray-200',
                         'relative cursor-default select-none py-2 pl-3 pr-9'
                       )
                     }
@@ -87,7 +87,7 @@ export default function NetworkDropdwon({
                         {selected ? (
                           <span
                             className={classNames(
-                              active ? 'text-white' : 'text-purple-500',
+                              active ? 'text-white' : 'text-indigo-500',
                               'absolute inset-y-0 right-0 flex items-center pr-4'
                             )}
                           >

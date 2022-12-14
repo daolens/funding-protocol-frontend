@@ -48,7 +48,7 @@ const Success = ({ communityName, multisigAddress, networkId }: Props) => {
       <button
         type="button"
         onClick={onSign}
-        className="inline-flex items-center rounded-xl border border-transparent bg-purple-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 self-start"
+        className="inline-flex items-center rounded-xl border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 self-start"
       >
         Sign and verify
         <ArrowRightIcon className="ml-3 -mr-1 h-5 w-5" aria-hidden="true" />

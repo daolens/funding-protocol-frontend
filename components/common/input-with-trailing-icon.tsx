@@ -6,7 +6,7 @@ type Props = React.HTMLProps<HTMLInputElement> & {
   label?: string
 }
 
-export default function InputWithTrailingIcon({
+export default function Input({
   icon,
   label,
   isIconShown,
@@ -16,15 +16,16 @@ export default function InputWithTrailingIcon({
     <div>
       <label
         htmlFor={inputProps.id}
-        className="block text-sm font-medium text-gray-700"
+        className="block text-sm font-medium text-gray-400"
       >
         {label}
       </label>
       <div className="relative mt-1 rounded-md shadow-sm">
         <input
+          type="text"
           {...inputProps}
           className={classNames(
-            `block w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm bg-gray-800 text-gray-200 p-3 ${inputProps.className}`,
+            `block w-full rounded-xl  focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm bg-gray-800 text-gray-200 p-3 ${inputProps.className}`,
             { 'pr-10': isIconShown }
           )}
         />

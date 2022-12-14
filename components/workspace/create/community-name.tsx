@@ -1,4 +1,4 @@
-import InputWithTrailingIcon from '@components/common/input-with-trailing-icon'
+import Input from '@components/common/input-with-trailing-icon'
 import React, { Dispatch, SetStateAction } from 'react'
 import classNames from 'classnames'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
@@ -21,7 +21,7 @@ const CommunityName = ({ communityName, setCommunityName, onNext }: Props) => {
         Tell us your grant community name
       </h2>
       <div className="flex flex-col gap-2">
-        <InputWithTrailingIcon
+        <Input
           placeholder={'eg. Aave grant DAO'}
           onChange={(e) => setCommunityName(e.currentTarget.value)}
           value={communityName}
@@ -41,7 +41,7 @@ const CommunityName = ({ communityName, setCommunityName, onNext }: Props) => {
         type="button"
         onClick={onNext}
         className={classNames(
-          'inline-flex items-center rounded-xl border border-transparent bg-purple-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 self-start',
+          'inline-flex items-center rounded-xl border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 self-start',
           { hidden: !isNextAllowed }
         )}
       >
