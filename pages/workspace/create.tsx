@@ -17,15 +17,13 @@ const Create = () => {
 
   return (
     <div className="bg-gray-900 h-screen w-screen flex px-5">
-      <div className="flex h-screen my-auto items-center max-w-5xl mx-auto relative">
+      <div className="flex h-screen my-auto items-center w-full max-w-6xl mx-auto relative">
         <div className="w-1/2 flex items-center justify-center relative h-full">
           <Image
             src="/images/workspace/create/circles-graphic.png"
             alt="Circles"
             width={658}
             height={759}
-            // fill
-            // className="object-cover"
           />
         </div>
         <div className="w-1/2">
