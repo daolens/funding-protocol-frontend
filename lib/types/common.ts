@@ -8,3 +8,8 @@ export type TokenType = {
   chain: 'Ethereum' | 'Polygon'
   image: string
 }
+
+export type DynamicInputItemType = {
+  id: string
+  text: string
+}

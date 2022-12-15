@@ -1,10 +1,14 @@
 import Background from '@components/common/background'
 import DatePicker from '@components/common/date-picker'
+import DynamicInputList from '@components/common/dynamic-input-list'
 import Input from '@components/common/input-with-trailing-icon'
+import Textarea from '@components/common/textarea'
 import TokenAmountInput from '@components/common/token-amount-input'
 import VotingRadioSelect from '@components/grants/create/voting-radio-buttons'
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline'
+import { DynamicInputItemType } from '@lib/types/common'
 import { SelectionProcessType } from '@lib/types/grant'
+import { nanoid } from 'nanoid'
 import React, { useState } from 'react'
 
 const Create = () => {
@@ -15,6 +19,9 @@ const Create = () => {
     useState<SelectionProcessType | null>(null)
   const [treasuryAmount, setTreasuryAmount] = useState<number | null>(null)
   const [tokenName, setTokenName] = useState('Ethereum')
+  const [milestones, setMilestones] = useState<DynamicInputItemType[]>([
+    { id: nanoid(), text: '' },
+  ])
 
   const onPublish = () => {
     console.log('publish')
@@ -34,12 +41,11 @@ const Create = () => {
           onChange={(e) => setTitle(e.currentTarget.value)}
           className="bg-opacity-20 border border-gray-800"
         />
-        <Input
-          label="Describe what you are looking for in a good proposal"
+        <Textarea
+          label={`Describe what you are looking for in a good proposal (${subTitle.length}/300)`}
           placeholder="Eg. Projects that boost the ecosystem with a deep focus on the climate"
           value={subTitle}
           onChange={(e) => setSubTitle(e.currentTarget.value)}
-          className="bg-opacity-20 border border-gray-800"
         />
         <VotingRadioSelect
           selectionProcess={selectionProcess}
@@ -68,6 +74,12 @@ const Create = () => {
             min={new Date().toISOString()?.split('T')[0]}
           />
         </div>
+        <DynamicInputList
+          inputProps={{ placeholder: 'Milestone' }}
+          items={milestones}
+          setItems={setMilestones}
+          label="Define milestone (optional)"
+        />
       </div>
       <div className="w-full max-w-7xl fixed mx-auto left-0 right-0 bottom-0 mb-6 px-4">
         <div className="flex w-full max-w-7xl items-end justify-end p-4 border rounded-2xl border-gray-700 bg-gray-900 bg-opacity-50 border-opacity-50 ">

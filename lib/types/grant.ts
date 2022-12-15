@@ -1,4 +1,5 @@
 import { PROPOSAL_GRANT_FORM_FIELDS } from '@lib/constants/grants'
+import { DynamicInputItemType } from '@lib/types/common'
 
 export type SelectionProcessType = 'community' | 'committee'
 
@@ -14,7 +15,7 @@ export type GrantType = {
   maxGrantAmount: number
   grantAmountToken: string
   selectionProcess: SelectionProcessType
-  milestones?: string[]
+  milestones?: DynamicInputItemType[]
   proposalFormFields?: ProposalGrantFormFieldType[]
   customFields?: string[]
 }
