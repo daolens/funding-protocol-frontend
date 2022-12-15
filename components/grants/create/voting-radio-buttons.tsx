@@ -1,6 +1,6 @@
 import { RadioGroup } from '@headlessui/react'
 import { BuildingLibraryIcon, UserGroupIcon } from '@heroicons/react/24/outline'
-import { SelectionProcessType } from '@lib/types/grant'
+import { SelectionProcessType } from '@lib/types/grants'
 
 const VOTING_OPTIONS = [
   {
@@ -43,7 +43,7 @@ export default function VotingRadioSelect({
   return (
     <RadioGroup value={selectionProcess} onChange={setSelectionProcess}>
       <RadioGroup.Label className="text-sm font-medium text-gray-400">
-        Select a mailing list
+        Selection process
       </RadioGroup.Label>
 
       <div className="mt-2 grid grid-cols-2 gap-y-6 gap-x-4">
@@ -55,7 +55,7 @@ export default function VotingRadioSelect({
               classNames(
                 checked ? 'border-indigo-500' : 'border-gray-800',
                 active ? 'border-indigo-500 ring-2 ring-indigo-500' : '',
-                'relative flex cursor-pointer rounded-lg border bg-gray-800 bg-opacity-20 p-4 shadow-sm focus:outline-none gap-3'
+                'relative flex cursor-pointer rounded-xl border bg-gray-800 bg-opacity-20 p-4 shadow-sm focus:outline-none gap-3'
               )
             }
           >

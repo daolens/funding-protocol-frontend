@@ -9,13 +9,11 @@ export type ProposalGrantFormFieldType =
 export type GrantType = {
   title: string
   subTitle: string
-  tags: string[]
   /** ISO date-time string */
   proposalDeadline: string
-  maxGrantAmount: number
-  grantAmountToken: string
+  treasuryAmount: number
   selectionProcess: SelectionProcessType
   milestones?: DynamicInputItemType[]
   proposalFormFields?: ProposalGrantFormFieldType[]
-  customFields?: string[]
+  customFields?: DynamicInputItemType[]
 }

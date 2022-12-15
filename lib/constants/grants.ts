@@ -1,12 +1,10 @@
 export const PROPOSAL_GRANT_FORM_FIELDS = [
   'Name',
   'Email',
-  'Wallet address',
-  'Team',
-  'Usage of Grant',
-  'Project name',
-  'Project links',
-  'Project details',
+  'Funding',
+  'Proposal Link',
   'Project goals',
-  'Add custom field',
+  'Team details',
+  'Usage of Grant',
+  'Wallet address',
 ] as const

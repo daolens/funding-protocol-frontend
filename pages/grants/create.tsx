@@ -4,10 +4,16 @@ import DynamicInputList from '@components/common/dynamic-input-list'
 import Input from '@components/common/input-with-trailing-icon'
 import Textarea from '@components/common/textarea'
 import TokenAmountInput from '@components/common/token-amount-input'
+import ProposalFormDetails from '@components/grants/create/required-details'
 import VotingRadioSelect from '@components/grants/create/voting-radio-buttons'
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline'
 import { DynamicInputItemType } from '@lib/types/common'
-import { SelectionProcessType } from '@lib/types/grant'
+import {
+  GrantType,
+  ProposalGrantFormFieldType,
+  SelectionProcessType,
+} from '@lib/types/grants'
+import { validateGrants } from '@lib/utils/grants'
 import { nanoid } from 'nanoid'
 import React, { useState } from 'react'
 
@@ -22,14 +28,38 @@ const Create = () => {
   const [milestones, setMilestones] = useState<DynamicInputItemType[]>([
     { id: nanoid(), text: '' },
   ])
+  const [proposalFields, setProposalFields] = useState<
+    ProposalGrantFormFieldType[]
+  >(['Email', 'Name', 'Funding'])
+  const [customProposalFields, setCustomProposalFields] = useState<
+    DynamicInputItemType[]
+  >([{ id: nanoid(), text: '' }])
+  const [fieldErrors, setFieldErrors] = useState({})
 
   const onPublish = () => {
-    console.log('publish')
+    const grant: GrantType = {
+      title,
+      subTitle,
+      treasuryAmount: treasuryAmount as number,
+      proposalDeadline: proposalDeadline as string,
+      selectionProcess: selectionProcess as SelectionProcessType,
+      customFields: customProposalFields,
+      milestones,
+      proposalFormFields: proposalFields,
+    }
+
+    const errors = validateGrants(grant)
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors)
+      return
+    }
+
+    // TODO: handle publish
   }
 
   return (
     <Background>
-      <div className="flex flex-col gap-8 py-9">
+      <div className="flex flex-col gap-8 py-9 mb-24">
         <button className="text-gray-400 text-sm self-start flex items-center gap-2 hover:underline">
           <ArrowLeftIcon className="w-4 stroke-2" />
           Back
@@ -80,9 +110,15 @@ const Create = () => {
           setItems={setMilestones}
           label="Define milestone (optional)"
         />
+        <ProposalFormDetails
+          customProposalFields={customProposalFields}
+          proposalFields={proposalFields}
+          setCustomProposalFields={setCustomProposalFields}
+          setProposalFields={setProposalFields}
+        />
       </div>
-      <div className="w-full max-w-7xl fixed mx-auto left-0 right-0 bottom-0 mb-6 px-4">
-        <div className="flex w-full max-w-7xl items-end justify-end p-4 border rounded-2xl border-gray-700 bg-gray-900 bg-opacity-50 border-opacity-50 ">
+      <div className="w-full max-w-7xl fixed mx-auto left-0 right-0 bottom-0 mb-6 px-8">
+        <div className="flex w-full max-w-7xl items-end justify-end p-4 border rounded-2xl border-gray-700 bg-gray-900 bg-opacity-50 border-opacity-50 backdrop-blur-md">
           <button
             type="button"
             onClick={onPublish}
