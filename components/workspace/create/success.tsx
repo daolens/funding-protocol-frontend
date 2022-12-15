@@ -37,7 +37,6 @@ const Success = ({ communityName, multisigAddress }: Props) => {
         <p className="text-gray-500 text-sm">
           Verifying you are a signer will ensure we don&apos;t have a
           impersonation
-        
         </p>
       </div>
 
