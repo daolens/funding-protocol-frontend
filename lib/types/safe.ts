@@ -1,4 +1,4 @@
-import { SupportedNetworkIdType } from "@lib/types/common"
+import { SupportedNetworkIdType } from '@lib/types/common'
 
 export type SafeDetailsType = {
   address: string

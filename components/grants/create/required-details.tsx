@@ -10,6 +10,7 @@ type Props = {
   setProposalFields: Dispatch<SetStateAction<ProposalGrantFormFieldType[]>>
   customProposalFields: DynamicInputItemType[]
   setCustomProposalFields: Dispatch<SetStateAction<DynamicInputItemType[]>>
+  error?: string
 }
 
 const ProposalFormDetails = ({
@@ -17,6 +18,7 @@ const ProposalFormDetails = ({
   proposalFields,
   setCustomProposalFields,
   setProposalFields,
+  error,
 }: Props) => {
   const [isModify, setIsModify] = useState(false)
 
@@ -102,6 +104,10 @@ const ProposalFormDetails = ({
           />
         </div>
       )}
+
+      <p className="mt-1 text-sm text-red-600" id="email-error">
+        {error}
+      </p>
     </div>
   )
 }

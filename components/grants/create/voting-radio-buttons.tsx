@@ -34,11 +34,13 @@ type Props = {
   setSelectionProcess: React.Dispatch<
     React.SetStateAction<SelectionProcessType | null>
   >
+  error?: string
 }
 
 export default function VotingRadioSelect({
   selectionProcess,
   setSelectionProcess,
+  error,
 }: Props) {
   return (
     <RadioGroup value={selectionProcess} onChange={setSelectionProcess}>
@@ -83,6 +85,10 @@ export default function VotingRadioSelect({
           </RadioGroup.Option>
         ))}
       </div>
+
+      <p className="mt-1 text-sm text-red-600" id="email-error">
+        {error}
+      </p>
     </RadioGroup>
   )
 }

@@ -34,9 +34,12 @@ const Create = () => {
   const [customProposalFields, setCustomProposalFields] = useState<
     DynamicInputItemType[]
   >([{ id: nanoid(), text: '' }])
-  const [fieldErrors, setFieldErrors] = useState({})
+  const [fieldErrors, setFieldErrors] = useState<
+    Record<keyof GrantType, string>
+  >({} as any)
 
   const onPublish = () => {
+    setFieldErrors({} as any)
     const grant: GrantType = {
       title,
       subTitle,
@@ -69,17 +72,19 @@ const Create = () => {
           placeholder="Eg. Climate Focus Grants - S1"
           value={title}
           onChange={(e) => setTitle(e.currentTarget.value)}
-          className="bg-opacity-20 border border-gray-800"
+          error={fieldErrors['title']}
         />
         <Textarea
           label={`Describe what you are looking for in a good proposal (${subTitle.length}/300)`}
           placeholder="Eg. Projects that boost the ecosystem with a deep focus on the climate"
           value={subTitle}
           onChange={(e) => setSubTitle(e.currentTarget.value)}
+          error={fieldErrors['subTitle']}
         />
         <VotingRadioSelect
           selectionProcess={selectionProcess}
           setSelectionProcess={setSelectionProcess}
+          error={fieldErrors['selectionProcess']}
         />
         <div className="grid grid-cols-2 gap-4">
           <TokenAmountInput
@@ -90,7 +95,6 @@ const Create = () => {
           />
           <DatePicker
             label="Accepting till"
-            className="bg-opacity-20 border border-gray-800"
             value={
               proposalDeadline
                 ? new Date(proposalDeadline as string)
@@ -102,6 +106,7 @@ const Create = () => {
               setProposalDeadline(new Date(e.currentTarget.value).toISOString())
             }
             min={new Date().toISOString()?.split('T')[0]}
+            error={fieldErrors['proposalDeadline']}
           />
         </div>
         <DynamicInputList
@@ -115,6 +120,7 @@ const Create = () => {
           proposalFields={proposalFields}
           setCustomProposalFields={setCustomProposalFields}
           setProposalFields={setProposalFields}
+          error={fieldErrors['proposalFormFields']}
         />
       </div>
       <div className="w-full max-w-7xl fixed mx-auto left-0 right-0 bottom-0 mb-6 px-8">

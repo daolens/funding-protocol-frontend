@@ -21,7 +21,7 @@ const Background = ({ children }: Props) => {
         width={500}
         className="bottom-0 fixed w-[1280px] -z-10"
       />
-      <div className='h-full w-full z-10'>{children}</div>
+      <div className="h-full w-full z-10">{children}</div>
     </div>
   )
 }

@@ -22,7 +22,11 @@ const Success = ({ communityName, multisigAddress, networkId }: Props) => {
   const onSign = () => console.log('HANLDE SIGN')
   return (
     <div className="flex flex-col gap-11 relative">
-      <Lottie animationData={confettiAnimation} className="absolute top-0 -mt-10" loop={false} />
+      <Lottie
+        animationData={confettiAnimation}
+        className="absolute top-0 -mt-10"
+        loop={false}
+      />
       <div className="flex flex-col gap-2">
         <h3 className="text-2xl text-gray-200">
           Looking great! Let&apos;s sign and verify
