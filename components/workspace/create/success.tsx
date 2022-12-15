@@ -14,12 +14,15 @@ type Props = {
   networkId: SupportedNetworkIdType
 }
 
-const Success = ({ communityName, multisigAddress, networkId }: Props) => {
+const Success = ({ communityName, multisigAddress }: Props) => {
   const truncatedAddress =
     multisigAddress.slice(0, 7) + '...' + multisigAddress.slice(-5)
 
   // TODO: handle sign
-  const onSign = () => console.log('HANLDE SIGN')
+  const onSign = () => {
+    // console.log('HANLDE SIGN')
+  }
+
   return (
     <div className="flex flex-col gap-11 relative">
       <Lottie
