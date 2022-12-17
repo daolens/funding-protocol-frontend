@@ -2,7 +2,7 @@ import { IRON_OPTIONS } from '@lib/constants/common'
 import { withIronSessionApiRoute } from 'iron-session/next'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { generateNonce } from 'siwe'
- 
+
 // TODO: complete sign-in with ethereme
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
@@ -18,5 +18,5 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       res.status(405).end(`Method ${method} Not Allowed`)
   }
 }
- 
+
 export default withIronSessionApiRoute(handler, IRON_OPTIONS as any)

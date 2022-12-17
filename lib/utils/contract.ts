@@ -16,7 +16,7 @@ export const writeSmartContractFunction = async ({
     address: contractObj.address,
     abi: contractObj.abi,
     functionName,
-    args: args
+    args: args,
   })
 
   const data = await writeContract(config)

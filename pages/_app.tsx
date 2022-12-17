@@ -3,7 +3,13 @@ import { Inter } from '@next/font/google'
 import type { AppProps } from 'next/app'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { configureChains, createClient, mainnet, WagmiConfig, goerli } from 'wagmi'
+import {
+  configureChains,
+  createClient,
+  mainnet,
+  WagmiConfig,
+  goerli,
+} from 'wagmi'
 import { publicProvider } from 'wagmi/providers/public'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
