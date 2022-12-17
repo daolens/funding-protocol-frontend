@@ -60,8 +60,11 @@ const SourceOfFunding = ({
         <Input
           value={multisigWalletAddress}
           onChange={(e) => {
-            setMultisigWalletAddress(e.currentTarget.value)
-            refetch({ queryKey: ['safes-for-address', e.currentTarget.value] })
+            const value = e.currentTarget.value.includes(':')
+              ? e.currentTarget.value.split(':')[1]
+              : e.currentTarget.value
+            setMultisigWalletAddress(value)
+            refetch({ queryKey: ['safes-for-address', value] })
           }}
           placeholder="Wallet address"
           isIconShown={!!multisigWalletAddress}

@@ -4,22 +4,22 @@ import { SelectionProcessType } from '@lib/types/grants'
 
 const VOTING_OPTIONS = [
   {
-    id: 'community',
-    title: 'Community voting',
-    description: 'DAO members can vote on the proposal',
-    icon: (
-      <div className="bg-pink-200 rounded-full p-3">
-        <BuildingLibraryIcon className="w-5 text-pink-800" />
-      </div>
-    ),
-  },
-  {
     id: 'committee',
     title: 'Committee voting',
     description: 'Assigned to a certain set of people',
     icon: (
       <div className="bg-yellow-200 rounded-full p-3">
         <UserGroupIcon className="w-5 text-yellow-800" />
+      </div>
+    ),
+  },
+  {
+    id: 'community',
+    title: 'Community voting',
+    description: 'DAO members can vote on the proposal',
+    icon: (
+      <div className="bg-pink-200 rounded-full p-3">
+        <BuildingLibraryIcon className="w-5 text-pink-800" />
       </div>
     ),
   },

@@ -10,8 +10,8 @@ const CommunityAvatar = ({ communityName }: Props) => {
     .join('')
 
   return (
-    <div className="p-4 rounded-md bg-yellow-100">
-      <p className="text-2xl text-yellow-800">{initials}</p>
+    <div className="p-4 rounded-md bg-yellow-100 w-16 flex items-center justify-center">
+      <p className="text-2xl text-yellow-800">{initials.toUpperCase()}</p>
     </div>
   )
 }

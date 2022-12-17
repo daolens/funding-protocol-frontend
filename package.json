@@ -24,12 +24,16 @@
     "cogo-toast": "^4.2.3",
     "eslint": "8.29.0",
     "eslint-config-next": "13.0.6",
+    "ethers": "^5.7.2",
+    "iron-session": "^6.3.1",
     "lottie-react": "^2.3.1",
     "nanoid": "^4.0.0",
     "next": "13.0.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "siwe": "^1.1.6",
     "typescript": "4.9.4",
+    "wagmi": "^0.9.3",
     "yarn": "^1.22.19"
   },
   "devDependencies": {

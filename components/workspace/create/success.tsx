@@ -7,6 +7,14 @@ import { SupportedNetworkIdType } from '@lib/types/common'
 import Lottie from 'lottie-react'
 import React from 'react'
 import confettiAnimation from '@public/animations/confetti.json'
+import { WorkspaceType } from '@lib/types/workspace'
+import { ethers } from 'ethers'
+import { useSignMessage } from 'wagmi'
+import { getSafeDetails } from '@lib/utils/safe'
+import SUPPORTED_SAFES_INFO from '@lib/constants/common'
+import cogoToast from 'cogo-toast'
+import { useMutation } from '@tanstack/react-query'
+import { postDataAndCallSmartContractFunction } from '@lib/utils/workspace'
 
 type Props = {
   communityName: string
@@ -14,14 +22,39 @@ type Props = {
   networkId: SupportedNetworkIdType
 }
 
-const Success = ({ communityName, multisigAddress }: Props) => {
+const Success = ({ communityName, multisigAddress, networkId }: Props) => {
+  const workspaceMutation = useMutation({
+    mutationFn: (data: WorkspaceType) =>
+      postDataAndCallSmartContractFunction(data),
+    // TODO: update redirections
+    onSuccess: () => cogoToast.success('Workspace created!'),
+  })
+
+  // Signing the message to verify the ownership of the address and then checking
+  // that address is one of owners of the multisig address.
+  const { signMessage, isLoading: isSignMessageLoading } = useSignMessage({
+    onSuccess: async (data, variables) => {
+      const signingAddress = ethers.utils.verifyMessage(variables.message, data)
+      const network = SUPPORTED_SAFES_INFO[networkId]
+      const safeDetails = await getSafeDetails(network.rpcURL, multisigAddress)
+      if (!safeDetails?.owners?.includes(signingAddress)) {
+        cogoToast.error('Failed to verify ownership of the multisig address.')
+        return
+      }
+      workspaceMutation.mutate({
+        communityName,
+        multisigAddress,
+        network: networkId,
+      })
+    },
+    onError: (error) => {
+      cogoToast.error('Something went wrong.')
+      console.error(error)
+    },
+  })
+
   const truncatedAddress =
     multisigAddress.slice(0, 7) + '...' + multisigAddress.slice(-5)
-
-  // TODO: handle sign
-  const onSign = () => {
-    // console.log('HANLDE SIGN')
-  }
 
   return (
     <div className="flex flex-col gap-11 relative">
@@ -54,8 +87,10 @@ const Success = ({ communityName, multisigAddress }: Props) => {
       </div>
       <button
         type="button"
-        onClick={onSign}
-        className="inline-flex items-center rounded-xl border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 self-start"
+        // TODO: update onclick to ask for connecting wallet first
+        onClick={() => signMessage({ message: 'Verifying ownership' })}
+        disabled={isSignMessageLoading || workspaceMutation.isLoading}
+        className="inline-flex items-center rounded-xl border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 self-start z-10"
       >
         Sign and verify
         <ArrowRightIcon className="ml-3 -mr-1 h-5 w-5" aria-hidden="true" />

@@ -69,3 +69,11 @@ export const DEFAULT_TOKENS: TokenType[] = [
   // { chain: 'Ethereum', name: 'Matic Token', image: '' },
   // { chain: 'Ethereum', name: 'Shiba Inu', image: '' },
 ]
+
+export const IRON_OPTIONS = {
+  cookieName: 'siwe',
+  password: process.env.IRON_SESSION_SECRET,
+  cookieOptions: {
+    secure: process.env.NODE_ENV === 'production',
+  },
+}

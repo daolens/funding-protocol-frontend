@@ -1,3 +1,6 @@
+const IPFS_UPLOAD_ENDPOINT = 'https://api.thegraph.com/ipfs/api/v0/add?pin=true'
+const IPFS_DOWNLOAD_ENDPOINT = 'https://api.thegraph.com/ipfs/api/v0/cat'
+
 export const uploadToIPFS = async (data: string | Blob) => {
   if (!data) {
     throw new Error('Data is null')
@@ -7,7 +10,7 @@ export const uploadToIPFS = async (data: string | Blob) => {
   form.append('file', data)
 
   // refer to https://infura.io/docs/ipfs#section/Getting-Started/Add-a-file
-  const response = await fetch(process.env.IPFS_UPLOAD_ENDPOINT as string, {
+  const response = await fetch(IPFS_UPLOAD_ENDPOINT as string, {
     method: 'POST',
     body: form,
   })
@@ -17,9 +20,7 @@ export const uploadToIPFS = async (data: string | Blob) => {
 }
 
 export const getFromIPFS = async (hash: string) => {
-  const response = await fetch(
-    `${process.env.IPFS_DOWNLOAD_ENDPOINT}?arg=${hash}`
-  )
+  const response = await fetch(`${IPFS_DOWNLOAD_ENDPOINT}?arg=${hash}`)
   if (response.ok) return await response.text()
   console.error(response.statusText)
 
@@ -36,7 +37,7 @@ export const getUrlForIPFSHash = (hash: string) => {
     return ''
   }
 
-  return `${process.env.IPFS_DOWNLOAD_ENDPOINT}?arg=${hash}`
+  return `${IPFS_DOWNLOAD_ENDPOINT}?arg=${hash}`
 }
 
 export const isIpfsHash = (str: string | undefined | null) =>
