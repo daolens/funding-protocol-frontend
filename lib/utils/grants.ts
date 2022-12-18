@@ -1,4 +1,4 @@
-import { DEFAULT_TOKENS } from '@lib/constants/common'
+import { DEFAULT_TOKENS, IS_PROD } from '@lib/constants/common'
 import { CONTRACTS } from '@lib/constants/contract'
 import { GrantType } from '@lib/types/grants'
 import { writeSmartContractFunction } from '@lib/utils/contract'
@@ -34,8 +34,10 @@ export const postGrantDataAndCallSmartContractFn = async (data: GrantType) => {
       // workspace id
       1,
       ipfsHash,
-      CONTRACTS.workspace.address,
-      CONTRACTS.application.address,
+      IS_PROD ? CONTRACTS.workspace.address : CONTRACTS.workspace.goerliAddress,
+      IS_PROD
+        ? CONTRACTS.application.address
+        : CONTRACTS.application.goerliAddress,
       data.reviewers,
       // Token amount
       0,

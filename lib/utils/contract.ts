@@ -1,3 +1,4 @@
+import { IS_PROD } from '@lib/constants/common'
 import { ContractType } from '@lib/types/contract'
 import { prepareWriteContract, writeContract } from '@wagmi/core'
 
@@ -13,7 +14,7 @@ export const writeSmartContractFunction = async ({
   args,
 }: CallSmartContractFunctionOptionsType) => {
   const config = await prepareWriteContract({
-    address: contractObj.address,
+    address: IS_PROD ? contractObj.address : contractObj.goerliAddress,
     abi: contractObj.abi,
     functionName,
     args: args,
