@@ -7,9 +7,12 @@ export type TokenType = {
   name: string
   chain: 'Ethereum' | 'Polygon'
   image: string
+  address: `0x${string}`
 }
 
 export type DynamicInputItemType = {
   id: string
   text: string
 }
+
+export type WalletAddressType = `0x${string}`

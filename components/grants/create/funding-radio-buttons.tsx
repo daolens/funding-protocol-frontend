@@ -1,25 +1,25 @@
 import { RadioGroup } from '@headlessui/react'
 import { BuildingLibraryIcon, UserGroupIcon } from '@heroicons/react/24/outline'
-import { SelectionProcessType } from '@lib/types/grants'
+import { FundingMethodType } from '@lib/types/grants'
 
-const VOTING_OPTIONS = [
+const FUNDING_OPTIONS = [
   {
-    id: 'committee',
-    title: 'Committee voting',
-    description: 'Assigned to a certain set of people',
+    id: 'UPFRONT',
+    title: 'Upfront',
+    description: 'As soon as proposals are approved',
     icon: (
-      <div className="bg-yellow-200 rounded-full p-3">
-        <UserGroupIcon className="w-5 text-yellow-800" />
+      <div className="bg-pink-200 rounded-full p-3">
+        <BuildingLibraryIcon className="w-5 text-pink-800" />
       </div>
     ),
   },
   {
-    id: 'community',
-    title: 'Community voting',
-    description: 'DAO members can vote on the proposal',
+    id: 'MILESTONE',
+    title: 'Milestone',
+    description: 'Split into multiple progressive steps',
     icon: (
-      <div className="bg-pink-200 rounded-full p-3">
-        <BuildingLibraryIcon className="w-5 text-pink-800" />
+      <div className="bg-yellow-200 rounded-full p-3">
+        <UserGroupIcon className="w-5 text-yellow-800" />
       </div>
     ),
   },
@@ -30,16 +30,16 @@ function classNames(...classes: string[]) {
 }
 
 type Props = {
-  selectionProcess: SelectionProcessType | null
-  setSelectionProcess: React.Dispatch<
-    React.SetStateAction<SelectionProcessType | null>
+  fundingMethod: FundingMethodType | null
+  setFundingMethod: React.Dispatch<
+    React.SetStateAction<FundingMethodType | null>
   >
   error?: string
 }
 
-export default function VotingRadioSelect({
-  selectionProcess,
-  setSelectionProcess,
+export default function FundingRadioSelect({
+  fundingMethod: selectionProcess,
+  setFundingMethod: setSelectionProcess,
   error,
 }: Props) {
   return (
@@ -49,7 +49,7 @@ export default function VotingRadioSelect({
       </RadioGroup.Label>
 
       <div className="mt-2 grid grid-cols-2 gap-y-6 gap-x-4">
-        {VOTING_OPTIONS.map((votingOption) => (
+        {FUNDING_OPTIONS.map((votingOption) => (
           <RadioGroup.Option
             key={votingOption.id}
             value={votingOption.id}

@@ -8,7 +8,7 @@ export const postDataAndCallSmartContractFunction = async (
   data: WorkspaceType
 ) => {
   const ipfsHash = (await uploadToIPFS(JSON.stringify(data))).hash
-  return writeSmartContractFunction({
+  const result = await writeSmartContractFunction({
     args: [
       ipfsHash,
       ethers.utils.hexZeroPad(data.multisigAddress, 32),
@@ -17,4 +17,6 @@ export const postDataAndCallSmartContractFunction = async (
     contractObj: CONTRACTS.workspace,
     functionName: 'createWorkspace',
   })
+  if (!result.hash)
+    throw new Error('createWorkspace smart contract call failed')
 }

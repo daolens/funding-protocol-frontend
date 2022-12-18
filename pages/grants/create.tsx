@@ -3,28 +3,47 @@ import DatePicker from '@components/common/date-picker'
 import DynamicInputList from '@components/common/dynamic-input-list'
 import Input from '@components/common/input-with-trailing-icon'
 import Textarea from '@components/common/textarea'
-import TokenAmountInput from '@components/common/token-amount-input'
+import TokenDropdown from '@components/common/token-dropdown'
 import ProposalFormDetails from '@components/grants/create/required-details'
-import VotingRadioSelect from '@components/grants/create/voting-radio-buttons'
+import FundingRadioSelect from '@components/grants/create/funding-radio-buttons'
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline'
-import { DynamicInputItemType } from '@lib/types/common'
+import { DynamicInputItemType, WalletAddressType } from '@lib/types/common'
 import {
+  FundingMethodType,
   GrantType,
   ProposalGrantFormFieldType,
-  SelectionProcessType,
 } from '@lib/types/grants'
-import { validateGrants } from '@lib/utils/grants'
+import {
+  postGrantDataAndCallSmartContractFn,
+  validateGrants,
+} from '@lib/utils/grants'
 import { nanoid } from 'nanoid'
 import React, { useState } from 'react'
+import { useAccount } from 'wagmi'
+import ReviewersMultiSelect from '@components/grants/create/reviewers-multi-select'
+import { useMutation } from '@tanstack/react-query'
+import cogoToast from 'cogo-toast'
 
 const Create = () => {
+  const grantMutation = useMutation({
+    mutationFn: (data: GrantType) => postGrantDataAndCallSmartContractFn(data),
+    onSuccess: () => cogoToast.success('Grant created successfully'),
+    onError: (error) => {
+      console.error(error)
+      cogoToast.error('Something went wrong while creating grant.')
+    },
+  })
+
+  const { address } = useAccount()
+
   const [title, setTitle] = useState('')
   const [subTitle, setSubTitle] = useState('')
   const [proposalDeadline, setProposalDeadline] = useState<string | null>(null)
-  const [selectionProcess, setSelectionProcess] =
-    useState<SelectionProcessType | null>(null)
-  const [treasuryAmount, setTreasuryAmount] = useState<number | null>(null)
+  const [fundingMethod, setFundingMethod] = useState<FundingMethodType | null>(
+    null
+  )
   const [tokenName, setTokenName] = useState('Ethereum')
+  const [selectedReviewers, setSelectedReviewers] = useState<string[]>([])
   const [milestones, setMilestones] = useState<DynamicInputItemType[]>([
     { id: nanoid(), text: '' },
   ])
@@ -43,12 +62,15 @@ const Create = () => {
     const grant: GrantType = {
       title,
       subTitle,
-      treasuryAmount: treasuryAmount as number,
       proposalDeadline: proposalDeadline as string,
-      selectionProcess: selectionProcess as SelectionProcessType,
+      fundingMethod: fundingMethod as FundingMethodType,
       customFields: customProposalFields,
       milestones,
       proposalFormFields: proposalFields,
+      selectionProcess: 'committee',
+      treasuryAmount: 0,
+      token: tokenName,
+      reviewers: [address as WalletAddressType],
     }
 
     const errors = validateGrants(grant)
@@ -57,7 +79,7 @@ const Create = () => {
       return
     }
 
-    // TODO: handle publish
+    grantMutation.mutate(grant)
   }
 
   return (
@@ -81,18 +103,8 @@ const Create = () => {
           onChange={(e) => setSubTitle(e.currentTarget.value)}
           error={fieldErrors['subTitle']}
         />
-        <VotingRadioSelect
-          selectionProcess={selectionProcess}
-          setSelectionProcess={setSelectionProcess}
-          error={fieldErrors['selectionProcess']}
-        />
         <div className="grid grid-cols-2 gap-4">
-          <TokenAmountInput
-            amount={treasuryAmount}
-            setAmount={setTreasuryAmount}
-            setTokenName={setTokenName}
-            tokenName={tokenName}
-          />
+          <TokenDropdown setTokenName={setTokenName} tokenName={tokenName} />
           <DatePicker
             label="Accepting till"
             value={
@@ -109,6 +121,18 @@ const Create = () => {
             error={fieldErrors['proposalDeadline']}
           />
         </div>
+        <FundingRadioSelect
+          fundingMethod={fundingMethod}
+          setFundingMethod={setFundingMethod}
+          error={fieldErrors['fundingMethod']}
+        />
+        <ReviewersMultiSelect
+          // TODO: update
+          reviewers={['test', 'test2', 'test3']}
+          selectedReviewers={selectedReviewers}
+          setSelectedReviewers={setSelectedReviewers}
+          error={fieldErrors['reviewers']}
+        />
         <DynamicInputList
           inputProps={{ placeholder: 'Milestone' }}
           items={milestones}

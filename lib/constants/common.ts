@@ -35,36 +35,46 @@ export const DEFAULT_TOKENS: TokenType[] = [
     chain: 'Ethereum',
     name: 'Aave',
     image: '/images/tokens/aave.png',
+    // TODO: verify address
+    address: '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9',
   },
   {
     id: '2',
     chain: 'Ethereum',
     name: 'Compound',
     image: '/images/tokens/compound.png',
+    // TODO: verify address
+    address: '0xc00e94cb662c3520282e6f5717214004a7f26888',
   },
   {
     id: '3',
     chain: 'Ethereum',
     name: 'Uniswap',
     image: '/images/tokens/uniswap.png',
+    // TODO: verify address
+    address: '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984',
   },
   {
     id: '4',
     chain: 'Ethereum',
     name: 'Bankless DAO',
     image: '/images/tokens/bankless-dao.png',
+    // TODO: verify address
+    address: '0x2d94aa3e47d9d5024503ca8491fce9a2fb4da198',
   },
   {
     id: '5',
     chain: 'Polygon',
     name: 'Matic Token',
     image: '/images/tokens/matic.png',
+    // TODO: find address
   },
   {
     id: '6',
     chain: 'Ethereum',
     name: 'Ethereum',
     image: '/images/tokens/ethereum.png',
+    // TODO: find address
   },
   // { chain: 'Ethereum', name: 'Matic Token', image: '' },
   // { chain: 'Ethereum', name: 'Shiba Inu', image: '' },
