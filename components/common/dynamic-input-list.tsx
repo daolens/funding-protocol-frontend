@@ -69,6 +69,7 @@ type Props = {
     'type' | 'value' | 'onChange'
   >
   label?: string
+  error?: string
   infoButtnDetails?: {
     text: string
     onClick: () => void
@@ -78,6 +79,7 @@ type Props = {
 function DynamicInputList({
   items,
   setItems,
+  error,
   inputProps,
   label,
   infoButtnDetails,
@@ -143,6 +145,10 @@ function DynamicInputList({
           />
         ))}
       </div>
+
+      <p className="mt-1 text-sm text-red-600" id="email-error">
+        {error}
+      </p>
     </div>
   )
 }

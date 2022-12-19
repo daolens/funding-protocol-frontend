@@ -9,15 +9,21 @@ function classNames(...classes: string[]) {
 }
 
 type Props = {
+  amount: number | null
+  setAmount: Dispatch<SetStateAction<number | null>>
   tokenName: string
   setTokenName: Dispatch<SetStateAction<string>>
   label?: string
+  error?: string
 }
 
-export default function TokenDropdown({
+export default function TokenAmountInput({
+  amount,
+  setAmount,
   setTokenName,
   tokenName,
-  label = 'Grant Treasury',
+  label = 'Recommended amount per proposal',
+  error,
 }: Props) {
   const selected = DEFAULT_TOKENS.find((token) => token.name === tokenName)
   return (
@@ -30,11 +36,20 @@ export default function TokenDropdown({
       </label>
 
       <div className="flex mt-2 items-center">
+        <input
+          type="number"
+          name="amount"
+          id="amount"
+          className="block w-2/3 rounded-xl rounded-r-none focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm bg-gray-800 text-gray-200 p-3 bg-opacity-20 border border-gray-800"
+          placeholder="0.00"
+          value={(amount || '') as number}
+          onChange={(e) => setAmount(parseInt(e.currentTarget.value) || null)}
+        />
         <Listbox value={tokenName} onChange={setTokenName}>
           {({ open }) => (
             <>
               <div className="relative h-full grow">
-                <Listbox.Button className="relative w-full cursor-default rounded-xl border border-gray-800 bg-gray-800 bg-opacity-20 py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
+                <Listbox.Button className="relative w-full h-full cursor-default rounded-xl rounded-l-none bg-gray-800 py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
                   <span className="flex items-center">
                     <Image
                       src={selected?.image as string}
@@ -120,6 +135,10 @@ export default function TokenDropdown({
           )}
         </Listbox>
       </div>
+
+      <p className="mt-1 text-sm text-red-600" id="email-error">
+        {error}
+      </p>
     </div>
   )
 }

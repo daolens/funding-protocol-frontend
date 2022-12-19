@@ -3,26 +3,20 @@ import DatePicker from '@components/common/date-picker'
 import DynamicInputList from '@components/common/dynamic-input-list'
 import Input from '@components/common/input-with-trailing-icon'
 import Textarea from '@components/common/textarea'
-import TokenDropdown from '@components/common/token-dropdown'
-import ProposalFormDetails from '@components/grants/create/required-details'
 import FundingRadioSelect from '@components/grants/create/funding-radio-buttons'
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline'
 import { DynamicInputItemType, WalletAddressType } from '@lib/types/common'
-import {
-  FundingMethodType,
-  GrantType,
-  ProposalGrantFormFieldType,
-} from '@lib/types/grants'
+import { FundingMethodType, GrantType } from '@lib/types/grants'
 import {
   postGrantDataAndCallSmartContractFn,
   validateGrants,
 } from '@lib/utils/grants'
 import { nanoid } from 'nanoid'
 import React, { useState } from 'react'
-import { useAccount } from 'wagmi'
-import ReviewersMultiSelect from '@components/grants/create/reviewers-multi-select'
 import { useMutation } from '@tanstack/react-query'
 import cogoToast from 'cogo-toast'
+import TokenAmountInput from '@components/common/token-amount-input'
+import MultiSelect from '@components/common/multi-select'
 
 const Create = () => {
   const grantMutation = useMutation({
@@ -34,43 +28,36 @@ const Create = () => {
     },
   })
 
-  const { address } = useAccount()
-
   const [title, setTitle] = useState('')
   const [subTitle, setSubTitle] = useState('')
   const [proposalDeadline, setProposalDeadline] = useState<string | null>(null)
   const [fundingMethod, setFundingMethod] = useState<FundingMethodType | null>(
     null
   )
+  const [tags, setTags] = useState<string[]>([])
   const [tokenName, setTokenName] = useState('Ethereum')
-  const [selectedReviewers, setSelectedReviewers] = useState<string[]>([])
-  const [milestones, setMilestones] = useState<DynamicInputItemType[]>([
-    { id: nanoid(), text: '' },
-  ])
-  const [proposalFields, setProposalFields] = useState<
-    ProposalGrantFormFieldType[]
-  >(['Email', 'Name', 'Funding'])
-  const [customProposalFields, setCustomProposalFields] = useState<
+  const [selectedReviewers, setSelectedReviewers] = useState<
     DynamicInputItemType[]
   >([{ id: nanoid(), text: '' }])
   const [fieldErrors, setFieldErrors] = useState<
     Record<keyof GrantType, string>
   >({} as any)
+  const [amount, setAmount] = useState<number | null>(null)
 
   const onPublish = () => {
     setFieldErrors({} as any)
     const grant: GrantType = {
       title,
       subTitle,
+      tags,
       proposalDeadline: proposalDeadline as string,
       fundingMethod: fundingMethod as FundingMethodType,
-      customFields: customProposalFields,
-      milestones,
-      proposalFormFields: proposalFields,
       selectionProcess: 'committee',
-      treasuryAmount: 0,
+      treasuryAmount: amount || 0,
       token: tokenName,
-      reviewers: [address as WalletAddressType],
+      reviewers: selectedReviewers
+        .filter((reviewrItem) => reviewrItem.text)
+        .map((reviewerItem) => reviewerItem.text as WalletAddressType),
     }
 
     const errors = validateGrants(grant)
@@ -96,6 +83,15 @@ const Create = () => {
           onChange={(e) => setTitle(e.currentTarget.value)}
           error={fieldErrors['title']}
         />
+        <MultiSelect
+          // TODO: update
+          options={['💰 DeFi', '🌱 Ecosystem', '👥 Social']}
+          selected={tags}
+          setSelected={setTags}
+          error={fieldErrors['tags']}
+          label="Add tags"
+          placeholder="Select which category your grants fall under"
+        />
         <Textarea
           label={`Describe what you are looking for in a good proposal (${subTitle.length}/300)`}
           placeholder="Eg. Projects that boost the ecosystem with a deep focus on the climate"
@@ -104,7 +100,13 @@ const Create = () => {
           error={fieldErrors['subTitle']}
         />
         <div className="grid grid-cols-2 gap-4">
-          <TokenDropdown setTokenName={setTokenName} tokenName={tokenName} />
+          <TokenAmountInput
+            setTokenName={setTokenName}
+            tokenName={tokenName}
+            amount={amount}
+            setAmount={setAmount}
+            error={fieldErrors['treasuryAmount']}
+          />
           <DatePicker
             label="Accepting till"
             value={
@@ -126,29 +128,12 @@ const Create = () => {
           setFundingMethod={setFundingMethod}
           error={fieldErrors['fundingMethod']}
         />
-        <ReviewersMultiSelect
-          // TODO: update
-          reviewers={['test', 'test2', 'test3']}
-          selectedReviewers={selectedReviewers}
-          setSelectedReviewers={setSelectedReviewers}
-          error={fieldErrors['reviewers']}
-        />
         <DynamicInputList
-          inputProps={{ placeholder: 'Milestone' }}
-          items={milestones}
-          setItems={setMilestones}
-          label="Define milestone (optional)"
-          infoButtnDetails={{
-            text: 'Learn why',
-            onClick: () => alert('TODO: add content'),
-          }}
-        />
-        <ProposalFormDetails
-          customProposalFields={customProposalFields}
-          proposalFields={proposalFields}
-          setCustomProposalFields={setCustomProposalFields}
-          setProposalFields={setProposalFields}
-          error={fieldErrors['proposalFormFields']}
+          inputProps={{ placeholder: 'Paste reviewer’s wallet/ENS address' }}
+          items={selectedReviewers}
+          setItems={setSelectedReviewers}
+          error={fieldErrors['reviewers']}
+          label="Add reviewers"
         />
       </div>
       <div className="w-full max-w-7xl fixed mx-auto left-0 right-0 bottom-0 mb-6 px-8">

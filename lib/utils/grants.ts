@@ -3,26 +3,27 @@ import { CONTRACTS } from '@lib/constants/contract'
 import { GrantType } from '@lib/types/grants'
 import { writeSmartContractFunction } from '@lib/utils/contract'
 import { uploadToIPFS } from '@lib/utils/ipfs'
+import { ethers } from 'ethers'
 
 export const validateGrants = (grant: GrantType) => {
+  const FIELD_REQUIRED_ERROR_MESSAGE = 'This field is required'
   const errors: Record<keyof GrantType, string> = {} as any
-  if (!grant.title) errors['title'] = 'This field is required'
-  if (!grant.subTitle) errors['subTitle'] = 'This field is required'
+  if (!grant.title) errors['title'] = FIELD_REQUIRED_ERROR_MESSAGE
+  if (!grant.subTitle) errors['subTitle'] = FIELD_REQUIRED_ERROR_MESSAGE
   if (grant.subTitle?.length > 300)
     errors['subTitle'] = 'Please limit description to 300 characters'
   if (!grant.selectionProcess)
-    errors['selectionProcess'] = 'This field is required'
-  if (!grant.fundingMethod) errors['fundingMethod'] = 'This field is required'
+    errors['selectionProcess'] = FIELD_REQUIRED_ERROR_MESSAGE
+  if (!grant.fundingMethod)
+    errors['fundingMethod'] = FIELD_REQUIRED_ERROR_MESSAGE
   if (!grant.proposalDeadline)
-    errors['proposalDeadline'] = 'This field is required'
+    errors['proposalDeadline'] = FIELD_REQUIRED_ERROR_MESSAGE
   if (grant.reviewers.length === 0)
-    errors['reviewers'] = 'This field is required'
-  if (
-    !grant.proposalFormFields ||
-    !grant.customFields ||
-    grant.proposalFormFields.length + grant.customFields.length - 1 <= 0
-  )
-    errors['proposalFormFields'] = 'This field is required'
+    errors['reviewers'] = FIELD_REQUIRED_ERROR_MESSAGE
+  if (!grant.treasuryAmount)
+    errors['treasuryAmount'] = FIELD_REQUIRED_ERROR_MESSAGE
+  if (!grant.reviewers.every((reviewer) => ethers.utils.isAddress(reviewer)))
+    errors['reviewers'] = 'Please enter a valid address'
   return errors
 }
 
@@ -31,7 +32,7 @@ export const postGrantDataAndCallSmartContractFn = async (data: GrantType) => {
   const result = await writeSmartContractFunction({
     contractObj: CONTRACTS.grant,
     args: [
-      // workspace id
+      // TODO: update workspace id
       1,
       ipfsHash,
       IS_PROD ? CONTRACTS.workspace.address : CONTRACTS.workspace.goerliAddress,
@@ -39,8 +40,7 @@ export const postGrantDataAndCallSmartContractFn = async (data: GrantType) => {
         ? CONTRACTS.application.address
         : CONTRACTS.application.goerliAddress,
       data.reviewers,
-      // Token amount
-      0,
+      data.treasuryAmount,
       DEFAULT_TOKENS.find((token) => token.name === data.token)?.address,
       data.fundingMethod,
     ],

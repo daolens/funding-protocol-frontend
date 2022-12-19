@@ -1,5 +1,5 @@
 import { RadioGroup } from '@headlessui/react'
-import { BuildingLibraryIcon, UserGroupIcon } from '@heroicons/react/24/outline'
+import { ArrowUpRightIcon, ListBulletIcon } from '@heroicons/react/24/outline'
 import { FundingMethodType } from '@lib/types/grants'
 
 const FUNDING_OPTIONS = [
@@ -9,7 +9,7 @@ const FUNDING_OPTIONS = [
     description: 'As soon as proposals are approved',
     icon: (
       <div className="bg-pink-200 rounded-full p-3">
-        <BuildingLibraryIcon className="w-5 text-pink-800" />
+        <ArrowUpRightIcon className="w-5 text-pink-800 stroke-2" />
       </div>
     ),
   },
@@ -19,7 +19,7 @@ const FUNDING_OPTIONS = [
     description: 'Split into multiple progressive steps',
     icon: (
       <div className="bg-yellow-200 rounded-full p-3">
-        <UserGroupIcon className="w-5 text-yellow-800" />
+        <ListBulletIcon className="w-5 text-yellow-800 stroke-2" />
       </div>
     ),
   },

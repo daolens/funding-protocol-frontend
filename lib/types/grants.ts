@@ -12,6 +12,7 @@ export type GrantType = {
   subTitle: string
   /** ISO date-time string */
   proposalDeadline: string
+  tags?: string[]
   token: string
   treasuryAmount: number
   selectionProcess: SelectionProcessType
