@@ -1,4 +1,5 @@
 import { MinusIcon, PlusIcon } from '@heroicons/react/20/solid'
+import { InformationCircleIcon } from '@heroicons/react/24/outline'
 import { DynamicInputItemType } from '@lib/types/common'
 import classNames from 'classnames'
 import { nanoid } from 'nanoid'
@@ -68,9 +69,19 @@ type Props = {
     'type' | 'value' | 'onChange'
   >
   label?: string
+  infoButtnDetails?: {
+    text: string
+    onClick: () => void
+  }
 }
 
-function DynamicInputList({ items, setItems, inputProps, label }: Props) {
+function DynamicInputList({
+  items,
+  setItems,
+  inputProps,
+  label,
+  infoButtnDetails,
+}: Props) {
   const updateItemById = (
     itemId: string,
     modifiedItem: Partial<DynamicInputItemType>
@@ -99,11 +110,22 @@ function DynamicInputList({ items, setItems, inputProps, label }: Props) {
 
   return (
     <div>
-      {label && (
-        <label className="block text-sm font-medium text-gray-400">
-          {label}
-        </label>
-      )}
+      <div className="flex justify-between">
+        {label && (
+          <label className="block text-sm font-medium text-gray-400">
+            {label}
+          </label>
+        )}
+        {infoButtnDetails && (
+          <button
+            className="flex items-center text-sm text-indigo-500 gap-1 hover:underline"
+            onClick={infoButtnDetails.onClick}
+          >
+            <InformationCircleIcon className="w-4 stroke-2" />
+            {infoButtnDetails.text}
+          </button>
+        )}
+      </div>
       <div className="mt-2 flex flex-col gap-1">
         {items.map((item, index) => (
           <Item

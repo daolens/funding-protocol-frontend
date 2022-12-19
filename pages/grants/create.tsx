@@ -138,6 +138,10 @@ const Create = () => {
           items={milestones}
           setItems={setMilestones}
           label="Define milestone (optional)"
+          infoButtnDetails={{
+            text: 'Learn why',
+            onClick: () => alert('TODO: add content'),
+          }}
         />
         <ProposalFormDetails
           customProposalFields={customProposalFields}
