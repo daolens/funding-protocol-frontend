@@ -4,7 +4,7 @@ import DynamicInputList from '@components/common/dynamic-input-list'
 import Input from '@components/common/input-with-trailing-icon'
 import Textarea from '@components/common/textarea'
 import FundingRadioSelect from '@components/grants/create/funding-radio-buttons'
-import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline'
+import { ArrowRightIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { DynamicInputItemType, WalletAddressType } from '@lib/types/common'
 import { FundingMethodType, GrantType } from '@lib/types/grants'
 import {
@@ -18,7 +18,8 @@ import cogoToast from 'cogo-toast'
 import TokenAmountInput from '@components/common/token-amount-input'
 import MultiSelect from '@components/common/multi-select'
 
-const Create = () => {
+// TODO: fetch workspace title server side
+const Create = ({ workspaceTitle = 'Workspace' }) => {
   const grantMutation = useMutation({
     mutationFn: (data: GrantType) => postGrantDataAndCallSmartContractFn(data),
     onSuccess: () => cogoToast.success('Grant created successfully'),
@@ -72,10 +73,16 @@ const Create = () => {
   return (
     <Background>
       <div className="flex flex-col gap-8 py-9 mb-24">
-        <button className="text-gray-400 text-sm self-start flex items-center gap-2 hover:underline">
-          <ArrowLeftIcon className="w-4 stroke-2" />
-          Back
-        </button>
+        <div className="flex justify-between">
+          <div className="flex flex-col gap-1">
+            <span className="text-xs text-gray-500">{workspaceTitle}/</span>
+            <h1 className="text-2xl font-bold">New Grant</h1>
+          </div>
+          {/* TODO: handle back button click */}
+          <button className="text-gray-300 hover:text-white text-sm bg-gray-800 p-3 rounded-full self-start flex items-center gap-2 hover:underline">
+            <XMarkIcon className="w-4 stroke-2" />
+          </button>
+        </div>
         <Input
           label="Give your grant a title"
           placeholder="Eg. Climate Focus Grants - S1"
