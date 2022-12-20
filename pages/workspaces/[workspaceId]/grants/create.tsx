@@ -36,7 +36,7 @@ const Create = ({ workspaceTitle = 'Workspace' }) => {
     null
   )
   const [tags, setTags] = useState<string[]>([])
-  const [tokenName, setTokenName] = useState('Ethereum')
+  const [tokenName, setTokenName] = useState('Aave')
   const [selectedReviewers, setSelectedReviewers] = useState<
     DynamicInputItemType[]
   >([{ id: nanoid(), text: '' }])
