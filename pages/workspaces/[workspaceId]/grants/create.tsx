@@ -9,7 +9,7 @@ import { DynamicInputItemType, WalletAddressType } from '@lib/types/common'
 import { FundingMethodType, GrantType } from '@lib/types/grants'
 import {
   postGrantDataAndCallSmartContractFn,
-  validateGrants,
+  validateGrantData,
 } from '@lib/utils/grants'
 import { nanoid } from 'nanoid'
 import React, { useState } from 'react'
@@ -61,7 +61,7 @@ const Create = ({ workspaceTitle = 'Workspace' }) => {
         .map((reviewerItem) => reviewerItem.text as WalletAddressType),
     }
 
-    const errors = validateGrants(grant)
+    const errors = validateGrantData(grant)
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors)
       return

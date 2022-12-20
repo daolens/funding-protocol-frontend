@@ -25,8 +25,8 @@ const CommunityName = ({ communityName, setCommunityName, onNext }: Props) => {
           placeholder={'eg. Aave grant DAO'}
           onChange={(e) => setCommunityName(e.currentTarget.value)}
           value={communityName}
-          isIconShown={isNextAllowed}
-          icon={<CheckCircleIcon className="w-5 h-5 text-green-500" />}
+          isTrailingIconShown={isNextAllowed}
+          trailingIcon={<CheckCircleIcon className="w-5 h-5 text-green-500" />}
         />
         <span
           className={classNames('text-xs self-end', {

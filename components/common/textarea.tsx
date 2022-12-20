@@ -27,7 +27,7 @@ export default function Textarea({ label, error, ...props }: Props) {
           rows={4}
         />
       </div>
-      <p className="mt-1 text-sm text-red-600" id="email-error">
+      <p className="mt-1 text-sm text-red-600" >
         {error}
       </p>
     </div>

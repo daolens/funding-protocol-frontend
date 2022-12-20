@@ -7,7 +7,7 @@ import { Dispatch, SetStateAction } from 'react'
 
 type ItemProps = {
   text: string
-  count: number
+  count?: number
   onAdd?: () => void
   onRemove?: () => void
   onTextChange: (newText: string) => void
@@ -28,15 +28,19 @@ function Item({
   return (
     <div className="flex gap-2 items-center">
       <div className="relative mt-1 rounded-md shadow-sm w-full">
-        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-          <span className="rounded-full bg-indigo-600 w-6 h-6 text-center text-sm flex items-center justify-center">
-            {count}
-          </span>
-        </div>
+        {count && (
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+            <span className="rounded-full bg-indigo-600 w-6 h-6 text-center text-sm flex items-center justify-center">
+              {count}
+            </span>
+          </div>
+        )}
         <input
           {...inputProps}
           type="text"
-          className={`block w-full rounded-xl focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm bg-gray-800 text-gray-200 p-3 pl-11 bg-opacity-20 border-gray-800 ${inputProps.className}`}
+          className={classNames(`block w-full rounded-xl focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm bg-gray-800 text-gray-200 p-3 bg-opacity-20 border-gray-800 ${inputProps.className}`, {
+            'pl-11': count
+          })}
           value={text}
           onChange={(e) => onTextChange(e.currentTarget.value)}
           onKeyUp={(e) => e.key === 'Enter' && onAdd?.()}
@@ -74,6 +78,7 @@ type Props = {
     text: string
     onClick: () => void
   }
+  areNumbersHidden?: boolean
 }
 
 function DynamicInputList({
@@ -83,6 +88,7 @@ function DynamicInputList({
   inputProps,
   label,
   infoButtnDetails,
+  areNumbersHidden,
 }: Props) {
   const updateItemById = (
     itemId: string,
@@ -132,7 +138,7 @@ function DynamicInputList({
         {items.map((item, index) => (
           <Item
             key={item.id}
-            count={index + 1}
+            count={areNumbersHidden ? undefined : index + 1}
             onAdd={index === items.length - 1 ? addNewItem : undefined}
             onRemove={
               index < items.length - 1
@@ -146,9 +152,7 @@ function DynamicInputList({
         ))}
       </div>
 
-      <p className="mt-1 text-sm text-red-600" id="email-error">
-        {error}
-      </p>
+      <p className="mt-1 text-sm text-red-600">{error}</p>
     </div>
   )
 }

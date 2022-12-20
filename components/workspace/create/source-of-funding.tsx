@@ -67,8 +67,8 @@ const SourceOfFunding = ({
             refetch({ queryKey: ['safes-for-address', value] })
           }}
           placeholder="Wallet address"
-          isIconShown={!!multisigWalletAddress}
-          icon={
+          isTrailingIconShown={!!multisigWalletAddress}
+          trailingIcon={
             isLoading ? (
               <Spinner />
             ) : isError || !data || data.length === 0 ? (

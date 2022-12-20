@@ -103,7 +103,7 @@ export default function MultiSelect({
           </>
         )}
       </Listbox>
-      <p className="mt-1 text-sm text-red-600" id="email-error">
+      <p className="mt-1 text-sm text-red-600" >
         {error}
       </p>
     </div>

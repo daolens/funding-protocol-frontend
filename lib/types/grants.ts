@@ -22,3 +22,23 @@ export type GrantType = {
   proposalFormFields?: ProposalGrantFormFieldType[]
   customFields?: DynamicInputItemType[]
 }
+
+export type ApplicationMilestoneType = {
+  id: string
+  text: string
+  funds: number | null
+}
+
+export type ApplicationType = {
+  name: string
+  email: string
+  walletAddress: WalletAddressType | ''
+  description: string
+  sneekingFunds: number | null
+  /** ISO data string */
+  expectedProjectDeadline: string
+  links: DynamicInputItemType[]
+  teamMemberDetails: DynamicInputItemType[]
+  previousSuccessfulProposalLinks: DynamicInputItemType[]
+  milestones: ApplicationMilestoneType[]
+}
