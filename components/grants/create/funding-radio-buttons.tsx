@@ -45,7 +45,7 @@ export default function FundingRadioSelect({
   return (
     <RadioGroup value={selectionProcess} onChange={setSelectionProcess}>
       <RadioGroup.Label className="text-sm font-medium text-gray-400">
-        Selection process
+        Select funding method
       </RadioGroup.Label>
 
       <div className="mt-2 grid grid-cols-2 gap-y-6 gap-x-4">
@@ -86,9 +86,7 @@ export default function FundingRadioSelect({
         ))}
       </div>
 
-      <p className="mt-1 text-sm text-red-600" >
-        {error}
-      </p>
+      <p className="mt-1 text-sm text-red-600">{error}</p>
     </RadioGroup>
   )
 }

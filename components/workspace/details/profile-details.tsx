@@ -9,13 +9,15 @@ import { WorkspaceType } from '@lib/types/workspace'
 import Image from 'next/image'
 import React from 'react'
 
+type Props = {
+  workspaceDetails: WorkspaceType
+  isAdmin: boolean
+}
+
 const ProfileDetails = ({
-  communityName,
-  description,
-  discord,
-  twitter,
-  website,
-}: WorkspaceType) => {
+  workspaceDetails: { communityName, description, discord, twitter, website },
+  isAdmin,
+}: Props) => {
   const onSettingsClick = () => {
     // TODO: handle
   }
@@ -36,13 +38,15 @@ const ProfileDetails = ({
       <div className="flex justify-between">
         <h1 className="text-2xl font-bold">{communityName}</h1>
         <div className="flex gap-2">
-          <button
-            className="border border-gray-800 py-2 px-3 rounded-lg hover:border-indigo-800"
-            onClick={onSettingsClick}
-            type="button"
-          >
-            <Cog6ToothIcon className="w-4 h-4 strocke-2" />
-          </button>
+          {isAdmin && (
+            <button
+              className="border border-gray-800 py-2 px-3 rounded-lg hover:border-indigo-800"
+              onClick={onSettingsClick}
+              type="button"
+            >
+              <Cog6ToothIcon className="w-4 h-4 strocke-2" />
+            </button>
+          )}
           <button
             className="border border-gray-800 py-2 px-3 rounded-lg hover:border-indigo-800"
             onClick={onShare}
@@ -50,14 +54,16 @@ const ProfileDetails = ({
           >
             <ShareIcon className="w-4 h-4 strocke-2" />
           </button>
-          <button
-            className="border border-gray-800 py-2 px-3 rounded-lg hover:border-indigo-800 flex items-center gap-2 text-sm"
-            onClick={onEditProfile}
-            type="button"
-          >
-            <PencilIcon className="w-4 h-4 strocke-2" />
-            Edit profile
-          </button>
+          {isAdmin && (
+            <button
+              className="border border-gray-800 py-2 px-3 rounded-lg hover:border-indigo-800 flex items-center gap-2 text-sm"
+              onClick={onEditProfile}
+              type="button"
+            >
+              <PencilIcon className="w-4 h-4 strocke-2" />
+              Edit profile
+            </button>
+          )}
         </div>
       </div>
       {(website || discord || twitter) && (

@@ -1,3 +1,4 @@
+import BackButton from '@components/common/back-button'
 import Background from '@components/common/background'
 import DatePicker from '@components/common/date-picker'
 import DynamicInputList from '@components/common/dynamic-input-list'
@@ -5,7 +6,7 @@ import Input from '@components/common/input-with-trailing-icon'
 import Textarea from '@components/common/textarea'
 import FundsInput from '@components/grants/apply/funds-input'
 import Milestones from '@components/grants/apply/milestones'
-import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline'
+import {  ArrowRightIcon } from '@heroicons/react/24/outline'
 import { DynamicInputItemType, WalletAddressType } from '@lib/types/common'
 import { ApplicationMilestoneType, ApplicationType } from '@lib/types/grants'
 import { validateGrantApplicationData } from '@lib/utils/grants'
@@ -83,13 +84,14 @@ const Apply = ({
     // TODO: integration smart contract call
   }
 
+  const onBack = () => {
+    // TODO: handle
+  }
+
   return (
     <Background>
       <div className="flex flex-col gap-8 py-9 mb-24">
-        <button className="text-gray-400 self-start flex items-center text-sm gap-2 hover:underline">
-          <ArrowLeftIcon className="w-3 stroke-2" />
-          Back
-        </button>
+        <BackButton onBack={onBack} />
         <h1 className="text-2xl font-semibold">
           Application - <span className="text-gray-400">{grantName}</span>
         </h1>

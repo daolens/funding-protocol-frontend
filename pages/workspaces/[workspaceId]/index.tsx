@@ -32,7 +32,10 @@ const Index = ({ workspaceDetails, grants, stats }: Props) => {
       </div>
       <div className="grid grid-cols-3 max-w-7xl px-4 sm:px-6 lg:px-8 mx-auto gap-6 my-5">
         <div className="col-span-2 flex flex-col">
-          <ProfileDetails {...workspaceDetails} />
+          <ProfileDetails
+            workspaceDetails={workspaceDetails}
+            isAdmin={!!isAdmin}
+          />
           <GrantList grants={grants} isAdmin={!!isAdmin} />
         </div>
         <Stats {...stats} />
@@ -52,7 +55,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     discord: 'https://www.google.com',
     twitter: 'https://www.google.com',
     website: 'https://daolens.com',
-    adminAddresses: ['0x7D04A724BCd6c0DBAf976BE9e9b89758c300E45A']
+    adminAddresses: ['0x7D04A724BCd6c0DBAf976BE9e9b89758c300E45A'],
   }
 
   const grants: GrantType[] = [
@@ -71,7 +74,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
         '0x7D04A724BCd6c0DBAf976BE9e9b89758c300E45A',
         '0x7D04A724BCd6c0DBAf976BE9e9b89758c300E45A',
       ],
-      applicantCount: 412
+      applicantCount: 412,
     },
     {
       status: 'open',
@@ -88,7 +91,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
         '0x7D04A724BCd6c0DBAf976BE9e9b89758c300E45A',
         '0x7D04A724BCd6c0DBAf976BE9e9b89758c300E45A',
       ],
-      applicantCount: 100
+      applicantCount: 100,
     },
   ]
 

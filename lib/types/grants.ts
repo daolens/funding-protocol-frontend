@@ -25,6 +25,7 @@ export type GrantType = {
   customFields?: DynamicInputItemType[]
   status?: GrantStatusType
   applicantCount?: number
+  approvedCount?: number
 }
 
 export type ApplicationMilestoneType = {
@@ -45,4 +46,10 @@ export type ApplicationType = {
   teamMemberDetails: DynamicInputItemType[]
   previousSuccessfulProposalLinks: DynamicInputItemType[]
   milestones: ApplicationMilestoneType[]
+}
+
+export type GrantTreasuryType = {
+  total: number
+  left: number
+  token: string
 }
