@@ -1,5 +1,6 @@
 import { PROPOSAL_GRANT_FORM_FIELDS } from '@lib/constants/grants'
 import { DynamicInputItemType, WalletAddressType } from '@lib/types/common'
+import { GrantStatusType } from '@lib/types/workspace'
 
 export type SelectionProcessType = 'community' | 'committee'
 export type FundingMethodType = 'UPFRONT' | 'MILESTONE'
@@ -8,6 +9,7 @@ export type ProposalGrantFormFieldType =
   typeof PROPOSAL_GRANT_FORM_FIELDS[number]
 
 export type GrantType = {
+  id?: string
   title: string
   subTitle: string
   /** ISO date-time string */
@@ -21,6 +23,8 @@ export type GrantType = {
   milestones?: DynamicInputItemType[]
   proposalFormFields?: ProposalGrantFormFieldType[]
   customFields?: DynamicInputItemType[]
+  status?: GrantStatusType
+  applicantCount?: number
 }
 
 export type ApplicationMilestoneType = {

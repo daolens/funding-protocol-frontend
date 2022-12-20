@@ -7,6 +7,7 @@ export type TokenType = {
   name: string
   chain: 'Ethereum' | 'Polygon'
   image: string
+  symbol: string
   address: `0x${string}`
 }
 
