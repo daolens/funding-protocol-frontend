@@ -36,7 +36,12 @@ export default function MultiSelect({
                 {selected.length > 0 ? (
                   <span className="flex truncate flex-wrap gap-1">
                     {selected.map((item) => (
-                      <span key={item} className="border border-gray-800 rounded-lg px-3 py-2">{item}</span>
+                      <span
+                        key={item}
+                        className="border border-gray-800 rounded-lg px-3 py-2"
+                      >
+                        {item}
+                      </span>
                     ))}
                   </span>
                 ) : (
@@ -103,9 +108,7 @@ export default function MultiSelect({
           </>
         )}
       </Listbox>
-      <p className="mt-1 text-sm text-red-600" >
-        {error}
-      </p>
+      <p className="mt-1 text-sm text-red-600">{error}</p>
     </div>
   )
 }

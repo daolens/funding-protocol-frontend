@@ -1,4 +1,3 @@
-import BackButton from '@components/common/back-button'
 import {
   ArrowUpRightIcon,
   CalendarIcon,
@@ -6,8 +5,8 @@ import {
   PencilIcon,
   ShareIcon,
 } from '@heroicons/react/24/outline'
-import { DEFAULT_TOKENS } from '@lib/constants/common'
 import { GrantType } from '@lib/types/grants'
+import { getTokenSymbol } from '@lib/utils/common'
 import React from 'react'
 
 type Props = {
@@ -17,9 +16,7 @@ type Props = {
 }
 
 const Info = ({ grant, workspaceName, isAdmin }: Props) => {
-  const tokenSymbol = DEFAULT_TOKENS.find(
-    (currToken) => currToken.name === grant.token
-  )?.symbol
+  const tokenSymbol = getTokenSymbol(grant.token)
 
   const fundingMethodData = {
     heading:
@@ -35,10 +32,6 @@ const Info = ({ grant, workspaceName, isAdmin }: Props) => {
   const FundingMethodIcon =
     grant.fundingMethod === 'MILESTONE' ? ListBulletIcon : ArrowUpRightIcon
 
-  const onBack = () => {
-    // TODO: handle
-  }
-
   const onShare = () => {
     // TODO: handle
   }
@@ -48,8 +41,7 @@ const Info = ({ grant, workspaceName, isAdmin }: Props) => {
   }
 
   return (
-    <div className="flex flex-col border-b border-gray-800 my-6 gap-3 pb-5">
-      <BackButton onBack={onBack} />
+    <div className="flex flex-col border-b border-gray-800 gap-3 pb-5">
       <div className="flex justify-between">
         <h1 className="text-2xl font-bold">{grant.title}</h1>
         <div className="flex gap-2">

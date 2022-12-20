@@ -1,4 +1,7 @@
-import { PROPOSAL_GRANT_FORM_FIELDS } from '@lib/constants/grants'
+import {
+  APPLICATION_STATUSES,
+  PROPOSAL_GRANT_FORM_FIELDS,
+} from '@lib/constants/grants'
 import { DynamicInputItemType, WalletAddressType } from '@lib/types/common'
 import { GrantStatusType } from '@lib/types/workspace'
 
@@ -34,7 +37,10 @@ export type ApplicationMilestoneType = {
   funds: number | null
 }
 
+export type ApplicationStatusType = typeof APPLICATION_STATUSES[number]
+
 export type ApplicationType = {
+  id?: string
   name: string
   email: string
   walletAddress: WalletAddressType | ''
@@ -46,6 +52,7 @@ export type ApplicationType = {
   teamMemberDetails: DynamicInputItemType[]
   previousSuccessfulProposalLinks: DynamicInputItemType[]
   milestones: ApplicationMilestoneType[]
+  status?: ApplicationStatusType
 }
 
 export type GrantTreasuryType = {
@@ -53,3 +60,5 @@ export type GrantTreasuryType = {
   left: number
   token: string
 }
+
+export type GrantSectionType = 'about' | 'applications'

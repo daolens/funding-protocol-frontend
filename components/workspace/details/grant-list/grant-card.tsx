@@ -3,9 +3,8 @@ import {
   CurrencyDollarIcon,
   UserIcon,
 } from '@heroicons/react/24/outline'
-import { DEFAULT_TOKENS } from '@lib/constants/common'
 import { GrantType } from '@lib/types/grants'
-import { getNumberWithCommas } from '@lib/utils/common'
+import { getNumberWithCommas, getTokenSymbol } from '@lib/utils/common'
 import React from 'react'
 
 type InfoProps = {
@@ -36,9 +35,7 @@ const GrantCard = ({
   token,
   tags,
 }: GrantType) => {
-  const tokenSymbol = DEFAULT_TOKENS.find(
-    (currToken) => currToken.name === token
-  )?.symbol
+  const tokenSymbol = getTokenSymbol(token)
 
   const onGrantClick = () => {
     // TODO: handle
@@ -46,7 +43,7 @@ const GrantCard = ({
 
   return (
     <button
-      className="flex flex-col bg-gray-800 bg-opacity-50 border-gray-800 border hover:border-indigo-800 p-5 rounded-xl gap-3"
+      className="flex flex-col bg-gray-800 bg-opacity-50 border-gray-800 border hover:border-indigo-500 p-5 rounded-xl gap-3"
       onClick={onGrantClick}
       type="button"
     >

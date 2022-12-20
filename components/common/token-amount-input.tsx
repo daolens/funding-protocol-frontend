@@ -136,9 +136,7 @@ export default function TokenAmountInput({
         </Listbox>
       </div>
 
-      <p className="mt-1 text-sm text-red-600" >
-        {error}
-      </p>
+      <p className="mt-1 text-sm text-red-600">{error}</p>
     </div>
   )
 }

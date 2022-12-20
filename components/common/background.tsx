@@ -9,10 +9,9 @@ type Props = {
 const Background = ({ children, isMaxWidthDisabled }: Props) => {
   return (
     <div
-      className={classNames(
-        'mx-auto min-h-screen relative',
-        { 'max-w-7xl px-4 sm:px-6 lg:px-8': !isMaxWidthDisabled }
-      )}
+      className={classNames('mx-auto min-h-screen relative', {
+        'max-w-7xl px-4 sm:px-6 lg:px-8': !isMaxWidthDisabled,
+      })}
     >
       <Image
         src="/images/background/top-bg.svg"

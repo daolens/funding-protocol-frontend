@@ -38,9 +38,12 @@ function Item({
         <input
           {...inputProps}
           type="text"
-          className={classNames(`block w-full rounded-xl focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm bg-gray-800 text-gray-200 p-3 bg-opacity-20 border-gray-800 ${inputProps.className}`, {
-            'pl-11': count
-          })}
+          className={classNames(
+            `block w-full rounded-xl focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm bg-gray-800 text-gray-200 p-3 bg-opacity-20 border-gray-800 ${inputProps.className}`,
+            {
+              'pl-11': count,
+            }
+          )}
           value={text}
           onChange={(e) => onTextChange(e.currentTarget.value)}
           onKeyUp={(e) => e.key === 'Enter' && onAdd?.()}
