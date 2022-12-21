@@ -12,11 +12,11 @@ const getSearchedProducts = (
   return communities
 }
 
-const getFilteredProducts = (
+const getFilteredData = (
   filterType?: string,
-  searchedProducts?: CommunityDetailsType[]
+  searchedCommunities?: CommunityDetailsType[]
 ) => {
-  const communities = searchedProducts?.filter((comm) => {
+  const communities = searchedCommunities?.filter((comm) => {
     if (filterType === 'expired') {
       return comm.activeGrants < 1
     } else if (filterType === 'active') {
@@ -33,12 +33,12 @@ export const getFilteredCommunities = (
   searchCommunity: string,
   discoverDetailsData?: CommunityDetailsType[]
 ) => {
-  const searchedProducts = getSearchedProducts(
+  const searchedCommunities = getSearchedProducts(
     searchCommunity,
     discoverDetailsData
   )
 
-  const filteredData = getFilteredProducts(filterType, searchedProducts)
+  const filteredData = getFilteredData(filterType, searchedCommunities)
 
   return filteredData
 }
