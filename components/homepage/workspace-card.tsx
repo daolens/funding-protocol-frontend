@@ -1,23 +1,20 @@
 import { UserIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline'
 import { Fragment } from 'react'
-import { CommunityDetailsType } from '@lib/types/home'
+import { WorkspaceCardType } from '@lib/types/home'
 import CommunityAvatar from '@components/common/community-avatar'
 
 type Props = {
-  communityDetailsData: CommunityDetailsType[]
+  communityDetailsData: WorkspaceCardType[]
 }
 
-const CommunityCard = ({ communityDetailsData }: Props) => {
+const WorkspaceCard = ({ communityDetailsData }: Props) => {
   return (
     <Fragment>
       {communityDetailsData?.map((val, idx) => (
         <div key={idx}>
           <div className="pt-5 pb-6 px-5 bg-gray-800 border bg-opacity-40 border-gray-800 rounded-tl-2xl rounded-tr-2xl flex flex-col gap-6">
             <div className="flex gap-4">
-              <CommunityAvatar
-                communityName={val.communityName}
-                rounded={'full'}
-              />
+              <CommunityAvatar communityName={val.communityName} rounded />
               <div className="flex flex-col gap-3">
                 <h3 className="text-lg font-semibold">{val.communityName}</h3>
                 <div className="flex gap-1">
@@ -52,4 +49,4 @@ const CommunityCard = ({ communityDetailsData }: Props) => {
   )
 }
 
-export default CommunityCard
+export default WorkspaceCard

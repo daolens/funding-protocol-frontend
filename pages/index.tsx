@@ -1,25 +1,25 @@
 import Background from '@components/common/background'
 import CommunitiesYouReview from '@components/homepage/review-community'
-import DiscoverApply from '@components/homepage/discover'
+import Discover from '@components/homepage/discover'
 import { GetServerSideProps } from 'next'
-import { CommunityDetailsType } from '@lib/types/home'
+import { WorkspaceCardType } from '@lib/types/home'
 
 type Props = {
-  communityDetailsData: CommunityDetailsType[]
-  discoverDetailsData: CommunityDetailsType[]
+  communityDetailsData: WorkspaceCardType[]
+  discoverDetailsData: WorkspaceCardType[]
 }
 
 const HomePage = ({ communityDetailsData, discoverDetailsData }: Props) => {
   return (
     <Background>
       <CommunitiesYouReview communityDetailsData={communityDetailsData} />
-      <DiscoverApply discoverDetailsData={discoverDetailsData} />
+      <Discover discoverDetailsData={discoverDetailsData} />
     </Background>
   )
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const communityDetailsData: CommunityDetailsType[] = [
+  const communityDetailsData: WorkspaceCardType[] = [
     {
       image: '/images/tokens/aave.png',
       communityName: 'Polygon DAO',
@@ -53,7 +53,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
       sentInGrants: 30000,
     },
   ]
-  const discoverDetailsData: CommunityDetailsType[] = [
+  const discoverDetailsData: WorkspaceCardType[] = [
     {
       image: '/images/tokens/aave.png',
       communityName: 'Daolens',

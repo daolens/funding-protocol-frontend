@@ -2,7 +2,7 @@ import classNames from 'classnames'
 
 type Props = {
   communityName: string
-  rounded?: 'full'
+  rounded?: boolean
 }
 
 const CommunityAvatar = ({ communityName, rounded }: Props) => {

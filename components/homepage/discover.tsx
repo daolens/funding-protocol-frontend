@@ -1,31 +1,29 @@
 import Input from '@components/common/input-with-trailing-icon'
-import CommunityCard from './community-card'
-
+import WorkspaceCard from '@components/homepage/workspace-card'
 import {
   PlusCircleIcon,
   MagnifyingGlassIcon,
 } from '@heroicons/react/24/outline'
-import { CommunityDetailsType, FilterType } from '@lib/types/home'
+import { WorkspaceCardType, FilterType } from '@lib/types/home'
 import { useState } from 'react'
 import { getFilteredCommunities } from '@lib/utils/home'
 import classNames from 'classnames'
 import Link from 'next/link'
 
 type Props = {
-  discoverDetailsData: CommunityDetailsType[]
+  discoverDetailsData: WorkspaceCardType[]
 }
 
-const DiscoverApply = ({ discoverDetailsData }: Props) => {
+const Discover = ({ discoverDetailsData }: Props) => {
   const [filterType, setFilterType] = useState<FilterType>('all')
 
   const [searchCommunity, setSearchCommunity] = useState('')
 
-  const filteredCommunities =
-    (getFilteredCommunities(
-      filterType,
-      searchCommunity,
-      discoverDetailsData
-    ) as CommunityDetailsType[]) || undefined
+  const filteredCommunities = getFilteredCommunities(
+    filterType,
+    searchCommunity,
+    discoverDetailsData
+  ) as WorkspaceCardType[]
 
   return (
     <section className="pt-16 text-gray-300">
@@ -41,9 +39,7 @@ const DiscoverApply = ({ discoverDetailsData }: Props) => {
             }
             isLeadingIconShown={true}
             className="rounded-none w-[20rem] h-8"
-            onChange={(e) =>
-              setSearchCommunity((e.target as HTMLInputElement).value)
-            }
+            onChange={(e) => setSearchCommunity(e.currentTarget.value)}
           />
           <div className="flex gap-1 items-center">
             <p
@@ -98,10 +94,10 @@ const DiscoverApply = ({ discoverDetailsData }: Props) => {
             List your community and reach out to thousands of builders 🚀
           </p>
         </Link>
-        <CommunityCard communityDetailsData={filteredCommunities} />
+        <WorkspaceCard communityDetailsData={filteredCommunities} />
       </div>
     </section>
   )
 }
 
-export default DiscoverApply
+export default Discover
