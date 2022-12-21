@@ -1,7 +1,7 @@
-import { CommunityDetailsType } from '@lib/types/home'
+import { CommunityDetailsType, FilterType } from '@lib/types/home'
 
 const getSearchedProducts = (
-  searchCommunity?: string,
+  searchCommunity: string,
   discoverDetailsData?: CommunityDetailsType[]
 ) => {
   const communities = discoverDetailsData?.filter((comm) =>
@@ -29,8 +29,8 @@ const getFilteredProducts = (
 }
 
 export const getFilteredCommunities = (
-  filterType?: string,
-  searchCommunity?: string,
+  filterType: FilterType,
+  searchCommunity: string,
   discoverDetailsData?: CommunityDetailsType[]
 ) => {
   const searchedProducts = getSearchedProducts(
