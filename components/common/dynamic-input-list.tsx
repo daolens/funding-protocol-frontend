@@ -7,7 +7,8 @@ import { Dispatch, SetStateAction } from 'react'
 
 type ItemProps = {
   text: string
-  count?: number
+  count: number
+  areNumbersHidden?: boolean
   onAdd?: () => void
   onRemove?: () => void
   onTextChange: (newText: string) => void
@@ -24,11 +25,12 @@ function Item({
   onRemove,
   onTextChange,
   inputProps,
+  areNumbersHidden,
 }: ItemProps) {
   return (
     <div className="flex gap-2 items-center">
       <div className="relative mt-1 rounded-md shadow-sm w-full">
-        {count && (
+        {!areNumbersHidden && (
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
             <span className="rounded-full bg-indigo-600 w-6 h-6 text-center text-sm flex items-center justify-center">
               {count}
@@ -41,13 +43,13 @@ function Item({
           className={classNames(
             `block w-full rounded-xl focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm bg-gray-800 text-gray-200 p-3 bg-opacity-20 border-gray-800 ${inputProps.className}`,
             {
-              'pl-11': count,
+              'pl-11': !areNumbersHidden,
             }
           )}
           value={text}
           onChange={(e) => onTextChange(e.currentTarget.value)}
           onKeyUp={(e) => e.key === 'Enter' && onAdd?.()}
-          autoFocus
+          autoFocus={count !== 1}
         />
       </div>
       <button
@@ -141,8 +143,9 @@ function DynamicInputList({
         {items.map((item, index) => (
           <Item
             key={item.id}
-            count={areNumbersHidden ? undefined : index + 1}
+            count={index + 1}
             onAdd={index === items.length - 1 ? addNewItem : undefined}
+            areNumbersHidden={areNumbersHidden}
             onRemove={
               index < items.length - 1
                 ? () => removeItemById(item.id)

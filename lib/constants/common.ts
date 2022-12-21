@@ -87,4 +87,6 @@ export const IS_PROD = process.env.NODE_ENV === 'production'
 export const ERROR_MESSAGES = {
   fieldRequired: 'This field is required',
   addressNotValid: 'Please enter a valid address',
+  urlNotValid: "Please enter a valid URL. Eg. 'https://example.com'.",
+  emailNotValid: 'Please enter a valid email',
 }

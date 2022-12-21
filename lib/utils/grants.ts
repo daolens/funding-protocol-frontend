@@ -1,7 +1,7 @@
 import { DEFAULT_TOKENS, ERROR_MESSAGES, IS_PROD } from '@lib/constants/common'
 import { CONTRACTS, CONTRACT_FUNCTION_NAME_MAP } from '@lib/constants/contract'
 import { ApplicationType, GrantType } from '@lib/types/grants'
-import { log } from '@lib/utils/common'
+import { checkIsEmail, checkIsLink, log } from '@lib/utils/common'
 import { writeSmartContractFunction } from '@lib/utils/contract'
 import { uploadToIPFS } from '@lib/utils/ipfs'
 import { ethers } from 'ethers'
@@ -81,6 +81,16 @@ export const validateGrantApplicationData = (data: ApplicationType) => {
 
   if (data.milestones.some((milestone) => !milestone.funds || !milestone.text))
     errors.milestones = ERROR_MESSAGES.fieldRequired
+
+  if (data.links.some((link) => !checkIsLink(link.text)))
+    errors.links = ERROR_MESSAGES.urlNotValid
+
+  if (
+    data.previousSuccessfulProposalLinks.some((link) => !checkIsLink(link.text))
+  )
+    errors.links = ERROR_MESSAGES.urlNotValid
+
+  if (!checkIsEmail(data.email)) errors.email = ERROR_MESSAGES.emailNotValid
 
   return errors
 }

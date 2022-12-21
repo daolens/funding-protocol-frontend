@@ -79,6 +79,7 @@ const ApplicationList = ({ applications }: Props) => {
             application.walletAddress as WalletAddressType
           }
           key={application.id}
+          id={application.id as string}
         />
       ))}
     </div>

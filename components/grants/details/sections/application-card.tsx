@@ -3,29 +3,37 @@ import { WalletAddressType } from '@lib/types/common'
 import { ApplicationStatusType } from '@lib/types/grants'
 import { getTruncatedWalletAddress } from '@lib/utils/common'
 import classNames from 'classnames'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { useEnsName } from 'wagmi'
 
 type Props = {
   applicantWalletAddress: WalletAddressType
   title: string
   status: ApplicationStatusType
+  id: string
 }
 
-const ApplicationCard = ({ applicantWalletAddress, status, title }: Props) => {
+const ApplicationCard = ({
+  applicantWalletAddress,
+  status,
+  title,
+  id,
+}: Props) => {
   const { data: ensName } = useEnsName({
     address: applicantWalletAddress,
   })
+  const router = useRouter()
+
+  const workspaceId = router.query.workspaceId
+  const grantId = router.query.grantId
 
   const statusColor = APPLICATION_STATUS_OBJ[status].color
 
-  const onApplicationClick = () => {
-    // TODO: handle
-  }
-
   return (
-    <button
+    <Link
+      href={`/workspaces/${workspaceId}/grants/${grantId}/applications/${id}`}
       className="flex flex-col p-5 gap-3 bg-gray-800 rounded-xl border border-gray-800 hover:border-indigo-500"
-      onClick={onApplicationClick}
     >
       <p className="text-gray-600 text-xs">
         Proposed by{' '}
@@ -42,7 +50,7 @@ const ApplicationCard = ({ applicantWalletAddress, status, title }: Props) => {
         />
         <span className="text-xs">{status}</span>
       </div>
-    </button>
+    </Link>
   )
 }
 
