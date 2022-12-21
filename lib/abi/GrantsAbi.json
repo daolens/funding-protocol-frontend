@@ -174,12 +174,12 @@
         "type": "string"
       },
       {
-        "internalType": "contract IWorkspaceRegistry",
+        "internalType": "address",
         "name": "_workspaceReg",
         "type": "address"
       },
       {
-        "internalType": "contract IApplicationRegistry",
+        "internalType": "address",
         "name": "_applicationReg",
         "type": "address"
       },
@@ -213,6 +213,25 @@
       }
     ],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_workspaceId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getWorkSpaceGrantMap",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {

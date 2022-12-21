@@ -1,6 +1,7 @@
 import { DEFAULT_TOKENS, ERROR_MESSAGES, IS_PROD } from '@lib/constants/common'
-import { CONTRACTS } from '@lib/constants/contract'
+import { CONTRACTS, CONTRACT_FUNCTION_NAME_MAP } from '@lib/constants/contract'
 import { ApplicationType, GrantType } from '@lib/types/grants'
+import { log } from '@lib/utils/common'
 import { writeSmartContractFunction } from '@lib/utils/contract'
 import { uploadToIPFS } from '@lib/utils/ipfs'
 import { ethers } from 'ethers'
@@ -28,25 +29,35 @@ export const validateGrantData = (grant: GrantType) => {
 
 export const postGrantDataAndCallSmartContractFn = async (data: GrantType) => {
   const ipfsHash = (await uploadToIPFS(JSON.stringify(data))).hash
+  const workspaceId = parseInt(data.workspaceId!, 16)
+
+  const args = [
+    workspaceId,
+    ipfsHash,
+    IS_PROD
+      ? CONTRACTS.workspace.address
+      : CONTRACTS.workspace.polygonMumbaiAddress,
+    IS_PROD
+      ? CONTRACTS.application.address
+      : CONTRACTS.application.polygonMumbaiAddress,
+    data.reviewers,
+    data.treasuryAmount,
+    IS_PROD
+      ? DEFAULT_TOKENS.find((token) => token.name === data.token)?.address
+      : // token address in dev
+        '0xfe4f5145f6e09952a5ba9e956ed0c25e3fa4c7f1',
+    data.fundingMethod,
+  ]
+
+  log('createGrant called', { args })
   const result = await writeSmartContractFunction({
     contractObj: CONTRACTS.grant,
-    args: [
-      // TODO: update workspace id
-      1,
-      ipfsHash,
-      IS_PROD ? CONTRACTS.workspace.address : CONTRACTS.workspace.goerliAddress,
-      IS_PROD
-        ? CONTRACTS.application.address
-        : CONTRACTS.application.goerliAddress,
-      data.reviewers,
-      data.treasuryAmount,
-      DEFAULT_TOKENS.find((token) => token.name === data.token)?.address,
-      data.fundingMethod,
-    ],
-    functionName: 'createGrant',
+    args,
+    functionName: CONTRACT_FUNCTION_NAME_MAP.grant.createGrant,
   })
 
   if (!result.hash) throw new Error('createGrant smart contract call failed')
+  log(`createGrant call successful. Hash: ${result.hash}`)
 }
 
 export const validateGrantApplicationData = (data: ApplicationType) => {
@@ -72,4 +83,28 @@ export const validateGrantApplicationData = (data: ApplicationType) => {
     errors.milestones = ERROR_MESSAGES.fieldRequired
 
   return errors
+}
+
+export const postApplicationDataAndCallSmartContractFn = async (
+  data: ApplicationType
+) => {
+  const ipfsHash = (await uploadToIPFS(JSON.stringify(data))).hash
+  const workspaceId = parseInt(data.workspaceId!, 16)
+  const args = [
+    data.grantAddress,
+    workspaceId,
+    ipfsHash,
+    data.milestones.length,
+    data.milestones.map((milestone) => milestone.funds),
+  ]
+  log('submitApplication called', { args })
+  const result = await writeSmartContractFunction({
+    contractObj: CONTRACTS.application,
+    args,
+    functionName: CONTRACT_FUNCTION_NAME_MAP.application.submitApplication,
+  })
+
+  if (!result.hash)
+    throw new Error('sumbitApplication smart contract call failed')
+  log(`submitApplication call successful. Hash: ${result.hash}`)
 }

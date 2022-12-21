@@ -9,8 +9,14 @@ import Milestones from '@components/grants/apply/milestones'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import { DynamicInputItemType, WalletAddressType } from '@lib/types/common'
 import { ApplicationMilestoneType, ApplicationType } from '@lib/types/grants'
-import { validateGrantApplicationData } from '@lib/utils/grants'
+import {
+  postApplicationDataAndCallSmartContractFn,
+  validateGrantApplicationData,
+} from '@lib/utils/grants'
+import { useMutation } from '@tanstack/react-query'
+import cogoToast from 'cogo-toast'
 import { nanoid } from 'nanoid'
+import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 
 type Props = {
@@ -22,6 +28,19 @@ const Apply = ({
   grantName = 'Uniswap Grants: Season 02',
   currency = 'USDC',
 }: Props) => {
+  const applicationMutation = useMutation({
+    mutationFn: (data: ApplicationType) =>
+      postApplicationDataAndCallSmartContractFn(data),
+    onSuccess: () => cogoToast.success('Applied successfully'),
+    onError: (error) => {
+      console.error(error)
+      cogoToast.error('Something went wrong while applying.')
+    },
+  })
+  const router = useRouter()
+  const workspaceId = router.query.workspaceId as string
+  const grantId = router.query.grantId as string
+
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [walletAddress, setWalletAddress] = useState<WalletAddressType | ''>('')
@@ -61,6 +80,8 @@ const Apply = ({
   const onApply = () => {
     setFieldErrors({} as any)
     const application: ApplicationType = {
+      workspaceId: router.query.workspaceId as string,
+      grantAddress: router.query.grantId as string,
       description,
       email,
       expectedProjectDeadline,
@@ -81,12 +102,11 @@ const Apply = ({
       return
     }
 
-    // TODO: integration smart contract call
+    applicationMutation.mutate(application)
   }
 
-  const onBack = () => {
-    // TODO: handle
-  }
+  const onBack = () =>
+    router.push(`/workspaces/${workspaceId}/grants/${grantId}`)
 
   return (
     <Background>
@@ -160,6 +180,7 @@ const Apply = ({
             error={fieldErrors['expectedProjectDeadline']}
           />
         </div>
+        {/* TODO: add validation for links */}
         <DynamicInputList
           inputProps={{ placeholder: 'Eg. A Drive/Notion link to some docs' }}
           items={links}
@@ -182,7 +203,7 @@ const Apply = ({
         <h2 className="text-indigo-500 text-sm font-semibold">
           EXPECTATIONS/MILESTONES (3/3)
         </h2>
-
+        {/* TODO: add validations for link */}
         <DynamicInputList
           inputProps={{
             placeholder: 'Eg. A google drive link to some docs',
@@ -193,6 +214,8 @@ const Apply = ({
           label="Attach previous successful proposals (optional)"
           areNumbersHidden
         />
+        {/* TODO: add info to show how many funds are remaining after each milestone */}
+        {/* TODO: funds field will be hiden for upfront funding method right? */}
         <Milestones
           items={milestones}
           setItems={setMilestones}

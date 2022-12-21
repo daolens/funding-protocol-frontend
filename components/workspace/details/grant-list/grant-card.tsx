@@ -5,6 +5,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { GrantType } from '@lib/types/grants'
 import { getNumberWithCommas, getTokenSymbol } from '@lib/utils/common'
+import Link from 'next/link'
 import React from 'react'
 
 type InfoProps = {
@@ -34,17 +35,15 @@ const GrantCard = ({
   treasuryAmount,
   token,
   tags,
+  workspaceId,
+  address,
 }: GrantType) => {
   const tokenSymbol = getTokenSymbol(token)
 
-  const onGrantClick = () => {
-    // TODO: handle
-  }
-
   return (
-    <button
+    <Link
+      href={`/workspaces/${workspaceId}/grants/${address}`}
       className="flex flex-col bg-gray-800 bg-opacity-50 border-gray-800 border hover:border-indigo-500 p-5 rounded-xl gap-3"
-      onClick={onGrantClick}
       type="button"
     >
       <h3>{title}</h3>
@@ -70,7 +69,7 @@ const GrantCard = ({
           </span>
         ))}
       </div>
-    </button>
+    </Link>
   )
 }
 

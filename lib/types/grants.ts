@@ -12,7 +12,8 @@ export type ProposalGrantFormFieldType =
   typeof PROPOSAL_GRANT_FORM_FIELDS[number]
 
 export type GrantType = {
-  id?: string
+  address?: string
+  workspaceId?: string
   title: string
   subTitle: string
   /** ISO date-time string */
@@ -41,6 +42,8 @@ export type ApplicationStatusType = typeof APPLICATION_STATUSES[number]
 
 export type ApplicationType = {
   id?: string
+  workspaceId?: string
+  grantAddress?: string
   name: string
   email: string
   walletAddress: WalletAddressType | ''
