@@ -1,6 +1,6 @@
 import { CommunityDetailsType, FilterType } from '@lib/types/home'
 
-const getSearchedProducts = (
+const getSearchedCommunities = (
   searchCommunity: string,
   discoverDetailsData?: CommunityDetailsType[]
 ) => {
@@ -33,7 +33,7 @@ export const getFilteredCommunities = (
   searchCommunity: string,
   discoverDetailsData?: CommunityDetailsType[]
 ) => {
-  const searchedCommunities = getSearchedProducts(
+  const searchedCommunities = getSearchedCommunities(
     searchCommunity,
     discoverDetailsData
   )
