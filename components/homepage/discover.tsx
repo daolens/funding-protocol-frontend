@@ -7,16 +7,23 @@ import {
 } from '@heroicons/react/24/outline'
 import { CommunityDetailsType } from '@lib/types/home'
 import { useState } from 'react'
+import { getFilteredCommunities } from '@lib/utils/home'
 
 type Props = {
   discoverDetailsData: CommunityDetailsType[]
 }
 
 const DiscoverApply = ({ discoverDetailsData }: Props) => {
+  const [filterType, setFilterType] = useState('all')
 
- const [filterType, setFilterType] = useState("")
+  const [searchCommunity, setSearchCommunity] = useState('')
 
- const [searchCommunity, setSearchCommunity] = useState("")
+  const filteredCommunities =
+    (getFilteredCommunities(
+      filterType,
+      searchCommunity,
+      discoverDetailsData
+    ) as CommunityDetailsType[]) || undefined
 
   return (
     <section className="pt-16 text-gray-300">
@@ -32,18 +39,29 @@ const DiscoverApply = ({ discoverDetailsData }: Props) => {
             }
             isLeadingIconShown={true}
             className="rounded-none w-[20rem] py-2 px-3"
-            onChange={(e) => setSearchCommunity(e.target.value)}
+            onChange={(e) =>
+              setSearchCommunity((e.target as HTMLInputElement).value)
+            }
           />
           <div className="flex gap-1 items-center">
-            <p className="bg-gray-800 text-sm flex gap-2 justify-center items-center h-fit py-1 px-3 rounded-2xl" onClick={() => setFilterType("all")}>
+            <p
+              className="bg-gray-800 text-sm flex gap-2 justify-center cursor-pointer items-center h-fit py-1 px-3 rounded-2xl"
+              onClick={() => setFilterType('all')}
+            >
               <span className="text-xs">✨</span>
               <span>All</span>
             </p>
-            <p className="bg-gray-800 text-sm flex gap-2 justify-center items-center h-fit py-1 px-3 rounded-2xl" onClick={() => setFilterType("active")}>
+            <p
+              className="bg-gray-800 text-sm flex gap-2 justify-center cursor-pointer items-center h-fit py-1 px-3 rounded-2xl"
+              onClick={() => setFilterType('active')}
+            >
               <span className="text-xs">🟢 </span>
               <span>Active</span>
             </p>
-            <p className="bg-gray-800 text-sm flex gap-2 justify-center items-center h-fit py-1 px-3 rounded-2xl" onClick={() => setFilterType("expired")}>
+            <p
+              className="bg-gray-800 text-sm flex gap-2 justify-center cursor-pointer items-center h-fit py-1 px-3 rounded-2xl"
+              onClick={() => setFilterType('expired')}
+            >
               <span className="text-xs">🔴 </span>
               <span>Expired</span>
             </p>
@@ -57,7 +75,7 @@ const DiscoverApply = ({ discoverDetailsData }: Props) => {
             List your community and reach out to thousands of builders 🚀
           </p>
         </div>
-        <CommunityCard communityDetailsData={discoverDetailsData} />
+        <CommunityCard communityDetailsData={filteredCommunities} />
       </div>
     </section>
   )

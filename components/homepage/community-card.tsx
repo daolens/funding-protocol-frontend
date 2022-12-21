@@ -15,8 +15,8 @@ const CommunityCard = ({ communityDetailsData }: Props) => {
           <div className="pt-5 pb-6 px-5 bg-gray-800 border bg-opacity-40 border-gray-800 rounded-tl-2xl rounded-tr-2xl flex flex-col gap-6">
             <div className="flex gap-4">
               <Image
-                src={val.image}
-                alt={val.communityName}
+                src={val?.image}
+                alt={val?.communityName}
                 width={68}
                 height={68}
                 className="rounded-full"

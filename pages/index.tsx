@@ -2,6 +2,7 @@ import Background from '@components/common/background'
 import CommunitiesYouReview from '@components/homepage/review-community'
 import DiscoverApply from '@components/homepage/discover'
 import { GetServerSideProps } from 'next'
+import { CommunityDetailsType } from '@lib/types/home'
 
 type Props = {
   communityDetailsData: CommunityDetailsType[]
@@ -29,7 +30,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     },
     {
       image: '/images/tokens/aave.png',
-      communityName: 'Polygon DAO',
+      communityName: 'Aave',
       activeGrants: 5,
       treasuryAmount: 250000,
       applicants: 22,
@@ -37,7 +38,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     },
     {
       image: '/images/tokens/aave.png',
-      communityName: 'Polygon DAO',
+      communityName: 'Daolens',
       activeGrants: 5,
       treasuryAmount: 250000,
       applicants: 22,
@@ -45,7 +46,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     },
     {
       image: '/images/tokens/aave.png',
-      communityName: 'Polygon DAO',
+      communityName: 'Uniswap',
       activeGrants: 0,
       treasuryAmount: 250000,
       applicants: 22,
@@ -55,15 +56,15 @@ export const getServerSideProps: GetServerSideProps = async () => {
   const discoverDetailsData: CommunityDetailsType[] = [
     {
       image: '/images/tokens/aave.png',
-      communityName: 'Polygon DAO',
-      activeGrants: 0,
+      communityName: 'Daolens',
+      activeGrants: 3,
       treasuryAmount: 250000,
       applicants: 22,
       sentInGrants: 30000,
     },
     {
       image: '/images/tokens/aave.png',
-      communityName: 'Polygon DAO',
+      communityName: 'Uniswap',
       activeGrants: 5,
       treasuryAmount: 250000,
       applicants: 22,
@@ -79,7 +80,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     },
     {
       image: '/images/tokens/aave.png',
-      communityName: 'Polygon DAO',
+      communityName: 'Aave',
       activeGrants: 5,
       treasuryAmount: 250000,
       applicants: 22,
