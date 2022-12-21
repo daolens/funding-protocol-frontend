@@ -10,6 +10,8 @@ import {
   GrantTreasuryType,
   GrantType,
 } from '@lib/types/grants'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React from 'react'
 
 type Props = {
@@ -27,13 +29,10 @@ const GrantDetails = ({
   isAdmin,
   applications,
 }: Props) => {
-  const onBack = () => {
-    // TODO: handle
-  }
-
-  const onApply = () => {
-    // TODO: handle
-  }
+  const router = useRouter()
+  const workspaceId = router.query.workspaceId as string
+  const grantId = router.query.grantId as string
+  const onBack = () => router.push(`/workspaces/${workspaceId}`)
 
   return (
     <Background>
@@ -57,9 +56,8 @@ const GrantDetails = ({
               applicantCount={grant.applicantCount as number}
               approvedCount={grant.approvedCount as number}
             />
-            <button
-              type="button"
-              onClick={onApply}
+            <Link
+              href={`/workspaces/${workspaceId}/grants/${grantId}/apply`}
               className="inline-flex items-center rounded-xl border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 justify-center"
             >
               Apply for Grant
@@ -67,7 +65,7 @@ const GrantDetails = ({
                 className="ml-3 -mr-1 h-5 w-5"
                 aria-hidden="true"
               />
-            </button>
+            </Link>
           </div>
         </div>
       </div>

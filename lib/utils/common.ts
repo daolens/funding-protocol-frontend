@@ -36,3 +36,6 @@ export const getTokenSymbol = (tokenName: string) =>
 
 export const getTruncatedWalletAddress = (address: WalletAddressType) =>
   address.slice(0, 4) + '...' + address.slice(-4)
+
+// eslint-disable-next-line no-console
+export const log = console.log

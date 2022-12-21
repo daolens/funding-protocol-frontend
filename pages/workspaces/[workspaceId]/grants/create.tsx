@@ -4,7 +4,7 @@ import DynamicInputList from '@components/common/dynamic-input-list'
 import Input from '@components/common/input-with-trailing-icon'
 import Textarea from '@components/common/textarea'
 import FundingRadioSelect from '@components/grants/create/funding-radio-buttons'
-import { ArrowRightIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import { DynamicInputItemType, WalletAddressType } from '@lib/types/common'
 import { FundingMethodType, GrantType } from '@lib/types/grants'
 import {
@@ -17,9 +17,16 @@ import { useMutation } from '@tanstack/react-query'
 import cogoToast from 'cogo-toast'
 import TokenAmountInput from '@components/common/token-amount-input'
 import MultiSelect from '@components/common/multi-select'
+import { useRouter } from 'next/router'
+import { GetServerSideProps } from 'next'
+import { fetchWorkspaceById } from '@lib/utils/workspace'
+import BackButton from '@components/common/back-button'
 
-// TODO: fetch workspace title server side
-const Create = ({ workspaceTitle = 'Workspace' }) => {
+type Props = {
+  workspaceTitle: string
+}
+
+const Create = ({ workspaceTitle = 'Workspace' }: Props) => {
   const grantMutation = useMutation({
     mutationFn: (data: GrantType) => postGrantDataAndCallSmartContractFn(data),
     onSuccess: () => cogoToast.success('Grant created successfully'),
@@ -28,6 +35,8 @@ const Create = ({ workspaceTitle = 'Workspace' }) => {
       cogoToast.error('Something went wrong while creating grant.')
     },
   })
+  const router = useRouter()
+  const workspaceId = router.query.workspaceId as string
 
   const [title, setTitle] = useState('')
   const [subTitle, setSubTitle] = useState('')
@@ -48,6 +57,7 @@ const Create = ({ workspaceTitle = 'Workspace' }) => {
   const onPublish = () => {
     setFieldErrors({} as any)
     const grant: GrantType = {
+      workspaceId: router.query.workspaceId as string,
       title,
       subTitle,
       tags,
@@ -70,18 +80,17 @@ const Create = ({ workspaceTitle = 'Workspace' }) => {
     grantMutation.mutate(grant)
   }
 
+  const onBack = () => router.push(`/workspaces/${workspaceId}`)
+
   return (
     <Background>
       <div className="flex flex-col gap-8 py-9 mb-24">
+        <BackButton onBack={onBack} />
         <div className="flex justify-between">
           <div className="flex flex-col gap-1">
             <span className="text-xs text-gray-500">{workspaceTitle}/</span>
             <h1 className="text-2xl font-bold">New Grant</h1>
           </div>
-          {/* TODO: handle back button click */}
-          <button className="text-gray-300 hover:text-white text-sm bg-gray-800 p-3 rounded-full self-start flex items-center gap-2 hover:underline">
-            <XMarkIcon className="w-4 stroke-2" />
-          </button>
         </div>
         <Input
           label="Give your grant a title"
@@ -157,6 +166,16 @@ const Create = ({ workspaceTitle = 'Workspace' }) => {
       </div>
     </Background>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { query } = ctx
+  const { workspaceId } = query
+  const { workspace } = await fetchWorkspaceById(workspaceId as any)
+
+  const workspaceTitle = workspace.communityName
+
+  return { props: { workspaceTitle } as Props }
 }
 
 export default Create

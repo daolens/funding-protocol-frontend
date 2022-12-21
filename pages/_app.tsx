@@ -14,13 +14,14 @@ import { publicProvider } from 'wagmi/providers/public'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
+import { polygonMumbai } from 'wagmi/chains'
 
 const inter = Inter({ subsets: ['latin'] })
 
 const queryClient = new QueryClient()
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [mainnet, goerli],
+  [mainnet, goerli, polygonMumbai],
   [publicProvider()]
 )
 

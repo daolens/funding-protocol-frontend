@@ -2,6 +2,7 @@ import { WORKSPACE_STEPS } from '@lib/constants/workspace'
 import { SupportedNetworkIdType, WalletAddressType } from '@lib/types/common'
 
 export type WorkspaceType = {
+  id?: string
   communityName: string
   multisigAddress: string
   network: SupportedNetworkIdType
