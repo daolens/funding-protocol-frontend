@@ -1,4 +1,4 @@
-import { CONTRACT_NAMES } from "@lib/constants/contract"
+import { CONTRACT_NAMES } from '@lib/constants/contract'
 
 export type ContractType = {
   address: string
