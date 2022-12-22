@@ -21,9 +21,9 @@ const Funds = ({ treasury, isAdmin }: Props) => {
         <span className="text-2xl font-semibold leading-none">
           {tokenSymbol} {treasury.left}
         </span>
-        <span className="text-xs text-gray-500 self-end">
+        {/* <span className="text-xs text-gray-500 self-end">
           of {tokenSymbol} {treasury.total}
-        </span>
+        </span> */}
       </div>
       {isAdmin && (
         <button

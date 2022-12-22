@@ -39,7 +39,7 @@ const Apply = ({
   })
   const router = useRouter()
   const workspaceId = router.query.workspaceId as string
-  const grantId = router.query.grantId as string
+  const grantAddress = router.query.grantAddress as string
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -81,7 +81,7 @@ const Apply = ({
     setFieldErrors({} as any)
     const application: ApplicationType = {
       workspaceId: router.query.workspaceId as string,
-      grantAddress: router.query.grantId as string,
+      grantAddress: router.query.grantAddress as string,
       description,
       email,
       expectedProjectDeadline,
@@ -106,7 +106,7 @@ const Apply = ({
   }
 
   const onBack = () =>
-    router.push(`/workspaces/${workspaceId}/grants/${grantId}`)
+    router.push(`/workspaces/${workspaceId}/grants/${grantAddress}`)
 
   return (
     <Background>
@@ -180,7 +180,6 @@ const Apply = ({
             error={fieldErrors['expectedProjectDeadline']}
           />
         </div>
-        {/* TODO: add validation for links */}
         <DynamicInputList
           inputProps={{ placeholder: 'Eg. A Drive/Notion link to some docs' }}
           items={links}
@@ -203,7 +202,6 @@ const Apply = ({
         <h2 className="text-indigo-500 text-sm font-semibold">
           EXPECTATIONS/MILESTONES (3/3)
         </h2>
-        {/* TODO: add validations for link */}
         <DynamicInputList
           inputProps={{
             placeholder: 'Eg. A google drive link to some docs',

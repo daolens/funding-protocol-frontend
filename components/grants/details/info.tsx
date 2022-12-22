@@ -93,7 +93,7 @@ const Info = ({ grant, workspaceName, isAdmin }: Props) => {
               Avg grant amount per proposal
             </span>
             <span className="font-semibold">
-              {tokenSymbol} {grant.treasuryAmount}
+              {tokenSymbol} {grant.recommendedSeekingAmount}
             </span>
           </div>
         </div>

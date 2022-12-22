@@ -1,95 +1,36 @@
 import Background from '@components/common/background'
-import CommunitiesYouReview from '@components/homepage/review-community'
+import WorkspacesYouOwn from '@components/homepage/review-community'
 import Discover from '@components/homepage/discover'
 import { GetServerSideProps } from 'next'
-import { WorkspaceCardListType } from '@lib/types/home'
+import { WorkspaceCardType } from '@lib/types/home'
+import { useAccount } from 'wagmi'
 
 type Props = {
-  communityDetailsData: WorkspaceCardListType[]
-  discoverDetailsData: WorkspaceCardListType[]
+  workspaceCards: WorkspaceCardType[]
 }
 
-const HomePage = ({ communityDetailsData, discoverDetailsData }: Props) => {
+const HomePage = ({ workspaceCards }: Props) => {
+  const { address } = useAccount()
+  const ownedWorkspaces = workspaceCards.filter(
+    (workspace) => workspace.owner === address
+  )
+  const remainingWorkspaces = workspaceCards.filter(
+    (workspace) => workspace.owner !== address
+  )
   return (
     <Background>
-      <CommunitiesYouReview communityDetailsData={communityDetailsData} />
-      <Discover discoverDetailsData={discoverDetailsData} />
+      <WorkspacesYouOwn workspaceList={ownedWorkspaces} />
+      <Discover workspaceList={remainingWorkspaces} />
     </Background>
   )
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const communityDetailsData: WorkspaceCardListType[] = [
-    {
-      image: '/images/tokens/aave.png',
-      communityName: 'Polygon DAO',
-      activeGrants: 0,
-      treasuryAmount: 250000,
-      applicants: 22,
-      sentInGrants: 30000,
-    },
-    {
-      image: '/images/tokens/aave.png',
-      communityName: 'Aave',
-      activeGrants: 5,
-      treasuryAmount: 250000,
-      applicants: 22,
-      sentInGrants: 30000,
-    },
-    {
-      image: '/images/tokens/aave.png',
-      communityName: 'Daolens',
-      activeGrants: 5,
-      treasuryAmount: 250000,
-      applicants: 22,
-      sentInGrants: 30000,
-    },
-    {
-      image: '/images/tokens/aave.png',
-      communityName: 'Uniswap',
-      activeGrants: 0,
-      treasuryAmount: 250000,
-      applicants: 22,
-      sentInGrants: 30000,
-    },
-  ]
-  const discoverDetailsData: WorkspaceCardListType[] = [
-    {
-      image: '/images/tokens/aave.png',
-      communityName: 'Daolens',
-      activeGrants: 3,
-      treasuryAmount: 250000,
-      applicants: 22,
-      sentInGrants: 30000,
-    },
-    {
-      image: '/images/tokens/aave.png',
-      communityName: 'Uniswap',
-      activeGrants: 5,
-      treasuryAmount: 250000,
-      applicants: 22,
-      sentInGrants: 30000,
-    },
-    {
-      image: '/images/tokens/aave.png',
-      communityName: 'Polygon DAO',
-      activeGrants: 0,
-      treasuryAmount: 250000,
-      applicants: 22,
-      sentInGrants: 30000,
-    },
-    {
-      image: '/images/tokens/aave.png',
-      communityName: 'Aave',
-      activeGrants: 5,
-      treasuryAmount: 250000,
-      applicants: 22,
-      sentInGrants: 30000,
-    },
-  ]
+  // const workspaces = await fetchWorkspaces()
+
+  // TODO: complete API integration
   const props: Props = {
-    communityDetailsData,
-    discoverDetailsData,
+    workspaceCards: [],
   }
   return { props }
 }

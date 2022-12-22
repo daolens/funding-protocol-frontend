@@ -20,7 +20,7 @@ export type GrantType = {
   proposalDeadline: string
   tags?: string[]
   token: string
-  treasuryAmount: number
+  recommendedSeekingAmount: number
   selectionProcess: SelectionProcessType
   fundingMethod: FundingMethodType
   reviewers: WalletAddressType[]
@@ -30,6 +30,7 @@ export type GrantType = {
   status?: GrantStatusType
   applicantCount?: number
   approvedCount?: number
+  balance?: number
 }
 
 export type ApplicationMilestoneType = {
@@ -47,6 +48,7 @@ export type ApplicationType = {
   name: string
   email: string
   walletAddress: WalletAddressType | ''
+  owner?: WalletAddressType
   description: string
   sneekingFunds: number | null
   /** ISO data string */
@@ -55,11 +57,11 @@ export type ApplicationType = {
   teamMemberDetails: DynamicInputItemType[]
   previousSuccessfulProposalLinks: DynamicInputItemType[]
   milestones: ApplicationMilestoneType[]
+  completedMilestoneCount?: number
   status?: ApplicationStatusType
 }
 
 export type GrantTreasuryType = {
-  total: number
   left: number
   token: string
 }

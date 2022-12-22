@@ -1,6 +1,5 @@
 import ApplicationCard from '@components/grants/details/sections/application-card'
 import {
-  APPLICATION_STATUSES,
   APPLICATION_STATUS_OBJ,
 } from '@lib/constants/grants'
 import { WalletAddressType } from '@lib/types/common'
@@ -10,7 +9,7 @@ import React, { useState } from 'react'
 
 type PillProps = {
   label: string
-  color?: 'yellow' | 'cyan' | 'red'
+  color?: 'yellow' | 'cyan' | 'red' | 'green'
   onClick: () => void
   isActive: boolean
 }
@@ -53,6 +52,8 @@ const ApplicationList = ({ applications }: Props) => {
       activeStatus === 'All' || application.status === activeStatus
   )
 
+  const filters: ApplicationStatusType[] = ['Submitted', 'Approved', 'Rejected']
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-3">
@@ -61,10 +62,10 @@ const ApplicationList = ({ applications }: Props) => {
           label="All"
           onClick={() => setActiveStatus('All')}
         />
-        {APPLICATION_STATUSES.map((status) => (
+        {filters.map((status) => (
           <Pill
             key={status}
-            label={status}
+            label={APPLICATION_STATUS_OBJ[status].label}
             isActive={status === activeStatus}
             onClick={() => setActiveStatus(status)}
             color={APPLICATION_STATUS_OBJ[status].color}

@@ -20,18 +20,18 @@ type Props = {
 const ApplicationDetails = ({ application, isReviewer }: Props) => {
   const router = useRouter()
   const { data: enaName } = useEnsName({
-    address: application.walletAddress as any,
+    address: application.owner as any,
   })
 
   const workspaceId = router.query.workspaceId as string
-  const grantId = router.query.grantId as string
+  const grantAddress = router.query.grantAddress as string
 
   return (
     <Background>
       <div className="py-6 flex flex-col gap-3">
         <BackButton
           onBack={() =>
-            router.push(`/workspaces/${workspaceId}/grants/${grantId}`)
+            router.push(`/workspaces/${workspaceId}/grants/${grantAddress}`)
           }
         />
         <h1 className="text-2xl font-bold">{application.name}</h1>
@@ -130,7 +130,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
       },
     ],
     walletAddress: '0x3512345234',
-    status: 'Under review',
+    status: 'Submitted',
   }
 
   return { props: { application, isReviewer: true } as Props }

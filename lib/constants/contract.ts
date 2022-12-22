@@ -17,12 +17,38 @@ export const CONTRACT_FUNCTION_NAME_MAP = {
   grant: {
     /** args: [workspaceId, ipfsHash, workspaceContractAddress, applicationContractAddress, reviewerAddress[], recommendedAmount, tokenAddress, fundingMethod] */
     createGrant: 'createGrant',
+    /** args: [grantAddress, workspaceId, workspaceContractAddress, metadataHash] */
+    updateGrant: 'updateGrant',
   },
   application: {
     /** args: [grantAddress, workspaceId, ipfsHash, milestoneCount, milestonePayments[]] */
     submitApplication: 'submitApplication',
     /** args: [grantAddress, numberOfApplications] */
     getGrantApplications: 'getGrantApplications',
+    /**
+     * args: [applicationId, workspaceId, applicationState, reasonMetadataHash, grantAddress]
+     *
+     * applicationState: {
+     *  Submitted,
+     *  Resubmit,
+     *  Approved,
+     *  Rejected,
+     *  Complete
+     * }
+     * */
+    updateApplicationState: 'updateApplicationState',
+    /**
+     * args: [applicationId, metadataHash, milestoneCount]
+     */
+    updateApplicationMetadata: 'updateApplicationMetadata',
+    /**
+     * args: [applicationId, milestoneId, reasonMetadataHash, workspaceId, grantAddress]
+     */
+    requestMilestoneApproval: 'requestMilestoneApproval',
+    /**
+     * args: [applicationId, milestoneId, workspaceId, grantAddress, reasonMetadataHash]
+     */
+    approveMilestone: 'approveMilestone',
   },
 } as const
 

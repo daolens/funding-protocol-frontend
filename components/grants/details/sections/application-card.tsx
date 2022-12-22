@@ -26,13 +26,14 @@ const ApplicationCard = ({
   const router = useRouter()
 
   const workspaceId = router.query.workspaceId
-  const grantId = router.query.grantId
+  const grantAddress = router.query.grantAddress
 
   const statusColor = APPLICATION_STATUS_OBJ[status].color
+  const statusLabel = APPLICATION_STATUS_OBJ[status].label
 
   return (
     <Link
-      href={`/workspaces/${workspaceId}/grants/${grantId}/applications/${id}`}
+      href={`/workspaces/${workspaceId}/grants/${grantAddress}/applications/${id}`}
       className="flex flex-col p-5 gap-3 bg-gray-800 rounded-xl border border-gray-800 hover:border-indigo-500"
     >
       <p className="text-gray-600 text-xs">
@@ -48,7 +49,7 @@ const ApplicationCard = ({
             'bg-red-500': statusColor === 'red',
           })}
         />
-        <span className="text-xs">{status}</span>
+        <span className="text-xs">{statusLabel}</span>
       </div>
     </Link>
   )

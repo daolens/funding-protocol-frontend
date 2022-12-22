@@ -1,9 +1,14 @@
 import { DEFAULT_TOKENS, ERROR_MESSAGES, IS_PROD } from '@lib/constants/common'
 import { CONTRACTS, CONTRACT_FUNCTION_NAME_MAP } from '@lib/constants/contract'
+import { APPLICATION_STATUSES } from '@lib/constants/grants'
+import { WalletAddressType } from '@lib/types/common'
 import { ApplicationType, GrantType } from '@lib/types/grants'
 import { checkIsEmail, checkIsLink, log } from '@lib/utils/common'
-import { writeSmartContractFunction } from '@lib/utils/contract'
-import { uploadToIPFS } from '@lib/utils/ipfs'
+import {
+  readSmartContractFunction,
+  writeSmartContractFunction,
+} from '@lib/utils/contract'
+import { getFromIPFS, uploadToIPFS } from '@lib/utils/ipfs'
 import { ethers } from 'ethers'
 
 export const validateGrantData = (grant: GrantType) => {
@@ -20,8 +25,8 @@ export const validateGrantData = (grant: GrantType) => {
     errors['proposalDeadline'] = ERROR_MESSAGES.fieldRequired
   if (grant.reviewers.length === 0)
     errors['reviewers'] = ERROR_MESSAGES.fieldRequired
-  if (!grant.treasuryAmount)
-    errors['treasuryAmount'] = ERROR_MESSAGES.fieldRequired
+  if (!grant.recommendedSeekingAmount)
+    errors['recommendedSeekingAmount'] = ERROR_MESSAGES.fieldRequired
   if (!grant.reviewers.every((reviewer) => ethers.utils.isAddress(reviewer)))
     errors['reviewers'] = ERROR_MESSAGES.addressNotValid
   return errors
@@ -41,7 +46,7 @@ export const postGrantDataAndCallSmartContractFn = async (data: GrantType) => {
       ? CONTRACTS.application.address
       : CONTRACTS.application.polygonMumbaiAddress,
     data.reviewers,
-    data.treasuryAmount,
+    data.recommendedSeekingAmount,
     IS_PROD
       ? DEFAULT_TOKENS.find((token) => token.name === data.token)?.address
       : // token address in dev
@@ -82,13 +87,16 @@ export const validateGrantApplicationData = (data: ApplicationType) => {
   if (data.milestones.some((milestone) => !milestone.funds || !milestone.text))
     errors.milestones = ERROR_MESSAGES.fieldRequired
 
-  if (data.links.some((link) => !checkIsLink(link.text)))
+  if (
+    data.links.length > 0 &&
+    data.links.some((link) => !checkIsLink(link.text))
+  )
     errors.links = ERROR_MESSAGES.urlNotValid
 
   if (
     data.previousSuccessfulProposalLinks.some((link) => !checkIsLink(link.text))
   )
-    errors.links = ERROR_MESSAGES.urlNotValid
+    errors.previousSuccessfulProposalLinks = ERROR_MESSAGES.urlNotValid
 
   if (!checkIsEmail(data.email)) errors.email = ERROR_MESSAGES.emailNotValid
 
@@ -106,6 +114,7 @@ export const postApplicationDataAndCallSmartContractFn = async (
     ipfsHash,
     data.milestones.length,
     data.milestones.map((milestone) => milestone.funds),
+    data.sneekingFunds,
   ]
   log('submitApplication called', { args })
   const result = await writeSmartContractFunction({
@@ -117,4 +126,49 @@ export const postApplicationDataAndCallSmartContractFn = async (
   if (!result.hash)
     throw new Error('sumbitApplication smart contract call failed')
   log(`submitApplication call successful. Hash: ${result.hash}`)
+}
+
+type ApplicationFetchResponseType = {
+  id: { _hex: string }
+  workspaceId: { _hex: string }
+  grantAddress: string
+  owner: WalletAddressType
+  milestoneCount: { _hex: string }
+  milestonesDone: { _hex: string }
+  metadataHash: string
+  state: 0 | 1 | 2 | 3 | 4
+  milestonePayment: { _hex: string }[]
+}
+
+export const fetchApplications = async (
+  grantAddress: string,
+  applicationCount: number
+) => {
+  const response = (await readSmartContractFunction({
+    contractObj: CONTRACTS.application,
+    functionName: CONTRACT_FUNCTION_NAME_MAP.application.getGrantApplications,
+    args: [grantAddress, applicationCount],
+  })) as ApplicationFetchResponseType[]
+
+  if (!response) throw new Error('response is not defined')
+
+  const applications: ApplicationType[] = []
+
+  for (let index = 0; index < response.length; index++) {
+    const applicationFromContract = response[index]
+    const application: ApplicationType = JSON.parse(
+      await getFromIPFS(applicationFromContract.metadataHash)
+    )
+    application.status = APPLICATION_STATUSES[applicationFromContract.state]
+    application.completedMilestoneCount = parseInt(
+      applicationFromContract.milestoneCount._hex,
+      16
+    )
+    application.id = applicationFromContract.id._hex
+    application.owner = applicationFromContract.owner
+
+    applications.push(application)
+  }
+
+  return applications
 }

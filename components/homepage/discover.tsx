@@ -4,17 +4,17 @@ import {
   PlusCircleIcon,
   MagnifyingGlassIcon,
 } from '@heroicons/react/24/outline'
-import { WorkspaceCardListType, FilterType } from '@lib/types/home'
+import { WorkspaceCardType, FilterType } from '@lib/types/home'
 import { useState } from 'react'
 import { getFilteredCommunities } from '@lib/utils/home'
 import classNames from 'classnames'
 import Link from 'next/link'
 
 type Props = {
-  discoverDetailsData: WorkspaceCardListType[]
+  workspaceList: WorkspaceCardType[]
 }
 
-const Discover = ({ discoverDetailsData }: Props) => {
+const Discover = ({ workspaceList }: Props) => {
   const [filterType, setFilterType] = useState<FilterType>('all')
 
   const [searchCommunity, setSearchCommunity] = useState('')
@@ -22,8 +22,8 @@ const Discover = ({ discoverDetailsData }: Props) => {
   const filteredCommunities = getFilteredCommunities(
     filterType,
     searchCommunity,
-    discoverDetailsData
-  ) as WorkspaceCardListType[]
+    workspaceList
+  ) as WorkspaceCardType[]
 
   return (
     <section className="pt-16 text-gray-300">
@@ -94,7 +94,7 @@ const Discover = ({ discoverDetailsData }: Props) => {
             List your community and reach out to thousands of builders 🚀
           </p>
         </Link>
-        <WorkspaceCardList communityDetailsData={filteredCommunities} />
+        <WorkspaceCardList workspaceList={filteredCommunities} />
       </div>
     </section>
   )

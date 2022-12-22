@@ -64,7 +64,7 @@ const Create = ({ workspaceTitle = 'Workspace' }: Props) => {
       proposalDeadline: proposalDeadline as string,
       fundingMethod: fundingMethod as FundingMethodType,
       selectionProcess: 'committee',
-      treasuryAmount: amount || 0,
+      recommendedSeekingAmount: amount || 0,
       token: tokenName,
       reviewers: selectedReviewers
         .filter((reviewrItem) => reviewrItem.text)
@@ -121,7 +121,7 @@ const Create = ({ workspaceTitle = 'Workspace' }: Props) => {
             tokenName={tokenName}
             amount={amount}
             setAmount={setAmount}
-            error={fieldErrors['treasuryAmount']}
+            error={fieldErrors['recommendedSeekingAmount']}
           />
           <DatePicker
             label="Accepting till"

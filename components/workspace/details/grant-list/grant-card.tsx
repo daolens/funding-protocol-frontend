@@ -32,7 +32,7 @@ const GrantCard = ({
   title,
   applicantCount,
   proposalDeadline,
-  treasuryAmount,
+  recommendedSeekingAmount,
   token,
   tags,
   workspaceId,
@@ -56,7 +56,7 @@ const GrantCard = ({
         <Info
           icon="currency-dollar"
           text={`Avg grant of ${tokenSymbol} ${getNumberWithCommas(
-            treasuryAmount || 0
+            recommendedSeekingAmount || 0
           )}`}
         />
         <span className="text-gray-500 text-xs">|</span>

@@ -12,16 +12,20 @@ export const PROPOSAL_GRANT_FORM_FIELDS = [
 ] as const
 
 export const APPLICATION_STATUSES = [
-  'Under review',
-  'Accepted',
+  'Submitted',
+  'Resubmit',
+  'Approved',
   'Rejected',
+  'Complete',
 ] as const
 
 export const APPLICATION_STATUS_OBJ: Record<
   ApplicationStatusType,
-  { color: 'yellow' | 'cyan' | 'red' }
+  { color: 'yellow' | 'cyan' | 'red' | 'green'; label: string }
 > = {
-  'Under review': { color: 'yellow' },
-  Accepted: { color: 'cyan' },
-  Rejected: { color: 'red' },
+  Submitted: { color: 'yellow', label: 'Under review' },
+  Resubmit: { color: 'yellow', label: 'Under review' },
+  Approved: { color: 'cyan', label: 'Accepted' },
+  Rejected: { color: 'red', label: 'Rejected' },
+  Complete: { color: 'green', label: 'Complete' },
 }

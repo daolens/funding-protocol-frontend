@@ -110,6 +110,7 @@ export const fetchWorkspaceById = async (workspaceId: `0x${string}`) => {
     grant.applicantCount = parseInt(grantFromContract.numApplicants._hex, 16)
     grant.address = grantFromContract.grantAddress
     grant.workspaceId = workspaceFromContract.id._hex
+    grant.balance = parseInt(grantFromContract.balance._hex, 16)
     grant.status =
       new Date() < new Date(grant.proposalDeadline) ? 'open' : 'close'
     grants.push(grant)

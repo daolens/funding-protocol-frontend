@@ -17,12 +17,14 @@ function Home() {
 
   if (isConnected) {
     return (
-      <div>
-        {ensAvatar && <img src={ensAvatar} alt="ENS Avatar" />}
-        <div>{ensName ? `${ensName} (${address})` : address}</div>
-        <div>Connected to {connector?.name}</div>
-        <button onClick={() => disconnect()}>Disconnect</button>
-      </div>
+      <ClientOnly>
+        <div>
+          {ensAvatar && <img src={ensAvatar} alt="ENS Avatar" />}
+          <div>{ensName ? `${ensName} (${address})` : address}</div>
+          <div>Connected to {connector?.name}</div>
+          <button onClick={() => disconnect()}>Disconnect</button>
+        </div>
+      </ClientOnly>
     )
   }
 
