@@ -1,8 +1,11 @@
+import classNames from 'classnames'
+
 type Props = {
   communityName: string
+  rounded?: boolean
 }
 
-const CommunityAvatar = ({ communityName }: Props) => {
+const CommunityAvatar = ({ communityName, rounded }: Props) => {
   const initials = communityName
     .split(' ')
     ?.map((word) => word[0])
@@ -10,7 +13,15 @@ const CommunityAvatar = ({ communityName }: Props) => {
     .join('')
 
   return (
-    <div className="p-4 rounded-md bg-yellow-100 w-16 flex items-center justify-center">
+    <div
+      className={classNames(
+        'p-4  bg-yellow-100 w-16 flex items-center justify-center',
+        {
+          'rounded-full': rounded,
+          'rounded-md': !rounded,
+        }
+      )}
+    >
       <p className="text-2xl text-yellow-800">{initials.toUpperCase()}</p>
     </div>
   )
