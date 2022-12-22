@@ -1,4 +1,5 @@
 import '@styles/globals.css'
+import '@styles/nprogress.css'
 import { Inter } from '@next/font/google'
 import type { AppProps } from 'next/app'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -15,6 +16,8 @@ import { InjectedConnector } from 'wagmi/connectors/injected'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 import { polygonMumbai } from 'wagmi/chains'
+import NProgress from 'nprogress'
+import Router from 'next/router'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -46,6 +49,12 @@ const wagmiClient = createClient({
   provider,
   webSocketProvider,
 })
+
+NProgress.configure({ showSpinner: false })
+
+Router.events.on('routeChangeStart', () => NProgress.start())
+Router.events.on('routeChangeComplete', () => NProgress.done())
+Router.events.on('routeChangeError', () => NProgress.done())
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
