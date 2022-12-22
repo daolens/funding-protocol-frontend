@@ -15,9 +15,20 @@ import { useEnsName } from 'wagmi'
 type Props = {
   application: ApplicationType
   isReviewer: boolean
+  isAdmin: boolean
+  grantBalance: number
+  grantBalanceToken: string
+  isInsufficientBalance: boolean
 }
 
-const ApplicationDetails = ({ application, isReviewer }: Props) => {
+const ApplicationDetails = ({
+  application,
+  isReviewer,
+  grantBalance,
+  grantBalanceToken,
+  isAdmin,
+  isInsufficientBalance,
+}: Props) => {
   const router = useRouter()
   const { data: enaName } = useEnsName({
     address: application.owner as any,
@@ -62,6 +73,10 @@ const ApplicationDetails = ({ application, isReviewer }: Props) => {
             {isReviewer && (
               <ReviewButtons
                 status={application.status as ApplicationStatusType}
+                grantBalance={grantBalance}
+                isAdmin={isAdmin}
+                isInsufficientBalance={isInsufficientBalance}
+                token={grantBalanceToken}
               />
             )}
             <SideInfoBar
@@ -133,7 +148,16 @@ export const getServerSideProps: GetServerSideProps = async () => {
     status: 'Submitted',
   }
 
-  return { props: { application, isReviewer: true } as Props }
+  return {
+    props: {
+      application,
+      isReviewer: true,
+      grantBalance: 10000,
+      grantBalanceToken: 'Aave',
+      isAdmin: true,
+      isInsufficientBalance: false,
+    } as Props,
+  }
 }
 
 export default ApplicationDetails

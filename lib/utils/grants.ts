@@ -173,6 +173,7 @@ export const fetchApplications = async (
   return applications
 }
 
+// TODO: test
 export const updateGrantDataAndCallSmartContractFn = async (
   data: GrantType
 ) => {
