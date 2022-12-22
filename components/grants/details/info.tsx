@@ -7,6 +7,8 @@ import {
 } from '@heroicons/react/24/outline'
 import { GrantType } from '@lib/types/grants'
 import { getTokenSymbol } from '@lib/utils/common'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React from 'react'
 
 type Props = {
@@ -16,6 +18,10 @@ type Props = {
 }
 
 const Info = ({ grant, workspaceName, isAdmin }: Props) => {
+  const router = useRouter()
+
+  const workspaceId = router.query.workspaceId
+  const grantAddress = router.query.grantAddress
   const tokenSymbol = getTokenSymbol(grant.token)
 
   const fundingMethodData = {
@@ -36,10 +42,6 @@ const Info = ({ grant, workspaceName, isAdmin }: Props) => {
     // TODO: handle
   }
 
-  const onEdit = () => {
-    // TODO: handle
-  }
-
   return (
     <div className="flex flex-col border-b border-gray-800 gap-3 pb-5">
       <div className="flex justify-between">
@@ -53,14 +55,14 @@ const Info = ({ grant, workspaceName, isAdmin }: Props) => {
             <ShareIcon className="w-4 h-4 strocke-2" />
           </button>
           {isAdmin && (
-            <button
+            <Link
+              href={`/workspaces/${workspaceId}/grants/${grantAddress}/update`}
               className="border border-gray-800 py-2 px-3 rounded-lg hover:border-indigo-800 flex items-center gap-2 text-sm"
-              onClick={onEdit}
               type="button"
             >
               <PencilIcon className="w-4 h-4 strocke-2" />
               Edit
-            </button>
+            </Link>
           )}
         </div>
       </div>

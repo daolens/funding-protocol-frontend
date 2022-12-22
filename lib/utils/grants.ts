@@ -172,3 +172,40 @@ export const fetchApplications = async (
 
   return applications
 }
+
+export const updateGrantDataAndCallSmartContractFn = async (
+  data: GrantType
+) => {
+  const ipfsHash = (await uploadToIPFS(JSON.stringify(data))).hash
+  const workspaceId = parseInt(data.workspaceId!, 16)
+
+  // TODO: update
+  const args = [
+    // Grant address
+    data.address,
+    workspaceId,
+    IS_PROD
+      ? CONTRACTS.workspace.address
+      : CONTRACTS.workspace.polygonMumbaiAddress,
+    IS_PROD
+      ? CONTRACTS.application.address
+      : CONTRACTS.application.polygonMumbaiAddress,
+    data.reviewers,
+    data.recommendedSeekingAmount,
+    IS_PROD
+      ? DEFAULT_TOKENS.find((token) => token.name === data.token)?.address
+      : // token address in dev
+        '0xfe4f5145f6e09952a5ba9e956ed0c25e3fa4c7f1',
+    ipfsHash,
+  ]
+
+  log('updateGrant called', { args })
+  const result = await writeSmartContractFunction({
+    contractObj: CONTRACTS.grant,
+    args,
+    functionName: CONTRACT_FUNCTION_NAME_MAP.grant.updateGrant,
+  })
+
+  if (!result.hash) throw new Error('createGrant smart contract call failed')
+  log(`updateGrant call successful. Hash: ${result.hash}`)
+}
