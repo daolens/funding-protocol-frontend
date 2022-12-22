@@ -1,8 +1,8 @@
-import { WorkspaceCardType, FilterType } from '@lib/types/home'
+import { WorkspaceCardListType, FilterType } from '@lib/types/home'
 
 const getSearchedCommunities = (
   searchCommunity: string,
-  discoverDetailsData?: WorkspaceCardType[]
+  discoverDetailsData?: WorkspaceCardListType[]
 ) => {
   const communities = discoverDetailsData?.filter((comm) =>
     comm.communityName
@@ -14,7 +14,7 @@ const getSearchedCommunities = (
 
 const getFilteredData = (
   filterType?: string,
-  searchedCommunities?: WorkspaceCardType[]
+  searchedCommunities?: WorkspaceCardListType[]
 ) => {
   const communities = searchedCommunities?.filter((comm) => {
     if (filterType === 'expired') {
@@ -31,7 +31,7 @@ const getFilteredData = (
 export const getFilteredCommunities = (
   filterType: FilterType,
   searchCommunity: string,
-  discoverDetailsData?: WorkspaceCardType[]
+  discoverDetailsData?: WorkspaceCardListType[]
 ) => {
   const searchedCommunities = getSearchedCommunities(
     searchCommunity,

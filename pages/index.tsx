@@ -2,11 +2,11 @@ import Background from '@components/common/background'
 import CommunitiesYouReview from '@components/homepage/review-community'
 import Discover from '@components/homepage/discover'
 import { GetServerSideProps } from 'next'
-import { WorkspaceCardType } from '@lib/types/home'
+import { WorkspaceCardListType } from '@lib/types/home'
 
 type Props = {
-  communityDetailsData: WorkspaceCardType[]
-  discoverDetailsData: WorkspaceCardType[]
+  communityDetailsData: WorkspaceCardListType[]
+  discoverDetailsData: WorkspaceCardListType[]
 }
 
 const HomePage = ({ communityDetailsData, discoverDetailsData }: Props) => {
@@ -19,7 +19,7 @@ const HomePage = ({ communityDetailsData, discoverDetailsData }: Props) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const communityDetailsData: WorkspaceCardType[] = [
+  const communityDetailsData: WorkspaceCardListType[] = [
     {
       image: '/images/tokens/aave.png',
       communityName: 'Polygon DAO',
@@ -53,7 +53,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
       sentInGrants: 30000,
     },
   ]
-  const discoverDetailsData: WorkspaceCardType[] = [
+  const discoverDetailsData: WorkspaceCardListType[] = [
     {
       image: '/images/tokens/aave.png',
       communityName: 'Daolens',

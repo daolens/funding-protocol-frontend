@@ -1,4 +1,4 @@
-export type WorkspaceCardType = {
+export type WorkspaceCardListType = {
   image?: string
   communityName: string
   activeGrants: number

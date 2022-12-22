@@ -1,17 +1,17 @@
 import Input from '@components/common/input-with-trailing-icon'
-import WorkspaceCard from '@components/homepage/workspace-card'
+import WorkspaceCardList from '@components/homepage/workspace-card'
 import {
   PlusCircleIcon,
   MagnifyingGlassIcon,
 } from '@heroicons/react/24/outline'
-import { WorkspaceCardType, FilterType } from '@lib/types/home'
+import { WorkspaceCardListType, FilterType } from '@lib/types/home'
 import { useState } from 'react'
 import { getFilteredCommunities } from '@lib/utils/home'
 import classNames from 'classnames'
 import Link from 'next/link'
 
 type Props = {
-  discoverDetailsData: WorkspaceCardType[]
+  discoverDetailsData: WorkspaceCardListType[]
 }
 
 const Discover = ({ discoverDetailsData }: Props) => {
@@ -23,7 +23,7 @@ const Discover = ({ discoverDetailsData }: Props) => {
     filterType,
     searchCommunity,
     discoverDetailsData
-  ) as WorkspaceCardType[]
+  ) as WorkspaceCardListType[]
 
   return (
     <section className="pt-16 text-gray-300">
@@ -94,7 +94,7 @@ const Discover = ({ discoverDetailsData }: Props) => {
             List your community and reach out to thousands of builders 🚀
           </p>
         </Link>
-        <WorkspaceCard communityDetailsData={filteredCommunities} />
+        <WorkspaceCardList communityDetailsData={filteredCommunities} />
       </div>
     </section>
   )

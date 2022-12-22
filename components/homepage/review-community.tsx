@@ -1,8 +1,8 @@
-import WorkspaceCard from '@components/homepage/workspace-card'
-import { WorkspaceCardType } from '@lib/types/home'
+import WorkspaceCardList from '@components/homepage/workspace-card'
+import { WorkspaceCardListType } from '@lib/types/home'
 
 type Props = {
-  communityDetailsData: WorkspaceCardType[]
+  communityDetailsData: WorkspaceCardListType[]
 }
 
 const CommunitiesYouReview = ({ communityDetailsData }: Props) => {
@@ -12,7 +12,7 @@ const CommunitiesYouReview = ({ communityDetailsData }: Props) => {
         ✍️ Communities you review
       </h2>
       <div className="grid grid-cols-2 gap-5">
-        <WorkspaceCard communityDetailsData={communityDetailsData} />
+        <WorkspaceCardList communityDetailsData={communityDetailsData} />
       </div>
     </section>
   )
