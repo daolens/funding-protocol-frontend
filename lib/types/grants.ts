@@ -61,6 +61,7 @@ export type ApplicationType = {
   status?: ApplicationStatusType
   reviewer?: WalletAddressType
   reviewTimestamp?: string
+  fundingMethod?: FundingMethodType
 }
 
 export type GrantTreasuryType = {

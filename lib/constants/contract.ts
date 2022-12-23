@@ -21,6 +21,8 @@ export const CONTRACT_FUNCTION_NAME_MAP = {
     updateGrant: 'updateGrant',
   },
   application: {
+    /** args: [applicationId] */
+    getApplicationDetail: 'getApplicationDetail',
     /** args: [grantAddress, workspaceId, ipfsHash, milestoneCount, milestonePayments[]] */
     submitApplication: 'submitApplication',
     /** args: [grantAddress, numberOfApplications] */
