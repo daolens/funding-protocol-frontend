@@ -450,6 +450,25 @@
         "type": "uint256"
       }
     ],
+    "name": "getMetaDataHash",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_workspaceId",
+        "type": "uint256"
+      }
+    ],
     "name": "increaseApplicationCount",
     "outputs": [],
     "stateMutability": "nonpayable",

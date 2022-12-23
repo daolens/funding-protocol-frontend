@@ -345,6 +345,81 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "fetchMyApplications",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "workspaceId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "grantAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "owner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "milestoneCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "milestonesDone",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "metadataHash",
+            "type": "string"
+          },
+          {
+            "internalType": "enum ApplicationRegistry.ApplicationState",
+            "name": "state",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "milestonePayment",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalFunds",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct ApplicationRegistry.Application[]",
+        "name": "",
+        "type": "tuple[]"
+      },
+      {
+        "internalType": "string[]",
+        "name": "",
+        "type": "string[]"
+      },
+      {
+        "internalType": "string[]",
+        "name": "",
+        "type": "string[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",

@@ -59,7 +59,7 @@ const ApplicationCard = ({ application }: Props) => {
           <p className="text-gray-500">{application.grantTitle}</p>
         </div>
       </div>
-      <div className="flex flex-nowrap items-center overflow-x-scroll">
+      <div className="flex flex-nowrap items-center overflow-x-auto max-w-xs md:max-w-lg lg:max-w-4xl">
         <Pill
           label={`Submitted on ${new Date(
             application.submissionTimestamp
