@@ -5,6 +5,7 @@ import { GetServerSideProps } from 'next'
 import { WorkspaceCardType } from '@lib/types/home'
 import { useAccount } from 'wagmi'
 import { fetchWorkspaces } from '@lib/utils/workspace'
+import Navbar from '@components/common/navbar'
 
 type Props = {
   workspaceCards: WorkspaceCardType[]
@@ -20,6 +21,7 @@ const HomePage = ({ workspaceCards }: Props) => {
   )
   return (
     <Background>
+      <Navbar />
       <WorkspacesYouOwn workspaceList={ownedWorkspaces} />
       <Discover workspaceList={remainingWorkspaces} />
     </Background>

@@ -5,6 +5,7 @@ import SideInfoBar from '@components/application/side-info-bar'
 import TeamMembers from '@components/application/team-members'
 import BackButton from '@components/common/back-button'
 import Background from '@components/common/background'
+import Navbar from '@components/common/navbar'
 import { AtSymbolIcon } from '@heroicons/react/24/outline'
 import { ApplicationSectionType } from '@lib/types/application'
 import {
@@ -58,6 +59,7 @@ const ApplicationDetails = ({
 
   return (
     <Background>
+      <Navbar />
       <div className="py-6 flex flex-col gap-3">
         <BackButton
           onBack={() =>
@@ -108,7 +110,7 @@ const ApplicationDetails = ({
                 isAdmin={isAdmin}
                 isInsufficientBalance={isInsufficientBalance}
                 token={grantBalanceToken}
-                reviewer={application.reviewer}
+                reviewers={application.reviewer}
                 reviewTimestamp={application.reviewTimestamp}
               />
             )}

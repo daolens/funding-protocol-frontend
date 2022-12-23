@@ -1,7 +1,11 @@
 import { CONTRACTS, CONTRACT_FUNCTION_NAME_MAP } from '@lib/constants/contract'
 import { APPLICATION_STATUSES } from '@lib/constants/grants'
 import { WalletAddressType } from '@lib/types/common'
-import { ApplicationStatusType, ApplicationType } from '@lib/types/grants'
+import {
+  ApplicationStatusType,
+  ApplicationType,
+  FundingMethodType,
+} from '@lib/types/grants'
 import { log } from '@lib/utils/common'
 import {
   readSmartContractFunction,
@@ -61,34 +65,39 @@ export const fetchApplicationById = async (applicationId: `0x${string}`) => {
     contractObj: CONTRACTS.application,
     functionName: CONTRACT_FUNCTION_NAME_MAP.application.getApplicationDetail,
     args: [applicationId],
-  })) as FetchApplicationResponseType
+  })) as [
+    FetchApplicationResponseType,
+    WalletAddressType[],
+    number,
+    FundingMethodType
+  ]
 
   if (!response) throw new Error('response is not defined')
 
+  const [applicationFromContract, reviewers, reviewTimestamp, fundingMethod] =
+    response
+
   log('getApplicationDetail response:', response)
 
-  const ipfsData = await getFromIPFS(response.metadataHash)
+  const ipfsData = await getFromIPFS(applicationFromContract.metadataHash)
 
   if (!ipfsData) throw new Error('Meta data not found')
 
   const application: ApplicationType = JSON.parse(ipfsData)
 
-  application.id = response.id._hex
+  application.id = applicationFromContract.id._hex
   application.completedMilestoneCount = parseInt(
-    response.milestonesDone._hex,
+    applicationFromContract.milestonesDone._hex,
     16
   )
-  application.owner = response.owner as WalletAddressType
-  application.status = APPLICATION_STATUSES[response.state]
-  // TODO: get from API
-  application.reviewTimestamp = ''
-  // TODO: get from API
-  application.reviewer = '0x0'
-  application.grantAddress = response.grantAddress
-  application.workspaceId = response.workspaceId._hex as `0x${string}`
-  // TODO: get from API
-  application.fundingMethod =
-    application.milestones.length === 0 ? 'UPFRONT' : 'MILESTONE'
+  application.owner = applicationFromContract.owner as WalletAddressType
+  application.status = APPLICATION_STATUSES[applicationFromContract.state]
+  application.reviewTimestamp = new Date(reviewTimestamp).toISOString()
+  application.reviewer = reviewers
+  application.grantAddress = applicationFromContract.grantAddress
+  application.workspaceId = applicationFromContract.workspaceId
+    ._hex as `0x${string}`
+  application.fundingMethod = fundingMethod
 
   return application
 }

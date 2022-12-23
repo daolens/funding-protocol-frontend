@@ -38,29 +38,31 @@ const SideInfoBar = ({ deadline, milestones, seekingFunds }: Props) => {
           </p>
         </div>
       </Card>
-      <Card>
-        <div className="flex flex-col">
-          {milestones.map((milestone, index) => (
-            <div
-              className={classNames(
-                'flex flex-col gap-4',
-                index !== milestones.length - 1 &&
-                  'pb-6 border-b border-gray-800',
-                index !== 0 && 'pt-6'
-              )}
-              key={milestone.id}
-            >
-              <p className="text-xs font-semibold text-gray-500">
-                MILESTONE {index + 1} -{' '}
-                <span className="text-indigo-500 font-bold">
-                  ${getNumberWithCommas(milestone.funds as number)}
-                </span>
-              </p>
-              <p className="font-semibold">{milestone.text}</p>
-            </div>
-          ))}
-        </div>
-      </Card>
+      {milestones.length > 0 && (
+        <Card>
+          <div className="flex flex-col">
+            {milestones.map((milestone, index) => (
+              <div
+                className={classNames(
+                  'flex flex-col gap-4',
+                  index !== milestones.length - 1 &&
+                    'pb-6 border-b border-gray-800',
+                  index !== 0 && 'pt-6'
+                )}
+                key={milestone.id}
+              >
+                <p className="text-xs font-semibold text-gray-500">
+                  MILESTONE {index + 1} -{' '}
+                  <span className="text-indigo-500 font-bold">
+                    ${getNumberWithCommas(milestone.funds as number)}
+                  </span>
+                </p>
+                <p className="font-semibold">{milestone.text}</p>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
     </div>
   )
 }

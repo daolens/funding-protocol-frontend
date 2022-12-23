@@ -21,7 +21,7 @@ type Props = {
   isInsufficientBalance: boolean
   isAdmin: boolean
   token: string
-  reviewer?: WalletAddressType
+  reviewers?: WalletAddressType[]
   reviewTimestamp?: string
 }
 
@@ -32,9 +32,10 @@ const ReviewButtons = ({
   isInsufficientBalance,
   isAdmin,
   token,
-  reviewer,
+  reviewers,
   reviewTimestamp,
 }: Props) => {
+  const reviewer = reviewers?.[0]
   const { data: reviewerEnsName } = useEnsName({ address: reviewer })
   const router = useRouter()
   const workspaceId = router.query.workspaceId as string
@@ -177,10 +178,10 @@ const ReviewButtons = ({
           >
             <p className="text-lg text-gray-200">Application Approved</p>
             {reviewer && (
-            <span className="text-gray-500 text-xs">
-              by {reviewerEnsName || getTruncatedWalletAddress(reviewer)}
-            </span>
-          )}
+              <span className="text-gray-500 text-xs">
+                by {reviewerEnsName || getTruncatedWalletAddress(reviewer)}
+              </span>
+            )}
           </div>
         )}
       {isInsufficientBalance && (

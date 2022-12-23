@@ -63,12 +63,14 @@ type FetchWorkspaceResponseType = {
 }
 
 export const fetchWorkspaces = async () => {
+  const args = [
+    IS_PROD ? CONTRACTS.grant.address : CONTRACTS.grant.polygonMumbaiAddress,
+  ]
+  log('fetchWorkspaces called with args', args)
   const response = (await readSmartContractFunction({
     contractObj: CONTRACTS.workspace,
     functionName: CONTRACT_FUNCTION_NAME_MAP.workspace.fetchWorkSpaces,
-    args: [
-      IS_PROD ? CONTRACTS.grant.address : CONTRACTS.grant.polygonMumbaiAddress,
-    ],
+    args,
   })) as [
     FetchWorkspaceResponseType[],
     /** totalAmts */

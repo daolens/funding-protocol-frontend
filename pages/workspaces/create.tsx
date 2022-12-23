@@ -1,3 +1,4 @@
+import ConnectWalletModal from '@components/common/connect-wallet-modal'
 import CommunityName from '@components/workspace/create/community-name'
 import SourceOfFunding from '@components/workspace/create/source-of-funding'
 import Success from '@components/workspace/create/success'
@@ -5,7 +6,8 @@ import { WORKSPACE_STEPS } from '@lib/constants/workspace'
 import { SupportedNetworkIdType } from '@lib/types/common'
 import { CreateWorkspaceStepType } from '@lib/types/workspace'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useAccount } from 'wagmi'
 
 const Create = () => {
   const [activeStep, setActiveStep] = useState<CreateWorkspaceStepType>('name')
@@ -14,6 +16,14 @@ const Create = () => {
   const [networkId, setNetworkId] = useState<SupportedNetworkIdType | null>(
     null
   )
+  const [isConnectWalletModalOpen, setIsConnectWalletModalOpen] =
+    useState(false)
+
+  const { address } = useAccount()
+
+  useEffect(() => {
+    !address && setIsConnectWalletModalOpen(true)
+  }, [address, isConnectWalletModalOpen])
 
   return (
     <div className="bg-gray-900 h-screen w-screen flex px-5">
@@ -68,6 +78,10 @@ const Create = () => {
           />
         </div>
       </div>
+      <ConnectWalletModal
+        isOpen={isConnectWalletModalOpen}
+        setIsOpen={setIsConnectWalletModalOpen}
+      />
     </div>
   )
 }
