@@ -1,4 +1,5 @@
 import Description from '@components/application/description'
+import MilestoneReporting from '@components/application/milestone-reporting'
 import ReviewButtons from '@components/application/review-buttons'
 import ApplicationSectionTabs from '@components/application/section-tabs'
 import SideInfoBar from '@components/application/side-info-bar'
@@ -98,7 +99,12 @@ const ApplicationDetails = ({
               </>
             )}
             {/* TODO: complete */}
-            {activeSection === 'milestone-reporting' && <>Coming soon</>}
+            {activeSection === 'milestone-reporting' && (
+              <MilestoneReporting
+                milestones={application.milestones}
+                completedMilestoneCount={application.completedMilestoneCount}
+              />
+            )}
           </div>
           <div className="flex flex-col gap-5">
             {isReviewer && (
@@ -124,10 +130,68 @@ const ApplicationDetails = ({
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { query } = ctx
-  const applicationId = query.applicationId as `0x${string}`
-  const application = await fetchApplicationById(applicationId)
+export const getServerSideProps: GetServerSideProps = async () => {
+  // TODO: update
+  const application: ApplicationType = {
+    id: '1',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    email: 'vandan@daolens.com',
+    expectedProjectDeadline: '2023-01-06T00:00:00.000Z',
+    links: [
+      {
+        id: 'v3C2nZMsQGvnvoSy_JAUm',
+        text: 'www.google.com',
+      },
+      {
+        id: 'DDo7rcyVpJvWqMcp0_NRV',
+        text: 'www.google.com',
+      },
+    ],
+    milestones: [
+      {
+        id: 'r4Yza9n9ZmmHFTKBP6LKO',
+        funds: 100,
+        text: 'Design',
+      },
+      {
+        id: '6Cwv_kxHO1tyNdH2OOYbC',
+        text: 'Dev',
+        funds: 100,
+      },
+      {
+        id: 'j5rURU1Y5W8P5nEUoungH',
+        text: 'Release',
+        funds: 100,
+      },
+    ],
+    name: 'Amazing Grant Proposal - Project 04 (seriously amazing, totally worth $50,000)',
+    previousSuccessfulProposalLinks: [
+      {
+        id: 'sxWOLLwozKzWFYC2GD5YM',
+        text: 'www.google.com',
+      },
+    ],
+    seekingFunds: 100000,
+    teamMemberDetails: [
+      {
+        id: '9GVcxKSHkzyLg-kBZb8VR',
+        text: 'Vandan',
+      },
+      {
+        id: 'qVeKEOmFdqFICqFVCaH9E',
+        text: 'Chandan',
+      },
+    ],
+    walletAddress: '0x3512345234',
+    status: 'Approved',
+    reviewer: '0x7D04A724BCd6c0DBAf976BE9e9b89758c300E45A',
+    owner: '0x7D04A724BCd6c0DBAf976BE9e9b89758c300E45A',
+    reviewTimestamp: '2022-12-19T17:39:09.109Z',
+  }
+
+  const grantFundingMethod: FundingMethodType =
+    application.milestones.length === 0 ? 'UPFRONT' : 'MILESTONE'
 
   return {
     props: {
@@ -137,7 +201,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       grantBalanceToken: 'Aave',
       isAdmin: true,
       isInsufficientBalance: false,
-      grantFundingMethod: application.fundingMethod,
+      grantFundingMethod,
     } as Props,
   }
 }
