@@ -1,6 +1,8 @@
+import AddFundsModal from '@components/grants/details/add-funds-moda'
 import { GrantTreasuryType } from '@lib/types/grants'
 import { getTokenSymbol } from '@lib/utils/common'
-import React from 'react'
+import { useRouter } from 'next/router'
+import React, { useState } from 'react'
 
 type Props = {
   treasury: GrantTreasuryType
@@ -8,11 +10,12 @@ type Props = {
 }
 
 const Funds = ({ treasury, isAdmin }: Props) => {
-  const tokenSymbol = getTokenSymbol(treasury.token)
+  const router = useRouter()
 
-  const onAddFunds = () => {
-    // TODO: on add funds
-  }
+  const grantAddress = router.query.grantAddress
+
+  const tokenSymbol = getTokenSymbol(treasury.token)
+  const [isFundsModalOpen, setIsFundsModalOpen] = useState<boolean>(false)
 
   return (
     <div className="bg-gray-800 bg-opacity-20 border-gray-800 border p-5 rounded-xl flex flex-col gap-2">
@@ -28,11 +31,16 @@ const Funds = ({ treasury, isAdmin }: Props) => {
       {isAdmin && (
         <button
           className="w-full text-indigo-500 bg-indigo-800 hover:bg-indigo-600 hover:bg-opacity-20 bg-opacity-20 rounded-lg border-dashed border border-indigo-800 p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          onClick={onAddFunds}
+          onClick={() => setIsFundsModalOpen(true)}
         >
           + Add funds
         </button>
       )}
+      <AddFundsModal
+        grantAddress={grantAddress as string}
+        isOpen={isFundsModalOpen}
+        setIsOpen={setIsFundsModalOpen}
+      />
     </div>
   )
 }
