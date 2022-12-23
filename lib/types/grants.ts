@@ -50,7 +50,7 @@ export type ApplicationType = {
   walletAddress: WalletAddressType | ''
   owner?: WalletAddressType
   description: string
-  sneekingFunds: number | null
+  seekingFunds: number | null
   /** ISO data string */
   expectedProjectDeadline: string
   links: DynamicInputItemType[]

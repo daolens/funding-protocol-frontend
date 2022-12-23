@@ -11,6 +11,7 @@ import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import { DynamicInputItemType, WalletAddressType } from '@lib/types/common'
 import { FundingMethodType, GrantType } from '@lib/types/grants'
 import { validateGrantData } from '@lib/utils/grants'
+import classNames from 'classnames'
 import { nanoid } from 'nanoid'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
@@ -21,6 +22,7 @@ type Props = {
   mutate: (data: GrantType) => void
   grant?: GrantType
   isUpdateForm?: boolean
+  isLoading?: boolean
 }
 
 const Form = ({
@@ -29,6 +31,7 @@ const Form = ({
   mutate,
   grant,
   isUpdateForm,
+  isLoading,
 }: Props) => {
   const router = useRouter()
 
@@ -58,8 +61,9 @@ const Form = ({
 
   const onPublish = () => {
     setFieldErrors({} as any)
-    const grant: GrantType = {
+    const _grant: GrantType = {
       workspaceId: router.query.workspaceId as string,
+      address: grant?.address || undefined,
       title,
       subTitle,
       tags,
@@ -73,18 +77,18 @@ const Form = ({
         .map((reviewerItem) => reviewerItem.text as WalletAddressType),
     }
 
-    const errors = validateGrantData(grant)
+    const errors = validateGrantData(_grant)
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors)
       return
     }
 
-    mutate(grant)
+    mutate(_grant)
   }
 
   return (
     <Background>
-      <div className="flex flex-col gap-8 py-9 mb-24">
+      <div className="flex flex-col gap-8 py-9 pb-36">
         <BackButton onBack={onBack} />
         <div className="flex justify-between">
           <div className="flex flex-col gap-1">
@@ -117,14 +121,21 @@ const Form = ({
           onChange={(e) => setSubTitle(e.currentTarget.value)}
           error={fieldErrors['subTitle']}
         />
-        <div className="grid grid-cols-2 gap-4">
-          <TokenAmountInput
-            setTokenName={setTokenName}
-            tokenName={tokenName}
-            amount={amount}
-            setAmount={setAmount}
-            error={fieldErrors['recommendedSeekingAmount']}
-          />
+        <div
+          className={classNames('grid gap-4', {
+            'grid-cols-1': isUpdateForm,
+            'grid-cols-2': !isUpdateForm,
+          })}
+        >
+          {!isUpdateForm && (
+            <TokenAmountInput
+              setTokenName={setTokenName}
+              tokenName={tokenName}
+              amount={amount}
+              setAmount={setAmount}
+              error={fieldErrors['recommendedSeekingAmount']}
+            />
+          )}
           <DatePicker
             label="Accepting till"
             value={
@@ -141,13 +152,15 @@ const Form = ({
             error={fieldErrors['proposalDeadline']}
           />
         </div>
-        <FundingRadioSelect
-          fundingMethod={fundingMethod}
-          setFundingMethod={setFundingMethod}
-          error={fieldErrors['fundingMethod']}
-        />
+        {!isUpdateForm && (
+          <FundingRadioSelect
+            fundingMethod={fundingMethod}
+            setFundingMethod={setFundingMethod}
+            error={fieldErrors['fundingMethod']}
+          />
+        )}
         <DynamicInputList
-          inputProps={{ placeholder: 'Paste reviewer’s wallet/ENS address' }}
+          inputProps={{ placeholder: "Paste reviewer's wallet/ENS address" }}
           items={selectedReviewers}
           setItems={setSelectedReviewers}
           error={fieldErrors['reviewers']}
@@ -159,7 +172,13 @@ const Form = ({
           <button
             type="button"
             onClick={onPublish}
-            className="inline-flex items-center rounded-xl border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 self-start"
+            disabled={isLoading}
+            className={classNames(
+              'inline-flex items-center rounded-xl border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 self-start',
+              {
+                'cursor-not-allowed opacity-50': isLoading,
+              }
+            )}
           >
             {isUpdateForm ? 'Update' : 'Publish'}
             <ArrowRightIcon className="ml-3 -mr-1 h-5 w-5" aria-hidden="true" />

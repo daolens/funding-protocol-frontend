@@ -4,6 +4,7 @@ import Discover from '@components/homepage/discover'
 import { GetServerSideProps } from 'next'
 import { WorkspaceCardType } from '@lib/types/home'
 import { useAccount } from 'wagmi'
+import { fetchWorkspaces } from '@lib/utils/workspace'
 
 type Props = {
   workspaceCards: WorkspaceCardType[]
@@ -26,11 +27,20 @@ const HomePage = ({ workspaceCards }: Props) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  // const workspaces = await fetchWorkspaces()
+  const workspaces = await fetchWorkspaces()
 
-  // TODO: complete API integration
+  const workspaceCards: WorkspaceCardType[] = workspaces.map((workspace) => ({
+    activeGrants: workspace.totalGrant as any,
+    applicants: workspace.totalApplicants as any,
+    communityName: workspace.communityName as any,
+    id: workspace.id as any,
+    owner: workspace.owner as any,
+    sentInGrants: workspace.totalFundsSpent as any,
+    treasuryAmount: workspace.totalFunds as any,
+  }))
+
   const props: Props = {
-    workspaceCards: [],
+    workspaceCards,
   }
   return { props }
 }

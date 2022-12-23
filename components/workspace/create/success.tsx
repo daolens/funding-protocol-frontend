@@ -5,16 +5,18 @@ import {
 } from '@heroicons/react/24/outline'
 import { SupportedNetworkIdType } from '@lib/types/common'
 import Lottie from 'lottie-react'
-import React from 'react'
+import React, { useRef } from 'react'
 import confettiAnimation from '@public/animations/confetti.json'
 import { WorkspaceType } from '@lib/types/workspace'
 import { ethers } from 'ethers'
 import { useSignMessage } from 'wagmi'
 import { getSafeDetails } from '@lib/utils/safe'
 import SUPPORTED_SAFES_INFO from '@lib/constants/common'
-import cogoToast from 'cogo-toast'
+import cogoToast, { CTReturn } from 'cogo-toast'
 import { useMutation } from '@tanstack/react-query'
 import { postDataAndCallSmartContractFunction } from '@lib/utils/workspace'
+import { useRouter } from 'next/router'
+import classNames from 'classnames'
 
 type Props = {
   communityName: string
@@ -23,11 +25,29 @@ type Props = {
 }
 
 const Success = ({ communityName, multisigAddress, networkId }: Props) => {
+  const loadingToastRef = useRef<CTReturn | null>(null)
+  const router = useRouter()
   const workspaceMutation = useMutation({
     mutationFn: (data: WorkspaceType) =>
       postDataAndCallSmartContractFunction(data),
-    // TODO: update redirections
-    onSuccess: () => cogoToast.success('Workspace created!'),
+    onSuccess: (workspaceId) => {
+      loadingToastRef.current?.hide?.()
+      cogoToast.success('Workspace created!')
+      router.push(`/workspaces/${workspaceId}`)
+    },
+    onError: (error) => {
+      loadingToastRef.current?.hide?.()
+      console.error(error)
+      cogoToast.error('Something went wrong.')
+    },
+    onMutate: () => {
+      loadingToastRef.current = cogoToast.loading(
+        'Creating workspace. This may take a while.',
+        {
+          hideAfter: 0,
+        }
+      )
+    },
   })
 
   // Signing the message to verify the ownership of the address and then checking
@@ -55,6 +75,8 @@ const Success = ({ communityName, multisigAddress, networkId }: Props) => {
 
   const truncatedAddress =
     multisigAddress.slice(0, 7) + '...' + multisigAddress.slice(-5)
+
+  const isLoading = isSignMessageLoading || workspaceMutation.isLoading
 
   return (
     <div className="flex flex-col gap-11 relative">
@@ -89,8 +111,11 @@ const Success = ({ communityName, multisigAddress, networkId }: Props) => {
         type="button"
         // TODO: update onclick to ask for connecting wallet first
         onClick={() => signMessage({ message: 'Verifying ownership' })}
-        disabled={isSignMessageLoading || workspaceMutation.isLoading}
-        className="inline-flex items-center rounded-xl border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 self-start z-10"
+        disabled={isLoading}
+        className={classNames(
+          'inline-flex items-center rounded-xl border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 self-start z-10',
+          { 'opacity-50 cursor-not-allowed': isLoading }
+        )}
       >
         Sign and verify
         <ArrowRightIcon className="ml-3 -mr-1 h-5 w-5" aria-hidden="true" />

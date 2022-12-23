@@ -8,6 +8,7 @@ import {
   writeSmartContractFunction,
 } from '@lib/utils/contract'
 import { getFromIPFS, uploadToIPFS } from '@lib/utils/ipfs'
+import { fetchTransaction } from '@wagmi/core'
 import { ethers } from 'ethers'
 
 export const postDataAndCallSmartContractFunction = async (
@@ -27,8 +28,18 @@ export const postDataAndCallSmartContractFunction = async (
   })
   if (!result.hash)
     throw new Error('createWorkspace smart contract call failed')
+  const txnConfirmation = await result.wait()
+  const hash = txnConfirmation.transactionHash
+  const transaction = await fetchTransaction({
+    hash: hash as `0x${string}`,
+  })
+
+  const returnValue: { _hex: string } = transaction.value
+  const workspaceId = returnValue._hex
 
   log(`createWorkspace call successful. Hash: ${result.hash}`)
+  log({ transaction })
+  return workspaceId
 }
 
 type FetchWorkspaceResponseType = {
@@ -43,26 +54,57 @@ type FetchWorkspaceResponseType = {
     }
     _address: `0x${string}`
   }
+  applicationCount: {
+    _hex: string
+  }
+  grantCount: {
+    _hex: string
+  }
 }
 
 export const fetchWorkspaces = async () => {
   const response = (await readSmartContractFunction({
     contractObj: CONTRACTS.workspace,
     functionName: CONTRACT_FUNCTION_NAME_MAP.workspace.fetchWorkSpaces,
-  })) as FetchWorkspaceResponseType[]
+    args: [
+      IS_PROD ? CONTRACTS.grant.address : CONTRACTS.grant.polygonMumbaiAddress,
+    ],
+  })) as [
+    FetchWorkspaceResponseType[],
+    /** totalAmts */
+    { _hex: string }[],
+    /** amtSpends */
+    { _hex: string }[]
+  ]
 
   if (!response) throw new Error('response is not defined')
 
+  log('fetchWorkSpaces response:', response)
+
   const workspaces: WorkspaceType[] = []
 
-  for (let index = 0; index < response.length; index++) {
-    const workspaceFromContract = response[index]
-    const workspace: WorkspaceType = JSON.parse(
-      await getFromIPFS(workspaceFromContract.metadataHash)
+  for (let index = 0; index < response[0].length; index++) {
+    const workspaceFromContract = response[0][index]
+    const totalFunds = parseInt(response[1][index]._hex, 16)
+    const totalFundsSpent = parseInt(response[2][index]._hex, 16)
+    const totalApplicants = parseInt(
+      workspaceFromContract.applicationCount._hex,
+      16
     )
+    const totalGrants = parseInt(workspaceFromContract.grantCount._hex, 16)
+
+    if (!workspaceFromContract?.id?._hex) continue
+    const dataFromIpfs = await getFromIPFS(workspaceFromContract.metadataHash)
+    if (!dataFromIpfs) continue
+    const workspace: WorkspaceType = JSON.parse(dataFromIpfs)
     workspace.id = workspaceFromContract.id._hex
     workspace.adminAddresses = [workspaceFromContract.owner]
-    workspaces.push(workspace)
+    workspace.totalFunds = totalFunds
+    workspace.totalFundsSpent = totalFundsSpent
+    workspace.totalApplicants = totalApplicants
+    workspace.totalGrant = totalGrants
+    workspace.owner = workspaceFromContract.owner
+    workspace.totalApplicants = workspaces.push(workspace)
   }
 
   return workspaces

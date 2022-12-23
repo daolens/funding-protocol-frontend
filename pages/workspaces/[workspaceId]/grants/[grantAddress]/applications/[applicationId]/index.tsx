@@ -114,7 +114,7 @@ const ApplicationDetails = ({
             <SideInfoBar
               deadline={application.expectedProjectDeadline}
               milestones={application.milestones}
-              seekingFunds={application.sneekingFunds as number}
+              seekingFunds={application.seekingFunds as number}
             />
           </div>
         </div>
@@ -165,7 +165,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
         text: 'www.google.com',
       },
     ],
-    sneekingFunds: 100000,
+    seekingFunds: 100000,
     teamMemberDetails: [
       {
         id: '9GVcxKSHkzyLg-kBZb8VR',

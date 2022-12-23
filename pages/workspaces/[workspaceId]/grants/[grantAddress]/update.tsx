@@ -1,8 +1,10 @@
 import { GrantType } from '@lib/types/grants'
-import { postGrantDataAndCallSmartContractFn } from '@lib/utils/grants'
-import React from 'react'
+import {
+  updateGrantDataAndCallSmartContractFn,
+} from '@lib/utils/grants'
+import React, { useRef } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import cogoToast from 'cogo-toast'
+import cogoToast, { CTReturn } from 'cogo-toast'
 import { useRouter } from 'next/router'
 import { GetServerSideProps } from 'next'
 import { fetchWorkspaceById } from '@lib/utils/workspace'
@@ -14,12 +16,23 @@ type Props = {
 }
 
 const UpdateGrant = ({ workspaceTitle = 'Workspace', grant }: Props) => {
+  const loadingToastRef = useRef<CTReturn | null>(null)
   const grantMutation = useMutation({
-    mutationFn: (data: GrantType) => postGrantDataAndCallSmartContractFn(data),
-    onSuccess: () => cogoToast.success('Grant updated successfully'),
+    mutationFn: (data: GrantType) =>
+      updateGrantDataAndCallSmartContractFn(data),
+    onSuccess: () => {
+      loadingToastRef.current?.hide?.()
+      cogoToast.success('Grant updated successfully')
+    },
     onError: (error) => {
+      loadingToastRef.current?.hide?.()
       console.error(error)
       cogoToast.error('Something went wrong while updating grant.')
+    },
+    onMutate: () => {
+      loadingToastRef.current = cogoToast.loading('Updating grant', {
+        hideAfter: 0,
+      })
     },
   })
   const router = useRouter()
@@ -35,6 +48,7 @@ const UpdateGrant = ({ workspaceTitle = 'Workspace', grant }: Props) => {
       onBack={onBack}
       workspaceTitle={workspaceTitle}
       grant={grant}
+      isLoading={grantMutation.isLoading}
       isUpdateForm
     />
   )

@@ -2,13 +2,18 @@ import { DEFAULT_TOKENS, ERROR_MESSAGES, IS_PROD } from '@lib/constants/common'
 import { CONTRACTS, CONTRACT_FUNCTION_NAME_MAP } from '@lib/constants/contract'
 import { APPLICATION_STATUSES } from '@lib/constants/grants'
 import { WalletAddressType } from '@lib/types/common'
-import { ApplicationType, GrantType } from '@lib/types/grants'
+import {
+  ApplicationType,
+  FundingMethodType,
+  GrantType,
+} from '@lib/types/grants'
 import { checkIsEmail, checkIsLink, log } from '@lib/utils/common'
 import {
   readSmartContractFunction,
   writeSmartContractFunction,
 } from '@lib/utils/contract'
 import { getFromIPFS, uploadToIPFS } from '@lib/utils/ipfs'
+import { fetchTransaction } from '@wagmi/core'
 import { ethers } from 'ethers'
 
 export const validateGrantData = (grant: GrantType) => {
@@ -62,10 +67,24 @@ export const postGrantDataAndCallSmartContractFn = async (data: GrantType) => {
   })
 
   if (!result.hash) throw new Error('createGrant smart contract call failed')
+
+  const txnConfirmation = await result.wait()
+  const hash = txnConfirmation.transactionHash
+  const transaction = await fetchTransaction({
+    hash: hash as `0x${string}`,
+  })
+
+  const returnValue: { _hex: string } = transaction.value
+  const grantAddress = returnValue._hex
   log(`createGrant call successful. Hash: ${result.hash}`)
+  log({ transaction })
+  return grantAddress
 }
 
-export const validateGrantApplicationData = (data: ApplicationType) => {
+export const validateGrantApplicationData = (
+  data: ApplicationType,
+  fundingMethod: FundingMethodType
+) => {
   const errors: Record<keyof ApplicationType, string> = {} as any
 
   // Validating required text fields
@@ -74,7 +93,7 @@ export const validateGrantApplicationData = (data: ApplicationType) => {
     'email',
     'description',
     'walletAddress',
-    'sneekingFunds',
+    'seekingFunds',
     'expectedProjectDeadline',
   ]
   requiredTextFields.forEach((key) => {
@@ -84,7 +103,10 @@ export const validateGrantApplicationData = (data: ApplicationType) => {
   if (data.teamMemberDetails.length === 0)
     errors.teamMemberDetails = ERROR_MESSAGES.fieldRequired
 
-  if (data.milestones.some((milestone) => !milestone.funds || !milestone.text))
+  if (
+    fundingMethod === 'MILESTONE' &&
+    data.milestones.some((milestone) => !milestone.funds || !milestone.text)
+  )
     errors.milestones = ERROR_MESSAGES.fieldRequired
 
   if (
@@ -100,6 +122,16 @@ export const validateGrantApplicationData = (data: ApplicationType) => {
 
   if (!checkIsEmail(data.email)) errors.email = ERROR_MESSAGES.emailNotValid
 
+  if (
+    fundingMethod === 'MILESTONE' &&
+    data.milestones
+      .map((milestone) => milestone.funds)
+      .reduce((prev = 0, curr = 0) => (prev || 0) + (curr || 0), 0) !==
+      data.seekingFunds
+  )
+    errors.milestones =
+      'Seeking funds and sum of funds in milestone are not equal'
+
   return errors
 }
 
@@ -114,7 +146,7 @@ export const postApplicationDataAndCallSmartContractFn = async (
     ipfsHash,
     data.milestones.length,
     data.milestones.map((milestone) => milestone.funds),
-    data.sneekingFunds,
+    data.seekingFunds,
   ]
   log('submitApplication called', { args })
   const result = await writeSmartContractFunction({
@@ -125,7 +157,18 @@ export const postApplicationDataAndCallSmartContractFn = async (
 
   if (!result.hash)
     throw new Error('sumbitApplication smart contract call failed')
+
+  const txnConfirmation = await result.wait()
+  const hash = txnConfirmation.transactionHash
+  const transaction = await fetchTransaction({
+    hash: hash as `0x${string}`,
+  })
+
+  const returnValue: { _hex: string } = transaction.value
+  const applicationId = returnValue._hex
   log(`submitApplication call successful. Hash: ${result.hash}`)
+  log({ transaction })
+  return applicationId
 }
 
 type ApplicationFetchResponseType = {
@@ -173,14 +216,12 @@ export const fetchApplications = async (
   return applications
 }
 
-// TODO: test
 export const updateGrantDataAndCallSmartContractFn = async (
   data: GrantType
 ) => {
   const ipfsHash = (await uploadToIPFS(JSON.stringify(data))).hash
   const workspaceId = parseInt(data.workspaceId!, 16)
 
-  // TODO: update
   const args = [
     // Grant address
     data.address,
@@ -188,16 +229,8 @@ export const updateGrantDataAndCallSmartContractFn = async (
     IS_PROD
       ? CONTRACTS.workspace.address
       : CONTRACTS.workspace.polygonMumbaiAddress,
-    IS_PROD
-      ? CONTRACTS.application.address
-      : CONTRACTS.application.polygonMumbaiAddress,
-    data.reviewers,
-    data.recommendedSeekingAmount,
-    IS_PROD
-      ? DEFAULT_TOKENS.find((token) => token.name === data.token)?.address
-      : // token address in dev
-        '0xfe4f5145f6e09952a5ba9e956ed0c25e3fa4c7f1',
     ipfsHash,
+    data.reviewers,
   ]
 
   log('updateGrant called', { args })

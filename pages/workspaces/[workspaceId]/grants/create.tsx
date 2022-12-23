@@ -1,8 +1,8 @@
 import { GrantType } from '@lib/types/grants'
 import { postGrantDataAndCallSmartContractFn } from '@lib/utils/grants'
-import React from 'react'
+import React, { useRef } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import cogoToast from 'cogo-toast'
+import cogoToast, { CTReturn } from 'cogo-toast'
 import { useRouter } from 'next/router'
 import { GetServerSideProps } from 'next'
 import { fetchWorkspaceById } from '@lib/utils/workspace'
@@ -13,16 +13,31 @@ type Props = {
 }
 
 const Create = ({ workspaceTitle = 'Workspace' }: Props) => {
+  const loadingToastRef = useRef<CTReturn | null>(null)
+  const router = useRouter()
+  const workspaceId = router.query.workspaceId as string
   const grantMutation = useMutation({
     mutationFn: (data: GrantType) => postGrantDataAndCallSmartContractFn(data),
-    onSuccess: () => cogoToast.success('Grant created successfully'),
+    onSuccess: (grantAddress) => {
+      loadingToastRef.current?.hide?.()
+      cogoToast.success('Grant created successfully')
+      router.push(`/workspaces/${workspaceId}/grants/${grantAddress}`)
+    },
+
     onError: (error) => {
+      loadingToastRef.current?.hide?.()
       console.error(error)
       cogoToast.error('Something went wrong while creating grant.')
     },
+    onMutate: () => {
+      loadingToastRef.current = cogoToast.loading(
+        'Creating grant. This may take a while.',
+        {
+          hideAfter: 0,
+        }
+      )
+    },
   })
-  const router = useRouter()
-  const workspaceId = router.query.workspaceId as string
 
   const onBack = () => router.push(`/workspaces/${workspaceId}`)
 
@@ -31,6 +46,7 @@ const Create = ({ workspaceTitle = 'Workspace' }: Props) => {
       mutate={grantMutation.mutate}
       onBack={onBack}
       workspaceTitle={workspaceTitle}
+      isLoading={grantMutation.isLoading}
     />
   )
 }

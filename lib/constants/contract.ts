@@ -17,7 +17,7 @@ export const CONTRACT_FUNCTION_NAME_MAP = {
   grant: {
     /** args: [workspaceId, ipfsHash, workspaceContractAddress, applicationContractAddress, reviewerAddress[], recommendedAmount, tokenAddress, fundingMethod] */
     createGrant: 'createGrant',
-    /** args: [grantAddress, workspaceId, workspaceContractAddress, metadataHash] */
+    /** args: [grantAddress, workspaceId, workspaceReg, metadataHash, reviewers] */
     updateGrant: 'updateGrant',
   },
   application: {

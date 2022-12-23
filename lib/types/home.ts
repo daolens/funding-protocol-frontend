@@ -1,4 +1,4 @@
-import { WalletAddressType } from "@lib/types/common"
+import { WalletAddressType } from '@lib/types/common'
 
 export type WorkspaceCardType = {
   id: string

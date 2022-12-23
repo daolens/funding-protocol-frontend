@@ -27,7 +27,8 @@ export const getFromIPFS = async (hash: string) => {
   // fallback
   const fallbackResponse = await fetch(`https://ipfs.io/ipfs/${hash}`)
   if (fallbackResponse.ok) return await fallbackResponse.text()
-  throw new Error(fallbackResponse.statusText)
+  console.error(fallbackResponse.statusText)
+  return ''
 }
 
 export const getUrlForIPFSHash = (hash: string) => {

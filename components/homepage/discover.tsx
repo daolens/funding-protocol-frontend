@@ -26,7 +26,7 @@ const Discover = ({ workspaceList }: Props) => {
   ) as WorkspaceCardType[]
 
   return (
-    <section className="pt-16 text-gray-300">
+    <section className="pt-16 pb-14 text-gray-300">
       <h2 className="text-2xl font-semibold text-decoration-line pb-8 underline decoration-pink-500 decoration-4">
         🔍 Discovery & Apply
       </h2>

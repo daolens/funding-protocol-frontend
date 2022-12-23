@@ -2,6 +2,7 @@ import { UserIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline'
 import { Fragment } from 'react'
 import { WorkspaceCardType } from '@lib/types/home'
 import CommunityAvatar from '@components/common/community-avatar'
+import Link from 'next/link'
 
 type Props = {
   workspaceList: WorkspaceCardType[]
@@ -11,12 +12,17 @@ const WorkspaceCardList = ({ workspaceList }: Props) => {
   return (
     <>
       {workspaceList?.map((workspace) => (
-        <div key={workspace.id}>
+        <Link href={`/workspaces/${workspace.id}`} key={workspace.id}>
           <div className="pt-5 pb-6 px-5 bg-gray-800 border bg-opacity-40 border-gray-800 rounded-tl-2xl rounded-tr-2xl flex flex-col gap-6">
             <div className="flex gap-4">
-              <CommunityAvatar communityName={workspace.communityName} rounded />
+              <CommunityAvatar
+                communityName={workspace.communityName}
+                rounded
+              />
               <div className="flex flex-col gap-3">
-                <h3 className="text-lg font-semibold">{workspace.communityName}</h3>
+                <h3 className="text-lg font-semibold">
+                  {workspace.communityName}
+                </h3>
                 <div className="flex gap-1">
                   <p className="px-3 py-[6px] bg-gray-800 text-xs rounded-2xl flex justify-center items-center">
                     <span className="text-xs mr-1">
@@ -39,11 +45,13 @@ const WorkspaceCardList = ({ workspaceList }: Props) => {
               </p>
               <p className="flex justify-center items-center gap-[6px]">
                 <CurrencyDollarIcon className="w-4 h-4" />
-                <span>${workspace.sentInGrants.toLocaleString()} sent in grants</span>
+                <span>
+                  ${workspace.sentInGrants.toLocaleString()} sent in grants
+                </span>
               </p>
             </div>
           </div>
-        </div>
+        </Link>
       ))}
     </>
   )

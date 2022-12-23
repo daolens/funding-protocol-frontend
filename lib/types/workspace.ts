@@ -11,6 +11,11 @@ export type WorkspaceType = {
   discord?: string
   twitter?: string
   adminAddresses?: WalletAddressType[]
+  totalFunds?: number
+  totalFundsSpent?: number
+  totalGrant?: number
+  totalApplicants?: number
+  owner?: WalletAddressType
 }
 
 export type CreateWorkspaceStepType = typeof WORKSPACE_STEPS[number]
