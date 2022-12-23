@@ -38,7 +38,7 @@ const Navbar = () => {
     .includes('/my-proposals')
 
   return (
-    <nav className="flex justify-between px-5 py-4 items-center">
+    <nav className="flex justify-between py-4 items-center">
       <Link href="/">
         <Image
           src="/images/logo/logo-white.svg"

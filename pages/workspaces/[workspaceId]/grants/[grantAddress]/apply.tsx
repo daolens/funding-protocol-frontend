@@ -106,6 +106,7 @@ const Apply = ({ grantName, currency = 'USDC', fundingMethod }: Props) => {
       workspaceId: router.query.workspaceId as string,
       grantAddress: router.query.grantAddress as string,
       description,
+      submissionTimestamp: new Date().toISOString(),
       email,
       expectedProjectDeadline,
       links: links.filter((item) => item.text),

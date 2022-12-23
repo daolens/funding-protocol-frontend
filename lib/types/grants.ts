@@ -47,6 +47,7 @@ export type ApplicationType = {
   grantAddress?: string
   name: string
   email: string
+  submissionTimestamp: string
   walletAddress: WalletAddressType | ''
   owner?: WalletAddressType
   description: string
@@ -62,6 +63,8 @@ export type ApplicationType = {
   reviewer?: WalletAddressType[]
   reviewTimestamp?: string
   fundingMethod?: FundingMethodType
+  grantTitle?: string
+  workspaceTitle?: string
 }
 
 export type GrantTreasuryType = {
