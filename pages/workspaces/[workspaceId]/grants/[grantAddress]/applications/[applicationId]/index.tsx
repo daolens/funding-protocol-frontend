@@ -1,15 +1,21 @@
 import Description from '@components/application/description'
 import ReviewButtons from '@components/application/review-buttons'
+import ApplicationSectionTabs from '@components/application/section-tabs'
 import SideInfoBar from '@components/application/side-info-bar'
 import TeamMembers from '@components/application/team-members'
 import BackButton from '@components/common/back-button'
 import Background from '@components/common/background'
 import { AtSymbolIcon } from '@heroicons/react/24/outline'
-import { ApplicationStatusType, ApplicationType } from '@lib/types/grants'
-import { getTruncatedWalletAddress } from '@lib/utils/common'
+import { ApplicationSectionType } from '@lib/types/application'
+import {
+  ApplicationStatusType,
+  ApplicationType,
+  FundingMethodType,
+} from '@lib/types/grants'
+import { addDays, getTruncatedWalletAddress } from '@lib/utils/common'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useState } from 'react'
 import { useEnsName } from 'wagmi'
 
 type Props = {
@@ -19,6 +25,7 @@ type Props = {
   grantBalance: number
   grantBalanceToken: string
   isInsufficientBalance: boolean
+  grantFundingMethod: FundingMethodType
 }
 
 const ApplicationDetails = ({
@@ -28,11 +35,22 @@ const ApplicationDetails = ({
   grantBalanceToken,
   isAdmin,
   isInsufficientBalance,
+  grantFundingMethod,
 }: Props) => {
+  const isApproved =
+    application.status === 'Approved' &&
+    new Date() >= addDays(application.reviewTimestamp as string, 3)
+
   const router = useRouter()
   const { data: enaName } = useEnsName({
     address: application.owner as any,
   })
+
+  const [activeSection, setActiveSection] = useState<ApplicationSectionType>(
+    isApproved && grantFundingMethod === 'MILESTONE'
+      ? 'milestone-reporting'
+      : 'application'
+  )
 
   const workspaceId = router.query.workspaceId as string
   const grantAddress = router.query.grantAddress as string
@@ -60,14 +78,26 @@ const ApplicationDetails = ({
             </a>
           </div>
         </div>
+        {isApproved && (
+          <ApplicationSectionTabs
+            selectedTab={activeSection}
+            setSelectedTab={setActiveSection}
+          />
+        )}
         <div className="grid grid-cols-3 gap-5">
           <div className="col-span-2 flex flex-col gap-5">
-            <TeamMembers teamMembers={application.teamMemberDetails} />
-            <Description
-              description={application.description}
-              links={application.links}
-              pastProposals={application.previousSuccessfulProposalLinks}
-            />
+            {activeSection === 'application' && (
+              <>
+                <TeamMembers teamMembers={application.teamMemberDetails} />
+                <Description
+                  description={application.description}
+                  links={application.links}
+                  pastProposals={application.previousSuccessfulProposalLinks}
+                />
+              </>
+            )}
+            {/* TODO: complete */}
+            {activeSection === 'milestone-reporting' && <>Coming soon</>}
           </div>
           <div className="flex flex-col gap-5">
             {isReviewer && (
@@ -77,6 +107,8 @@ const ApplicationDetails = ({
                 isAdmin={isAdmin}
                 isInsufficientBalance={isInsufficientBalance}
                 token={grantBalanceToken}
+                reviewer={application.reviewer}
+                reviewTimestamp={application.reviewTimestamp}
               />
             )}
             <SideInfoBar
@@ -145,8 +177,14 @@ export const getServerSideProps: GetServerSideProps = async () => {
       },
     ],
     walletAddress: '0x3512345234',
-    status: 'Submitted',
+    status: 'Approved',
+    reviewer: '0x7D04A724BCd6c0DBAf976BE9e9b89758c300E45A',
+    owner: '0x7D04A724BCd6c0DBAf976BE9e9b89758c300E45A',
+    reviewTimestamp: '2022-12-19T17:39:09.109Z',
   }
+
+  const grantFundingMethod: FundingMethodType =
+    application.milestones.length === 0 ? 'UPFRONT' : 'MILESTONE'
 
   return {
     props: {
@@ -156,6 +194,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
       grantBalanceToken: 'Aave',
       isAdmin: true,
       isInsufficientBalance: false,
+      grantFundingMethod,
     } as Props,
   }
 }

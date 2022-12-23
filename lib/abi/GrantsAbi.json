@@ -341,6 +341,11 @@
         "internalType": "string",
         "name": "_metadataHash",
         "type": "string"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_reviewers",
+        "type": "address[]"
       }
     ],
     "name": "updateGrant",

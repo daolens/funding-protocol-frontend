@@ -59,6 +59,8 @@ export type ApplicationType = {
   milestones: ApplicationMilestoneType[]
   completedMilestoneCount?: number
   status?: ApplicationStatusType
+  reviewer?: WalletAddressType
+  reviewTimestamp?: string
 }
 
 export type GrantTreasuryType = {

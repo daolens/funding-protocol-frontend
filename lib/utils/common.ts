@@ -54,3 +54,9 @@ export const checkIsEmail = (email: string) => {
   const regex = new RegExp(expression)
   return email.match(regex)
 }
+
+export const addDays = (date: string | Date, days: number) => {
+  const result = new Date(date)
+  result.setDate(result.getDate() + days)
+  return result
+}

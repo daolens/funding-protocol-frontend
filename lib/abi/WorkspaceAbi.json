@@ -195,6 +195,26 @@
         "internalType": "struct WorkspaceRegistry.Safe",
         "name": "safe",
         "type": "tuple"
+      },
+      {
+        "internalType": "uint256",
+        "name": "applicationCount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "grantCount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "totalFunds",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "totalAmountSpentGrant",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -219,7 +239,13 @@
       }
     ],
     "name": "createWorkspace",
-    "outputs": [],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -271,6 +297,26 @@
             "internalType": "struct WorkspaceRegistry.Safe",
             "name": "safe",
             "type": "tuple"
+          },
+          {
+            "internalType": "uint256",
+            "name": "applicationCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "grantCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalFunds",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalAmountSpentGrant",
+            "type": "uint256"
           }
         ],
         "internalType": "struct WorkspaceRegistry.WorkSpace",
@@ -298,6 +344,11 @@
             "internalType": "address",
             "name": "grantAddress",
             "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amountSpent",
+            "type": "uint256"
           }
         ],
         "internalType": "struct WorkspaceRegistry.Grant[]",
@@ -309,7 +360,13 @@
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_grantFactory",
+        "type": "address"
+      }
+    ],
     "name": "fetchWorkSpaces",
     "outputs": [
       {
@@ -345,14 +402,70 @@
             "internalType": "struct WorkspaceRegistry.Safe",
             "name": "safe",
             "type": "tuple"
+          },
+          {
+            "internalType": "uint256",
+            "name": "applicationCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "grantCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalFunds",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalAmountSpentGrant",
+            "type": "uint256"
           }
         ],
         "internalType": "struct WorkspaceRegistry.WorkSpace[]",
         "name": "",
         "type": "tuple[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_workspaceId",
+        "type": "uint256"
+      }
+    ],
+    "name": "increaseApplicationCount",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_workspaceId",
+        "type": "uint256"
+      }
+    ],
+    "name": "increaseGrantCount",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

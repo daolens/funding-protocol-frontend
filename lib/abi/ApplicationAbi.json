@@ -14,6 +14,37 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_applicationId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_grantAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_time",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum ApplicationRegistry.ApplicationState",
+        "name": "_state",
+        "type": "uint8"
+      }
+    ],
+    "name": "ApplicationRejectStatusReverted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": true,
         "internalType": "uint256",
         "name": "applicationId",
@@ -263,6 +294,11 @@
         "internalType": "enum ApplicationRegistry.ApplicationState",
         "name": "state",
         "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "totalFunds",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -299,6 +335,84 @@
     "name": "approveMilestone",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "executeTransactions",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_applicationId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getApplicationDetail",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "workspaceId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "grantAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "owner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "milestoneCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "milestonesDone",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "metadataHash",
+            "type": "string"
+          },
+          {
+            "internalType": "enum ApplicationRegistry.ApplicationState",
+            "name": "state",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "milestonePayment",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalFunds",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct ApplicationRegistry.Application",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -400,6 +514,11 @@
             "internalType": "uint256[]",
             "name": "milestonePayment",
             "type": "uint256[]"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalFunds",
+            "type": "uint256"
           }
         ],
         "internalType": "struct ApplicationRegistry.Application[]",
@@ -492,6 +611,24 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_applicationId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_grantAddress",
+        "type": "address"
+      }
+    ],
+    "name": "revertTransactions",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "_grantAddress",
         "type": "address"
@@ -515,10 +652,21 @@
         "internalType": "uint256[]",
         "name": "_milestonePayments",
         "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_totalAmount",
+        "type": "uint256"
       }
     ],
     "name": "submitApplication",
-    "outputs": [],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -587,6 +735,24 @@
       }
     ],
     "name": "updateApplicationState",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_applicationId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_grantAddress",
+        "type": "address"
+      }
+    ],
+    "name": "updateApplicationStateGrant",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
