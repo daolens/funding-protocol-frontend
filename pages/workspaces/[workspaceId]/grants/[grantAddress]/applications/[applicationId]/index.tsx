@@ -103,6 +103,7 @@ const ApplicationDetails = ({
               <MilestoneReporting
                 milestones={application.milestones}
                 completedMilestoneCount={application.completedMilestoneCount}
+                isReviewer={isReviewer}
               />
             )}
           </div>
@@ -153,16 +154,22 @@ export const getServerSideProps: GetServerSideProps = async () => {
         id: 'r4Yza9n9ZmmHFTKBP6LKO',
         funds: 100,
         text: 'Design',
+        details:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque justo metus, fringilla sit amet eleifend vehicula, pharetra non risus. Proin dapibus bibendum venenatis. Nullam gravida est nec placerat volutpat. Mauris ullamcorper placerat quam, eu malesuada metus consectetur vitae. Cras euismod nisi id lectus tempor sollicitudin. Vestibulum eget eleifend elit. Fusce mattis odio eu ex tempus cursus non ac ipsum. Sed facilisis nulla sit amet pulvinar blandit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque justo metus, fringilla sit amet eleifend vehicula, pharetra non risus. Proin dapibus bibendum venenatis. Nullam gravida est nec placerat volutpat. Mauris ullamcorper placerat quam, eu malesuada metus consectetur vitae. Cras euismod nisi id lectus tempor sollicitudin. Vestibulum eget eleifend elit. Fusce mattis odio eu ex tempus cursus non ac ipsum. Sed facilisis nulla sit amet pulvinar blandit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque justo metus, fringilla sit amet eleifend vehicula, pharetra non risus. Proin dapibus bibendum venenatis. Nullam gravida est nec placerat volutpat. Mauris ullamcorper placerat quam, eu malesuada metus consectetur vitae. Cras euismod nisi id lectus tempor sollicitudin. Vestibulum eget eleifend elit. Fusce mattis odio eu ex tempus cursus non ac ipsum. Sed facilisis nulla sit amet pulvinar blandit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque justo metus, fringilla sit amet eleifend vehicula, pharetra non risus. Proin dapibus bibendum venenatis. Nullam gravida est nec placerat volutpat. Mauris ullamcorper placerat quam, eu malesuada metus consectetur vitae. Cras euismod nisi id lectus tempor sollicitudin. Vestibulum eget eleifend elit. Fusce mattis odio eu ex tempus cursus non ac ipsum. Sed facilisis nulla sit amet pulvinar blandit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque justo metus, fringilla sit amet eleifend vehicula, pharetra non risus. Proin dapibus bibendum venenatis. Nullam gravida est nec placerat volutpat. Mauris ullamcorper placerat quam, eu malesuada metus consectetur vitae. Cras euismod nisi id lectus tempor sollicitudin. Vestibulum eget eleifend elit. Fusce mattis odio eu ex tempus cursus non ac ipsum. Sed facilisis nulla sit amet pulvinar blandit.',
       },
       {
         id: '6Cwv_kxHO1tyNdH2OOYbC',
         text: 'Dev',
         funds: 100,
+        details:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque justo metus, fringilla sit amet eleifend vehicula, pharetra non risus. Proin dapibus bibendum venenatis. Nullam gravida est nec placerat volutpat. Mauris ullamcorper placerat quam, eu malesuada metus consectetur vitae. Cras euismod nisi id lectus tempor sollicitudin. Vestibulum eget eleifend elit. Fusce mattis odio eu ex tempus cursus non ac ipsum. Sed facilisis nulla sit amet pulvinar blandit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque justo metus, fringilla sit amet eleifend vehicula, pharetra non risus. Proin dapibus bibendum venenatis. Nullam gravida est nec placerat volutpat. Mauris ullamcorper placerat quam, eu malesuada metus consectetur vitae. Cras euismod nisi id lectus tempor sollicitudin. Vestibulum eget eleifend elit. Fusce mattis odio eu ex tempus cursus non ac ipsum. Sed facilisis nulla sit amet pulvinar blandit.',
       },
       {
         id: 'j5rURU1Y5W8P5nEUoungH',
         text: 'Release',
         funds: 100,
+        details:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque justo metus, fringilla sit amet eleifend vehicula, pharetra non risus. Proin dapibus bibendum venenatis. Nullam gravida est nec placerat volutpat. Mauris ullamcorper placerat quam, eu malesuada metus consectetur vitae. Cras euismod nisi id lectus tempor sollicitudin. Vestibulum eget eleifend elit. Fusce mattis odio eu ex tempus cursus non ac ipsum. Sed facilisis nulla sit amet pulvinar blandit.',
       },
     ],
     name: 'Amazing Grant Proposal - Project 04 (seriously amazing, totally worth $50,000)',

@@ -37,6 +37,7 @@ export type ApplicationMilestoneType = {
   id: string
   text: string
   funds: number | null
+  details?: string
 }
 
 export type ApplicationStatusType = typeof APPLICATION_STATUSES[number]
