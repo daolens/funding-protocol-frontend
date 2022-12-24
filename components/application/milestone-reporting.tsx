@@ -135,7 +135,7 @@ const MilestoneReporting = ({
 
   const [activeMilestoneId, setActiveMilestoneId] = useState('')
   const [isApproveMilestoneModalOpen, setIsApproveMilestoneModalOpen] =
-    useState(true)
+    useState(false)
 
   const completedMilestones = milestones.filter(
     (_, index) => index < completedMilestoneCount

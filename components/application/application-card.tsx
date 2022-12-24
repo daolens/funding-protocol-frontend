@@ -2,6 +2,7 @@ import CommunityAvatar from '@components/common/community-avatar'
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid'
 import { ApplicationType } from '@lib/types/grants'
 import classNames from 'classnames'
+import Link from 'next/link'
 import React from 'react'
 
 type PillProps = {
@@ -46,17 +47,20 @@ const ApplicationCard = ({ application }: Props) => {
   const reviewTimeString = application.reviewTimestamp
     ? new Date(application.reviewTimestamp).toDateString()
     : ''
+  const workspaceId = application.workspaceId
+  const grantAddress = application.grantAddress
   return (
-    <div className="p-5 bg-gray-800 bg-opacity-20 border border-gray-800 flex flex-col rounded-xl gap-5">
+    <Link
+      href={`/workspaces/${workspaceId}/grants/${grantAddress}/applications/${application.id}`}
+      className="p-5 bg-gray-800 bg-opacity-20 border border-gray-800 flex flex-col rounded-xl gap-5 hover:border-indigo-500"
+    >
       <div className="flex gap-4 items-center">
         {application.workspaceTitle && (
           <CommunityAvatar communityName={application.workspaceTitle} />
         )}
         <div className="flex flex-col gap-1">
-          <h3 className="text-xl font-semibold">
-            {application.workspaceTitle}
-          </h3>
-          <p className="text-gray-500">{application.grantTitle}</p>
+          <h3 className="text-xl font-semibold">{application.grantTitle}</h3>
+          <p className="text-gray-500">by {application.workspaceTitle}</p>
         </div>
       </div>
       <div className="flex flex-nowrap items-center overflow-x-auto max-w-xs md:max-w-lg lg:max-w-4xl">
@@ -116,7 +120,7 @@ const ApplicationCard = ({ application }: Props) => {
             />
           ))}
       </div>
-    </div>
+    </Link>
   )
 }
 

@@ -5,7 +5,9 @@ import {
   ApplicationStatusType,
   ApplicationType,
   FundingMethodType,
+  GrantType,
 } from '@lib/types/grants'
+import { WorkspaceType } from '@lib/types/workspace'
 import { log } from '@lib/utils/common'
 import {
   readSmartContractFunction,
@@ -171,4 +173,56 @@ export const approveMilestoneSC = async ({
   const txnConfirmation = await result.wait()
   log(`approveMilestone call successful. Hash: ${result.hash}`)
   log({ txnConfirmation })
+}
+
+export const fetchCurrentUserApplications = async (
+  address: WalletAddressType
+) => {
+  const response = (await readSmartContractFunction({
+    contractObj: CONTRACTS.application,
+    functionName: CONTRACT_FUNCTION_NAME_MAP.application.fetchMyApplications,
+    overrides: { from: address },
+  })) as [FetchApplicationResponseType[], string[], string[]]
+
+  if (!response) throw new Error('response is not defined')
+
+  log('fetchMyApplications response:', response)
+
+  const applications: ApplicationType[] = []
+
+  for (let index = 0; index < response[0].length; index++) {
+    const applicationFromContract = response[0][index]
+
+    const applicationIpfsData = await getFromIPFS(
+      applicationFromContract.metadataHash
+    )
+    const grantIpfsData = await getFromIPFS(response[1][index])
+    const worksapceIpfsData = await getFromIPFS(response[2][index])
+
+    if (!applicationIpfsData) throw new Error('Application meta data not found')
+    if (!grantIpfsData) throw new Error('Grant meta data not found')
+    if (!worksapceIpfsData) throw new Error('Workspace meta data not found')
+
+    const application: ApplicationType = JSON.parse(applicationIpfsData)
+    const grant: GrantType = JSON.parse(grantIpfsData)
+    const workspace: WorkspaceType = JSON.parse(worksapceIpfsData)
+
+    application.id = applicationFromContract.id._hex
+    application.completedMilestoneCount = parseInt(
+      applicationFromContract.milestonesDone._hex,
+      16
+    )
+    application.owner = applicationFromContract.owner as WalletAddressType
+    application.status = APPLICATION_STATUSES[applicationFromContract.state]
+    // TODO: add review timestamp
+    // application.reviewTimestamp = new Date(reviewTimestamp).toISOString()
+    application.grantAddress = applicationFromContract.grantAddress
+    application.workspaceId = applicationFromContract.workspaceId
+      ._hex as `0x${string}`
+    application.workspaceTitle = workspace.communityName
+    application.grantTitle = grant.title
+    applications.push(application)
+  }
+
+  return applications
 }

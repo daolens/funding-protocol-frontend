@@ -7,6 +7,7 @@ type CallSmartContractFunctionOptionsType = {
   contractObj: ContractType
   functionName: string
   args?: any[]
+  overrides?: any
 }
 
 export const writeSmartContractFunction = async ({
@@ -31,6 +32,7 @@ export const readSmartContractFunction = async ({
   contractObj,
   args,
   functionName,
+  overrides,
 }: CallSmartContractFunctionOptionsType) => {
   const data = await readContract({
     address: IS_PROD ? contractObj.address : contractObj.polygonMumbaiAddress,
@@ -38,6 +40,7 @@ export const readSmartContractFunction = async ({
     functionName,
     args,
     chainId: IS_PROD ? mainnet.id : polygonMumbai.id,
+    overrides,
   })
 
   return data

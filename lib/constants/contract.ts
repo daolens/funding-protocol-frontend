@@ -51,6 +51,8 @@ export const CONTRACT_FUNCTION_NAME_MAP = {
      * args: [applicationId, milestoneId, workspaceId, grantAddress, reasonMetadataHash]
      */
     approveMilestone: 'approveMilestone',
+    /** Call client side */
+    fetchMyApplications: 'fetchMyApplications'
   },
 } as const
 
