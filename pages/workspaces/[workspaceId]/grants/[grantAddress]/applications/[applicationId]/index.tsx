@@ -1,4 +1,5 @@
 import Description from '@components/application/description'
+import MilestoneReporting from '@components/application/milestone-reporting'
 import ReviewButtons from '@components/application/review-buttons'
 import ApplicationSectionTabs from '@components/application/section-tabs'
 import SideInfoBar from '@components/application/side-info-bar'
@@ -99,8 +100,13 @@ const ApplicationDetails = ({
                 />
               </>
             )}
-            {/* TODO: complete */}
-            {activeSection === 'milestone-reporting' && <>Coming soon</>}
+            {activeSection === 'milestone-reporting' && (
+              <MilestoneReporting
+                milestones={application.milestones}
+                completedMilestoneCount={application.completedMilestoneCount}
+                isReviewer={isReviewer}
+              />
+            )}
           </div>
           <div className="flex flex-col gap-5">
             {isReviewer && (
@@ -134,12 +140,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return {
     props: {
       application,
+      grantFundingMethod: application.fundingMethod,
+      // TODO: update these
       isReviewer: true,
       grantBalance: 10000,
       grantBalanceToken: 'Aave',
       isAdmin: true,
       isInsufficientBalance: false,
-      grantFundingMethod: application.fundingMethod,
     } as Props,
   }
 }
