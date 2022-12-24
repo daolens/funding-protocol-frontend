@@ -2,17 +2,40 @@ import BackButton from '@components/common/back-button'
 import Background from '@components/common/background'
 import Textarea from '@components/common/textarea'
 import { ArrowRightIcon } from '@heroicons/react/24/solid'
+import { ApplicationSectionType } from '@lib/types/application'
+import { ApplicationMilestoneType, ApplicationType } from '@lib/types/grants'
+import { fetchApplicationById } from '@lib/utils/application'
 import classNames from 'classnames'
+import { GetServerSideProps } from 'next'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
 
-const MilestoneDetails = () => {
+type Props = {
+  application: ApplicationType
+  milestone: ApplicationMilestoneType
+  milestoneIndex: number
+}
+
+const MilestoneDetails = ({
+  application,
+  milestone,
+  milestoneIndex,
+}: Props) => {
   const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
+  const milestoneId = router.query.milestoneId as string
+  const workspaceId = router.query.workspaceId as string
+  const grantAddress = router.query.grantAddress as string
+
+  const onBack = () => {
+    // TODO: handle
+  }
   return (
     <Background>
       <div className="py-6 flex flex-col gap-3">
-        <BackButton onBack={() => {}} />
+        <BackButton onBack={onBack} />
       </div>
-      <div className="text-2xl font-semibold mb-2">Milestone 1 report</div>
+      <div className="text-2xl font-semibold mb-2">{}</div>
       <div className="text-sm text-gray-500 mb-6">
         Goal: Defining the structure and designing the whole basketball court in
         UniSwap’s theme and some more things as place
@@ -41,5 +64,28 @@ const MilestoneDetails = () => {
       </div>
     </Background>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { query } = ctx
+  const applicationId = query.applicationId as `0x${string}`
+  const milestoneId = query.milestoneId as `0x${string}`
+  const application = await fetchApplicationById(applicationId)
+  const milestone = application.milestones.find(
+    (milestone) => milestone.id === milestoneId
+  )
+  const milestoneIndex = application.milestones.findIndex(
+    (milestone) => milestone.id === milestoneId
+  )
+
+  if (!milestone) return { notFound: true }
+
+  const props: Props = {
+    application,
+    milestone,
+    milestoneIndex,
+  }
+
+  return { props }
 }
 export default MilestoneDetails
