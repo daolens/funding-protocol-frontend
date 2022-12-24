@@ -22,7 +22,9 @@ const HomePage = ({ workspaceCards }: Props) => {
   return (
     <Background>
       <Navbar />
-      <WorkspacesYouOwn workspaceList={ownedWorkspaces} />
+      {ownedWorkspaces.length > 0 && (
+        <WorkspacesYouOwn workspaceList={ownedWorkspaces} />
+      )}
       <Discover workspaceList={remainingWorkspaces} />
     </Background>
   )

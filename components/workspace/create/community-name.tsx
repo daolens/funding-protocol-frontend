@@ -13,7 +13,6 @@ type Props = {
 const CHARACTER_LIMIT = 100
 
 const CommunityName = ({ communityName, setCommunityName, onNext }: Props) => {
-  // TODO: replace with a check for unique community name
   const isNextAllowed = communityName.length !== 0
   return (
     <div className="flex flex-col gap-11 transition-all ease-linear">

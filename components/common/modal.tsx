@@ -6,9 +6,15 @@ type Props = {
   children: React.ReactNode
   isOpen: boolean
   setIsOpen: Dispatch<SetStateAction<boolean>>
+  isCloseButtonHidden?: boolean
 }
 
-export default function Modal({ children, isOpen, setIsOpen }: Props) {
+export default function Modal({
+  children,
+  isOpen,
+  setIsOpen,
+  isCloseButtonHidden,
+}: Props) {
   return (
     <Transition.Root show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setIsOpen}>
@@ -36,16 +42,18 @@ export default function Modal({ children, isOpen, setIsOpen }: Props) {
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-gray-900 px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
-                <div className="absolute top-0 right-0 hidden pt-4 pr-4 sm:block">
-                  <button
-                    type="button"
-                    className="rounded-md bg-gray-900 text-gray-500 hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <span className="sr-only">Close</span>
-                    <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                  </button>
-                </div>
+                {!isCloseButtonHidden && (
+                  <div className="absolute top-0 right-0 hidden pt-4 pr-4 sm:block">
+                    <button
+                      type="button"
+                      className="rounded-md bg-gray-900 text-gray-500 hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <span className="sr-only">Close</span>
+                      <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                    </button>
+                  </div>
+                )}
                 {children}
               </Dialog.Panel>
             </Transition.Child>

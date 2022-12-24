@@ -1,7 +1,5 @@
 import { GrantType } from '@lib/types/grants'
-import {
-  updateGrantDataAndCallSmartContractFn,
-} from '@lib/utils/grants'
+import { updateGrantDataAndCallSmartContractFn } from '@lib/utils/grants'
 import React, { useRef } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import cogoToast, { CTReturn } from 'cogo-toast'
@@ -23,6 +21,7 @@ const UpdateGrant = ({ workspaceTitle = 'Workspace', grant }: Props) => {
     onSuccess: () => {
       loadingToastRef.current?.hide?.()
       cogoToast.success('Grant updated successfully')
+      router.push(`/workspaces/${workspaceId}/grants/${grantAddress}`)
     },
     onError: (error) => {
       loadingToastRef.current?.hide?.()

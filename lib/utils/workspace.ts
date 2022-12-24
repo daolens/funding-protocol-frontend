@@ -35,6 +35,7 @@ export const postDataAndCallSmartContractFunction = async (
   })
 
   const returnValue: { _hex: string } = transaction.value
+  // TODO: send correct ID
   const workspaceId = returnValue._hex
 
   log(`createWorkspace call successful. Hash: ${result.hash}`)
@@ -141,6 +142,7 @@ export const fetchWorkspaceById = async (workspaceId: `0x${string}`) => {
   )
   workspace.adminAddresses = [workspaceFromContract.owner]
   workspace.id = workspaceFromContract.id._hex
+  workspace.owner = workspaceFromContract.owner
 
   const grants: GrantType[] = []
 

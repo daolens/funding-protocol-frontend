@@ -44,18 +44,16 @@ const Apply = ({ grantName, currency = 'USDC', fundingMethod }: Props) => {
       postApplicationDataAndCallSmartContractFn(data),
     onMutate: () => {
       loadingToastRef.current = cogoToast.loading(
-        'Creating grant. This may take a while.',
+        'Submitting application. This may take a while.',
         {
           hideAfter: 0,
         }
       )
     },
-    onSuccess: (applicationId) => {
+    onSuccess: () => {
       loadingToastRef.current?.hide?.()
       cogoToast.success('Applied successfully')
-      router.push(
-        `/workspaces/${workspaceId}/grants/${grantAddress}/applications/${applicationId}`
-      )
+      router.push(`/workspaces/${workspaceId}/grants/${grantAddress}`)
     },
     onError: (error) => {
       loadingToastRef.current?.hide?.()

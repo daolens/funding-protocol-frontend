@@ -7,9 +7,14 @@ import { Connector, useConnect } from 'wagmi'
 type Props = {
   isOpen: boolean
   setIsOpen: Dispatch<SetStateAction<boolean>>
+  isCloseButtonHidden?: boolean
 }
 
-const ConnectWalletModal = ({ isOpen, setIsOpen }: Props) => {
+const ConnectWalletModal = ({
+  isOpen,
+  setIsOpen,
+  isCloseButtonHidden,
+}: Props) => {
   const { connectors, connect, isLoading, pendingConnector } = useConnect({
     onSuccess: () => {
       setIsOpen(false)
@@ -33,7 +38,11 @@ const ConnectWalletModal = ({ isOpen, setIsOpen }: Props) => {
   }
 
   return (
-    <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
+    <Modal
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
+      isCloseButtonHidden={isCloseButtonHidden}
+    >
       <div className="flex flex-col gap-7 px-16 py-5">
         <div className="flex flex-col gap-2 items-center">
           <h2 className="text-xl font-semibold">Connect your wallet</h2>

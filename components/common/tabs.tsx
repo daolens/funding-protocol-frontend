@@ -10,11 +10,7 @@ type Props = {
   tabs: { id: string; name: string }[]
 }
 
-export default function Tabs({
-  selectedTab,
-  setSelectedTab,
-  tabs,
-}: Props) {
+export default function Tabs({ selectedTab, setSelectedTab, tabs }: Props) {
   return (
     <div>
       <div className="border-b border-gray-800">

@@ -38,7 +38,7 @@ const Discover = ({ workspaceList }: Props) => {
               <MagnifyingGlassIcon className="w-4 h-4 text-gray-400 " />
             }
             isLeadingIconShown={true}
-            className="rounded-none w-[20rem] h-8"
+            className="rounded-md w-80 h-8"
             onChange={(e) => setSearchCommunity(e.currentTarget.value)}
           />
           <div className="flex gap-1 items-center">
@@ -87,7 +87,7 @@ const Discover = ({ workspaceList }: Props) => {
       <div className="grid grid-cols-2 gap-5 ">
         <Link
           href="/workspaces/create"
-          className="bg-indigo-800 bg-opacity-20 flex gap-2 items-center rounded-2xl col-span-2 p-5 mb-2 mt-6"
+          className="bg-indigo-800 hover:bg-indigo-700 hover:bg-opacity-20 bg-opacity-20 flex gap-2 items-center rounded-2xl col-span-2 p-5 mb-2 mt-6 border border-dashed border-indigo-500"
         >
           <PlusCircleIcon className="w-12 h-12 text-indigo-400 " />
           <p className="text-indigo-200 text-base text-center">

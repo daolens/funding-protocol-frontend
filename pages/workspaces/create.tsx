@@ -81,6 +81,7 @@ const Create = () => {
       <ConnectWalletModal
         isOpen={isConnectWalletModalOpen}
         setIsOpen={setIsConnectWalletModalOpen}
+        isCloseButtonHidden
       />
     </div>
   )

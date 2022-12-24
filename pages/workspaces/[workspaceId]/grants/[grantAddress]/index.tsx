@@ -7,6 +7,7 @@ import Info from '@components/grants/details/info'
 import Sections from '@components/grants/details/sections'
 import Stats from '@components/grants/details/stats'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
+import { WalletAddressType } from '@lib/types/common'
 import {
   ApplicationType,
   GrantTreasuryType,
@@ -25,7 +26,7 @@ type Props = {
   grant: GrantType
   workspaceName: string
   treasury: GrantTreasuryType
-  isAdmin: boolean
+  workspaceOwner: WalletAddressType
   applications: ApplicationType[]
 }
 
@@ -33,7 +34,7 @@ const GrantDetails = ({
   grant,
   treasury,
   workspaceName,
-  isAdmin,
+  workspaceOwner,
   applications,
 }: Props) => {
   const { address } = useAccount()
@@ -47,6 +48,7 @@ const GrantDetails = ({
   )
 
   const onBack = () => router.push(`/workspaces/${workspaceId}`)
+  const isAdmin = workspaceOwner === address
 
   return (
     <ClientOnly>
@@ -110,7 +112,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { grants, workspace } = await fetchWorkspaceById(workspaceId as any)
   const grant = grants.find((grant) => grant.address === grantAddress)
 
-  if (!grant)
+  if (!grant || !workspace)
     return {
       notFound: true,
     }
@@ -140,7 +142,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     grant,
     workspaceName,
     treasury,
-    isAdmin: true,
+    workspaceOwner: workspace.owner as WalletAddressType,
     applications,
   }
 

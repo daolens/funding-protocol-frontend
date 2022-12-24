@@ -5,7 +5,7 @@ type Props = {
   workspaceList: WorkspaceCardType[]
 }
 
-const WorkspacesYouOwn = ({ workspaceList}: Props) => {
+const WorkspacesYouOwn = ({ workspaceList }: Props) => {
   return (
     <section className="pt-14 text-gray-300">
       <h2 className="text-2xl font-semibold text-decoration-line pb-8 underline decoration-4 decoration-indigo-400">

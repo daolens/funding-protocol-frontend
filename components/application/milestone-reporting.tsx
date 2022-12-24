@@ -1,7 +1,12 @@
+import AlertModal from '@components/common/alert-modal'
 import { CheckCircleIcon, CurrencyDollarIcon } from '@heroicons/react/24/solid'
 import { ApplicationMilestoneType } from '@lib/types/grants'
+import { approveMilestoneSC } from '@lib/utils/application'
 import classNames from 'classnames'
-import { useState } from 'react'
+import cogoToast, { CTReturn } from 'cogo-toast'
+import { useRouter } from 'next/router'
+import { useRef, useState } from 'react'
+import { useMutation } from 'wagmi'
 
 type MilestoneCardProps = {
   milestone: ApplicationMilestoneType
@@ -10,7 +15,6 @@ type MilestoneCardProps = {
   areDetailsShown: boolean
   isReviewer: boolean
   onApprove?: () => void
-  onSendFeedback?: () => void
   index: number
 }
 
@@ -22,7 +26,6 @@ const MilestoneCard = ({
   isReviewer,
   index,
   onApprove,
-  onSendFeedback,
 }: MilestoneCardProps) => (
   <div className="rounded-xl border border-gray-800  bg-gray-800/20 backdrop-blur">
     <button
@@ -62,14 +65,15 @@ const MilestoneCard = ({
         </p>
         {isReviewer && state !== 'completed' && (
           <div className="space-x-2 flex w-full max-w-7xl items-end justify-end p-2 border rounded-2xl border-gray-700 bg-gray-900 bg-opacity-50 border-opacity-50 backdrop-blur-md">
-            <button
+            {/* TODO: enable post v1 launch */}
+            {/* <button
               className={classNames(
                 'inline-flex items-center rounded-xl border border-transparent bg-red-900 bg-opacity-20 px-4 py-3 text-sm font-medium shadow-sm hover:bg-red-800 hover:bg-opacity-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 justify-center text-red-400'
               )}
               onClick={onSendFeedback}
             >
               Send back with feedback
-            </button>
+            </button> */}
             <button
               className={classNames(
                 'inline-flex items-center rounded-xl border border-transparent bg-green-900 bg-opacity-20 px-4 py-3 text-sm font-medium shadow-sm hover:bg-green-800 hover:bg-opacity-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 justify-center text-green-400'
@@ -89,14 +93,50 @@ type Props = {
   milestones: ApplicationMilestoneType[]
   completedMilestoneCount?: number
   isReviewer?: boolean
+  isApplicant?: boolean
 }
 
 const MilestoneReporting = ({
   milestones,
   completedMilestoneCount = 1,
   isReviewer,
+  isApplicant,
 }: Props) => {
-  const [activeMilestone, setActiveMilestone] = useState('')
+  const loadingToastRef = useRef<CTReturn | null>(null)
+  const router = useRouter()
+  const { workspaceId, grantAddress, applicationId } = router.query
+
+  const approveMilestoneMutation = useMutation({
+    mutationFn: (milestoneId: string) =>
+      approveMilestoneSC({
+        applicationId: applicationId as string,
+        grantAddress: grantAddress as string,
+        milestoneId,
+        workspaceId: workspaceId as string,
+      }),
+    onMutate: () => {
+      loadingToastRef.current = cogoToast.loading(
+        'Approving milestone. This may take a while.',
+        {
+          hideAfter: 0,
+        }
+      )
+    },
+    onSuccess: () => {
+      loadingToastRef.current?.hide?.()
+      cogoToast.success('Milestone approved')
+    },
+    onError: (error) => {
+      loadingToastRef.current?.hide?.()
+      console.error(error)
+      cogoToast.error('Something went wrong while approving milestone.')
+    },
+  })
+
+  const [activeMilestoneId, setActiveMilestoneId] = useState('')
+  const [isApproveMilestoneModalOpen, setIsApproveMilestoneModalOpen] =
+    useState(true)
+
   const completedMilestones = milestones.filter(
     (_, index) => index < completedMilestoneCount
   )
@@ -104,12 +144,33 @@ const MilestoneReporting = ({
     (_, index) => index >= completedMilestoneCount
   )
 
+  const activeMilestoneIndex = milestones.findIndex(
+    (milestone) => milestone.id === activeMilestoneId
+  )
+
+  const onMilestoneClick = (milestone: ApplicationMilestoneType) => {
+    if (!milestone.details) {
+      isReviewer
+        ? cogoToast.error('Please wait for applicant to submit proof of work')
+        : isApplicant
+        ? router.push(
+            `/workspaces/${workspaceId}/grants/${grantAddress}/applications/${applicationId}/milestones/${milestone.id}`
+          )
+        : null
+      return
+    }
+    setActiveMilestoneId((prev) => (prev === milestone.id ? '' : milestone.id))
+  }
+
   const onApproveMilestoneById = (milestoneId: string) => {
-    // TODO: handle
+    const milestoneIndex = milestones.findIndex(
+      (milestone) => milestone.id === milestoneId
+    )
+    setIsApproveMilestoneModalOpen(false)
+    // TODO: verify whether to pass index or someother ID
+    approveMilestoneMutation.mutate(milestoneIndex.toString())
   }
-  const onSubmitFeedbackById = (milestoneId: string) => {
-    // TODO: open a modal to submit feedback
-  }
+
   return (
     <>
       <div className="border border-solid border-gray-800 rounded-xl backdrop-blur h-12 flex items-center p-5 font-medium">
@@ -117,9 +178,14 @@ const MilestoneReporting = ({
         Total funds promised for the application
         <span className="text-indigo-500 ml-auto font-medium">
           $
-          {milestones?.reduce((value, milestone) => {
-            return value + (milestone?.funds || 0)
-          }, 0)}
+          {milestones?.reduce(
+            (value, milestone) =>
+              value +
+              (typeof milestone.funds === 'string'
+                ? parseInt(milestone?.funds || '0')
+                : milestone?.funds || 0),
+            0
+          )}
         </span>
       </div>
       {completedMilestoneCount > 0 && (
@@ -130,15 +196,11 @@ const MilestoneReporting = ({
         {completedMilestones.map((milestone, index) => (
           <MilestoneCard
             key={milestone.id}
-            areDetailsShown={activeMilestone === milestone.id}
+            areDetailsShown={activeMilestoneId === milestone.id}
             index={index}
             isReviewer={!!isReviewer}
             milestone={milestone}
-            onClick={() =>
-              setActiveMilestone((prev) =>
-                prev === milestone.id ? '' : milestone.id
-              )
-            }
+            onClick={() => onMilestoneClick(milestone)}
             state="completed"
           />
         ))}
@@ -152,17 +214,12 @@ const MilestoneReporting = ({
         {pendingMilestones.map((milestone, index) => (
           <MilestoneCard
             key={milestone.id}
-            areDetailsShown={activeMilestone === milestone.id}
+            areDetailsShown={activeMilestoneId === milestone.id}
             index={index + completedMilestones.length}
             isReviewer={!!isReviewer}
             milestone={milestone}
-            onApprove={() => onApproveMilestoneById(milestone.id)}
-            onSendFeedback={() => onSubmitFeedbackById(milestone.id)}
-            onClick={() =>
-              setActiveMilestone((prev) =>
-                prev === milestone.id ? '' : milestone.id
-              )
-            }
+            onApprove={() => setIsApproveMilestoneModalOpen(true)}
+            onClick={() => onMilestoneClick(milestone)}
             state={
               index + completedMilestones.length === completedMilestoneCount
                 ? 'ongoing'
@@ -171,6 +228,14 @@ const MilestoneReporting = ({
           />
         ))}
       </div>
+      <AlertModal
+        onCtaClick={() => onApproveMilestoneById(activeMilestoneId)}
+        isOpen={isApproveMilestoneModalOpen}
+        setIsOpen={setIsApproveMilestoneModalOpen}
+        ctaText="Approve"
+        title={`Approve Milestone ${activeMilestoneIndex + 1}`}
+        text="Approving this milestone will credit the requested funds to applicant's wallet."
+      />
     </>
   )
 }

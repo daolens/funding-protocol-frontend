@@ -24,8 +24,10 @@ const ConnectWalletButton = () => {
         {address ? (
           <>
             <CreditCardIcon className="w-5 h-5" />
-            <span className='group-hover:hidden w-20'>{ensName || getTruncatedWalletAddress(address)}</span>
-            <span className='hidden group-hover:flex w-20'>Disconnect</span>
+            <span className="group-hover:hidden w-20">
+              {ensName || getTruncatedWalletAddress(address)}
+            </span>
+            <span className="hidden group-hover:flex w-20">Disconnect</span>
           </>
         ) : (
           'Connect wallet'

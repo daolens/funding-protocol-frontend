@@ -30,10 +30,10 @@ const Success = ({ communityName, multisigAddress, networkId }: Props) => {
   const workspaceMutation = useMutation({
     mutationFn: (data: WorkspaceType) =>
       postDataAndCallSmartContractFunction(data),
-    onSuccess: (workspaceId) => {
+    onSuccess: () => {
       loadingToastRef.current?.hide?.()
       cogoToast.success('Workspace created!')
-      router.push(`/workspaces/${workspaceId}`)
+      router.push(`/`)
     },
     onError: (error) => {
       loadingToastRef.current?.hide?.()
@@ -109,7 +109,6 @@ const Success = ({ communityName, multisigAddress, networkId }: Props) => {
       </div>
       <button
         type="button"
-        // TODO: update onclick to ask for connecting wallet first
         onClick={() => signMessage({ message: 'Verifying ownership' })}
         disabled={isLoading}
         className={classNames(

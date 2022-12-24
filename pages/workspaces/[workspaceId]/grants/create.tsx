@@ -18,12 +18,11 @@ const Create = ({ workspaceTitle = 'Workspace' }: Props) => {
   const workspaceId = router.query.workspaceId as string
   const grantMutation = useMutation({
     mutationFn: (data: GrantType) => postGrantDataAndCallSmartContractFn(data),
-    onSuccess: (grantAddress) => {
+    onSuccess: () => {
       loadingToastRef.current?.hide?.()
       cogoToast.success('Grant created successfully')
-      router.push(`/workspaces/${workspaceId}/grants/${grantAddress}`)
+      router.push(`/workspaces/${workspaceId}`)
     },
-
     onError: (error) => {
       loadingToastRef.current?.hide?.()
       console.error(error)

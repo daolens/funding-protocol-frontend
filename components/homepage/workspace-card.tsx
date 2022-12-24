@@ -12,7 +12,11 @@ const WorkspaceCardList = ({ workspaceList }: Props) => {
   return (
     <>
       {workspaceList?.map((workspace) => (
-        <Link href={`/workspaces/${workspace.id}`} key={workspace.id}>
+        <Link
+          href={`/workspaces/${workspace.id}`}
+          key={workspace.id}
+          className="border border-transparent hover:border-indigo-500 rounded-2xl"
+        >
           <div className="pt-5 pb-6 px-5 bg-gray-800 border bg-opacity-40 border-gray-800 rounded-tl-2xl rounded-tr-2xl flex flex-col gap-6">
             <div className="flex gap-4">
               <CommunityAvatar

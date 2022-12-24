@@ -75,6 +75,7 @@ export const postGrantDataAndCallSmartContractFn = async (data: GrantType) => {
   })
 
   const returnValue: { _hex: string } = transaction.value
+  // TODO: send correct grant address
   const grantAddress = returnValue._hex
   log(`createGrant call successful. Hash: ${result.hash}`)
   log({ transaction })
@@ -125,9 +126,15 @@ export const validateGrantApplicationData = (
   if (
     fundingMethod === 'MILESTONE' &&
     data.milestones
-      .map((milestone) => milestone.funds)
+      .map((milestone) =>
+        typeof milestone.funds === 'string'
+          ? parseInt(milestone.funds)
+          : milestone.funds
+      )
       .reduce((prev = 0, curr = 0) => (prev || 0) + (curr || 0), 0) !==
-      data.seekingFunds
+      (typeof data.seekingFunds === 'string'
+        ? parseInt(data.seekingFunds)
+        : data.seekingFunds)
   )
     errors.milestones =
       'Seeking funds and sum of funds in milestone are not equal'
@@ -165,6 +172,7 @@ export const postApplicationDataAndCallSmartContractFn = async (
   })
 
   const returnValue: { _hex: string } = transaction.value
+  // TODO: send correct application id
   const applicationId = returnValue._hex
   log(`submitApplication call successful. Hash: ${result.hash}`)
   log({ transaction })

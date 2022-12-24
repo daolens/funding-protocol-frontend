@@ -1,7 +1,5 @@
 import ApplicationCard from '@components/grants/details/sections/application-card'
-import {
-  APPLICATION_STATUS_OBJ,
-} from '@lib/constants/grants'
+import { APPLICATION_STATUS_OBJ } from '@lib/constants/grants'
 import { WalletAddressType } from '@lib/types/common'
 import { ApplicationStatusType, ApplicationType } from '@lib/types/grants'
 import classNames from 'classnames'
