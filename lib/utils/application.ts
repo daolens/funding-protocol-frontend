@@ -67,6 +67,12 @@ type FetchApplicationResponseType = {
   workspaceId: { _hex: string }
 }
 
+type FetchMilestoneResponseType = {
+  state: number
+  reviewerHash: string
+  applicantHash: string
+}
+
 export const fetchApplicationById = async (applicationId: `0x${string}`) => {
   const response = (await readSmartContractFunction({
     contractObj: CONTRACTS.application,
@@ -76,7 +82,8 @@ export const fetchApplicationById = async (applicationId: `0x${string}`) => {
     FetchApplicationResponseType,
     WalletAddressType[],
     { _hex: string },
-    FundingMethodType
+    FundingMethodType,
+    FetchMilestoneResponseType[]
   ]
 
   if (!response) throw new Error('response is not defined')
@@ -109,6 +116,24 @@ export const fetchApplicationById = async (applicationId: `0x${string}`) => {
   application.fundingMethod = fundingMethod
   // TODO: populate feedback here
   application.feedback = ''
+
+  const milestonesFromSC = response[4]
+
+  for (let index = 0; index < milestonesFromSC.length; index++) {
+    const milestone = application.milestones[index]
+    const milestoneFromSC = milestonesFromSC[index]
+
+    if (!milestoneFromSC.applicantHash) continue
+    const milestoneDetailsJsonString = await getFromIPFS(
+      milestoneFromSC.applicantHash
+    )
+    if (!milestoneDetailsJsonString) continue
+    const milestoneDetails = JSON.parse(
+      milestoneDetailsJsonString
+    ).milestoneDetails
+    milestone.details = milestoneDetails
+    application.milestones[index] = milestone
+  }
 
   return application
 }
@@ -249,5 +274,50 @@ export const updateApplicationMetadataSC = async (data: ApplicationType) => {
 
   const txnConfirmation = await result.wait()
   log(`updateApplicationMetadata call successful. Hash: ${result.hash}`)
+  log({ txnConfirmation })
+}
+
+export const revertRejectDecisionSC = async (
+  applicationId: string,
+  grantAddress: string
+) => {
+  const args = [applicationId, grantAddress]
+  log('application.revertTransactions called', { args })
+  const result = await writeSmartContractFunction({
+    contractObj: CONTRACTS.application,
+    args,
+    functionName: CONTRACT_FUNCTION_NAME_MAP.application.revertTransactions,
+  })
+
+  if (!result.hash)
+    throw new Error('application.revertTransactions smart contract call failed')
+
+  const txnConfirmation = await result.wait()
+  log(`application.revertTransactions call successful. Hash: ${result.hash}`)
+  log({ txnConfirmation })
+}
+
+export const revertApproveDecisionSC = async (
+  applicationId: string,
+  grantAddress: string
+) => {
+  const args = [applicationId]
+  log('individualGrant.revertTransactions called', { args })
+  const result = await writeSmartContractFunction({
+    contractObj: {
+      abi: CONTRACTS.individualGrant.abi,
+      address: grantAddress,
+      polygonMumbaiAddress: grantAddress,
+      goerliAddress: grantAddress,
+    },
+    args,
+    functionName: CONTRACT_FUNCTION_NAME_MAP.individualGrant.revertTransactions,
+  })
+
+  if (!result.hash)
+    throw new Error('individualGrant.revertTransactions smart contract call failed')
+
+  const txnConfirmation = await result.wait()
+  log(`individualGrant.revertTransactions call successful. Hash: ${result.hash}`)
   log({ txnConfirmation })
 }

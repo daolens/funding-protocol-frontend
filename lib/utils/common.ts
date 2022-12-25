@@ -3,6 +3,7 @@ import { WalletAddressType } from '@lib/types/common'
 import { ContractType } from '@lib/types/contract'
 import { writeSmartContractFunction } from '@lib/utils/contract'
 import { uploadToIPFS } from '@lib/utils/ipfs'
+import cogoToast from 'cogo-toast'
 
 type WriteDataOptionsType = {
   data: string
@@ -59,4 +60,9 @@ export const addDays = (date: string | Date, days: number) => {
   const result = new Date(date)
   result.setDate(result.getDate() + days)
   return result
+}
+
+export const onCopyText = (text: string) => {
+  navigator.clipboard.writeText(text)
+  cogoToast.success('Copied', { hideAfter: 1 })
 }

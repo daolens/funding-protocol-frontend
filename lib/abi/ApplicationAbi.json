@@ -238,8 +238,18 @@
     "outputs": [
       {
         "internalType": "enum ApplicationRegistry.MilestoneState",
-        "name": "",
+        "name": "state",
         "type": "uint8"
+      },
+      {
+        "internalType": "string",
+        "name": "reviewersHash",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "applicantHash",
+        "type": "string"
       }
     ],
     "stateMutability": "view",
@@ -500,6 +510,28 @@
         "internalType": "string",
         "name": "",
         "type": "string"
+      },
+      {
+        "components": [
+          {
+            "internalType": "enum ApplicationRegistry.MilestoneState",
+            "name": "state",
+            "type": "uint8"
+          },
+          {
+            "internalType": "string",
+            "name": "reviewersHash",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "applicantHash",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct ApplicationRegistry.MilestoneStateApp[]",
+        "name": "",
+        "type": "tuple[]"
       }
     ],
     "stateMutability": "view",

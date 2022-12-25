@@ -4,6 +4,7 @@ import DatePicker from '@components/common/date-picker'
 import DynamicInputList from '@components/common/dynamic-input-list'
 import Input from '@components/common/input-with-trailing-icon'
 import MultiSelect from '@components/common/multi-select'
+import Navbar from '@components/common/navbar'
 import Textarea from '@components/common/textarea'
 import TokenAmountInput from '@components/common/token-amount-input'
 import FundingRadioSelect from '@components/grants/create/funding-radio-buttons'
@@ -88,6 +89,7 @@ const Form = ({
 
   return (
     <Background>
+      <Navbar />
       <div className="flex flex-col gap-8 py-9 pb-36">
         <BackButton onBack={onBack} />
         <div className="flex justify-between">

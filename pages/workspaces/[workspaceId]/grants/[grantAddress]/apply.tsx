@@ -1,4 +1,5 @@
 import ApplicationForm from '@components/application/form'
+import ForceConnectWallet from '@components/common/force-connect-wallet'
 import { ApplicationType, FundingMethodType } from '@lib/types/grants'
 import { postApplicationDataAndCallSmartContractFn } from '@lib/utils/grants'
 import { fetchWorkspaceById } from '@lib/utils/workspace'
@@ -48,14 +49,17 @@ const Apply = ({ grantName, currency = 'USDC', fundingMethod }: Props) => {
     router.push(`/workspaces/${workspaceId}/grants/${grantAddress}`)
 
   return (
-    <ApplicationForm
-      onBack={onBack}
-      isLoading={applicationMutation.isLoading}
-      onSubmit={(application) => applicationMutation.mutate(application)}
-      currency={currency}
-      fundingMethod={fundingMethod}
-      grantName={grantName}
-    />
+    <>
+      <ForceConnectWallet />
+      <ApplicationForm
+        onBack={onBack}
+        isLoading={applicationMutation.isLoading}
+        onSubmit={(application) => applicationMutation.mutate(application)}
+        currency={currency}
+        fundingMethod={fundingMethod}
+        grantName={grantName}
+      />
+    </>
   )
 }
 

@@ -1,11 +1,7 @@
 import CommunityAvatar from '@components/common/community-avatar'
-import {
-  Cog6ToothIcon,
-  GlobeAltIcon,
-  PencilIcon,
-  ShareIcon,
-} from '@heroicons/react/24/outline'
+import { GlobeAltIcon, ShareIcon } from '@heroicons/react/24/outline'
 import { WorkspaceType } from '@lib/types/workspace'
+import { onCopyText } from '@lib/utils/common'
 import Image from 'next/image'
 import React from 'react'
 
@@ -16,19 +12,8 @@ type Props = {
 
 const ProfileDetails = ({
   workspaceDetails: { communityName, description, discord, twitter, website },
-  isAdmin,
 }: Props) => {
-  const onSettingsClick = () => {
-    // TODO: handle
-  }
-
-  const onShare = () => {
-    // TODO: handle
-  }
-
-  const onEditProfile = () => {
-    // TODO: handle
-  }
+  const onShare = () => onCopyText(window.location.href)
 
   return (
     <div className="flex flex-col relative mt-7 gap-4">
@@ -38,7 +23,8 @@ const ProfileDetails = ({
       <div className="flex justify-between">
         <h1 className="text-2xl font-bold">{communityName}</h1>
         <div className="flex gap-2">
-          {isAdmin && (
+          {/* TODO: add support for change workspace settings */}
+          {/* {isAdmin && (
             <button
               className="border border-gray-800 py-2 px-3 rounded-lg hover:border-indigo-800"
               onClick={onSettingsClick}
@@ -46,7 +32,7 @@ const ProfileDetails = ({
             >
               <Cog6ToothIcon className="w-4 h-4 strocke-2" />
             </button>
-          )}
+          )} */}
           <button
             className="border border-gray-800 py-2 px-3 rounded-lg hover:border-indigo-800"
             onClick={onShare}
@@ -54,7 +40,8 @@ const ProfileDetails = ({
           >
             <ShareIcon className="w-4 h-4 strocke-2" />
           </button>
-          {isAdmin && (
+          {/* TODO: add support for update workspace details */}
+          {/* {isAdmin && (
             <button
               className="border border-gray-800 py-2 px-3 rounded-lg hover:border-indigo-800 flex items-center gap-2 text-sm"
               onClick={onEditProfile}
@@ -63,7 +50,7 @@ const ProfileDetails = ({
               <PencilIcon className="w-4 h-4 strocke-2" />
               Edit profile
             </button>
-          )}
+          )} */}
         </div>
       </div>
       {(website || discord || twitter) && (

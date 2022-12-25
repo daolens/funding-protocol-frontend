@@ -1,6 +1,7 @@
 import WorkspaceContractAbi from '@lib/abi/WorkspaceAbi.json'
 import GrantContractAbi from '@lib/abi/GrantsAbi.json'
 import ApplicationContractAbi from '@lib/abi/ApplicationAbi.json'
+import IndiviaulGrantAbi from '@lib/abi/IndividualGrantAbi.json'
 import { ContractNameType, ContractType } from '@lib/types/contract'
 
 export const CONTRACT_NAMES = [
@@ -71,19 +72,23 @@ export const CONTRACT_FUNCTION_NAME_MAP = {
 export const CONTRACTS: Record<ContractNameType, ContractType> = {
   workspace: {
     address: '0x5266679B13fc94CF9DE0818D15E60A9c225e4668',
-    polygonMumbaiAddress: '0xA521264D40289B20ee7cA89c2cb4D54C3b6918A3',
+    polygonMumbaiAddress: '0x765166979620Dab42eb68a1f71cF7754e94e0932',
     abi: WorkspaceContractAbi,
   },
   application: {
     address: '0xB1873E7234199E864F9619562c058465C0085ac8',
-    polygonMumbaiAddress: '0xAe1A8C853EC992309Bcca1bA4D9794Bd0b833939',
+    polygonMumbaiAddress: '0xdb86A3D241FE1EDb7d59288240EB25C888b14afC',
     abi: ApplicationContractAbi,
   },
   grant: {
     address: '0x49aD31dA5B105789C8737c9c98c0D97AA69fE996',
-    polygonMumbaiAddress: '0xe561BF9EE2cAF74E502dE79e97c7A0C0392dFD10',
+    polygonMumbaiAddress: '0xB86386DDE4553b7829377f28c35AFC742984B32C',
     abi: GrantContractAbi,
   },
   // address will be the grantAddress of the grant
-  individualGrant: { address: '', polygonMumbaiAddress: '', abi: null },
+  individualGrant: {
+    address: '',
+    polygonMumbaiAddress: '',
+    abi: IndiviaulGrantAbi,
+  },
 }

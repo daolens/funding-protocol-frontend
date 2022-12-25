@@ -6,7 +6,7 @@ import {
   ShareIcon,
 } from '@heroicons/react/24/outline'
 import { GrantType } from '@lib/types/grants'
-import { getTokenSymbol } from '@lib/utils/common'
+import { getTokenSymbol, onCopyText } from '@lib/utils/common'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
@@ -38,9 +38,7 @@ const Info = ({ grant, workspaceName, isAdmin }: Props) => {
   const FundingMethodIcon =
     grant.fundingMethod === 'MILESTONE' ? ListBulletIcon : ArrowUpRightIcon
 
-  const onShare = () => {
-    // TODO: handle
-  }
+  const onShare = () => onCopyText(window.location.href)
 
   return (
     <div className="flex flex-col border-b border-gray-800 gap-3 pb-5">

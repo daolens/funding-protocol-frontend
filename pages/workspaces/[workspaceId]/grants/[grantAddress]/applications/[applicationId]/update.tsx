@@ -1,4 +1,5 @@
 import ApplicationForm from '@components/application/form'
+import ForceConnectWallet from '@components/common/force-connect-wallet'
 import { ApplicationType } from '@lib/types/grants'
 import {
   fetchApplicationById,
@@ -34,7 +35,9 @@ const Update = ({ application }: Props) => {
     onSuccess: () => {
       loadingToastRef.current?.hide?.()
       cogoToast.success('Updated successfully')
-      router.push(`/workspaces/${workspaceId}/grants/${grantAddress}/applications/${application.id}`)
+      router.push(
+        `/workspaces/${workspaceId}/grants/${grantAddress}/applications/${application.id}`
+      )
     },
     onError: (error) => {
       loadingToastRef.current?.hide?.()
@@ -49,13 +52,16 @@ const Update = ({ application }: Props) => {
     )
 
   return (
-    <ApplicationForm
-      onBack={onBack}
-      isLoading={applicationMutation.isLoading}
-      onSubmit={(application) => applicationMutation.mutate(application)}
-      application={application}
-      isUpdateForm
-    />
+    <>
+      <ForceConnectWallet />
+      <ApplicationForm
+        onBack={onBack}
+        isLoading={applicationMutation.isLoading}
+        onSubmit={(application) => applicationMutation.mutate(application)}
+        application={application}
+        isUpdateForm
+      />
+    </>
   )
 }
 

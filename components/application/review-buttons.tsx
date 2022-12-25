@@ -1,4 +1,5 @@
 import FeedbackModal from '@components/application/feedback-modal'
+import RevertReviewDecisionModal from '@components/application/revert-review-decision-modal'
 import ClientOnly from '@components/common/client-only'
 import CountDownTimer from '@components/common/count-down-timer'
 import Funds from '@components/grants/details/funds'
@@ -79,14 +80,12 @@ const ReviewButtons = ({
 
   const [isSuggestChangesModalOpen, setIsSuggestChangesModalOpen] =
     useState(false)
+  const [isRevertReviewDecisionModalOpen, setIsRevertReviewDecisionModalOpen] =
+    useState(false)
 
   const onApprove = () => mutate('Approved')
 
   const onReject = () => mutate('Rejected')
-
-  const onReviewDecision = () => {
-    // TODO: handle
-  }
 
   return (
     <ClientOnly>
@@ -137,24 +136,27 @@ const ReviewButtons = ({
           </div>
         )}
 
-        {status === 'Rejected' && (
-          <div className="col-span-2 bg-red-500 bg-opacity-10 border border-red-800 p-5 rounded-xl flex flex-col gap-3">
-            <p className="text-lg text-gray-200">Application Rejected</p>
-            {reviewer && (
-              <span className="text-gray-500 text-xs">
-                by {reviewerEnsName || getTruncatedWalletAddress(reviewer)}
-              </span>
-            )}
-          </div>
-        )}
+        {status === 'Rejected' &&
+          new Date() >= addDays(reviewTimestamp as string, 3) && (
+            <div className="col-span-2 bg-red-500 bg-opacity-10 border border-red-800 p-5 rounded-xl flex flex-col gap-3">
+              <p className="text-lg text-gray-200">Application Rejected</p>
+              {reviewer && (
+                <span className="text-gray-500 text-xs">
+                  by {reviewerEnsName || getTruncatedWalletAddress(reviewer)}
+                </span>
+              )}
+            </div>
+          )}
 
         {isReviewer &&
-          status === 'Approved' &&
+          (status === 'Approved' || status === 'Rejected') &&
           new Date() < addDays(reviewTimestamp as string, 3) && (
             <div
               style={{
                 background:
-                  'linear-gradient(180deg, rgba(0, 175, 117, 0.12) 0%, rgba(0, 0, 0, 0) 100%)',
+                  status === 'Approved'
+                    ? 'linear-gradient(180deg, rgba(0, 175, 117, 0.12) 0%, rgba(0, 0, 0, 0) 100%)'
+                    : 'linear-gradient(180deg, rgba(220, 38, 38, 0.12) 0%, rgba(0, 0, 0, 0) 100%)',
               }}
               className="rounded-xl p-5 border border-gray-800 flex flex-col gap-4 col-span-2"
             >
@@ -162,7 +164,8 @@ const ReviewButtons = ({
                 <p className="text-lg text-gray-200">Pending confirmation</p>
                 {reviewer && (
                   <span className="text-gray-500 text-xs">
-                    application approved by{' '}
+                    application{' '}
+                    {status === 'Approved' ? 'approved' : 'rejected'} by{' '}
                     {reviewerEnsName || getTruncatedWalletAddress(reviewer)}
                   </span>
                 )}
@@ -179,7 +182,7 @@ const ReviewButtons = ({
               </div>
               <button
                 className="w-full text-indigo-500 bg-indigo-800 hover:bg-indigo-600 hover:bg-opacity-20 bg-opacity-20 rounded-lg border-dashed border border-indigo-800 p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                onClick={onReviewDecision}
+                onClick={() => setIsRevertReviewDecisionModalOpen(true)}
               >
                 Review Decision
               </button>
@@ -229,6 +232,13 @@ const ReviewButtons = ({
         workspaceId={workspaceId}
         isOpen={isSuggestChangesModalOpen}
         setIsOpen={setIsSuggestChangesModalOpen}
+      />
+      <RevertReviewDecisionModal
+        applicationId={applicationId}
+        grantAddress={grantAddress}
+        status={status}
+        isOpen={isRevertReviewDecisionModalOpen}
+        setIsOpen={setIsRevertReviewDecisionModalOpen}
       />
     </ClientOnly>
   )

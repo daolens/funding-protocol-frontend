@@ -116,7 +116,8 @@ const ApplicationForm = ({
       email,
       expectedProjectDeadline,
       links: links.filter((item) => item.text),
-      milestones: fundingMethod === 'MILESTONE' ? milestones : [],
+      milestones:
+        isUpdateForm || fundingMethod === 'MILESTONE' ? milestones : [],
       name,
       previousSuccessfulProposalLinks: previousSuccessfulProposalLinks.filter(
         (item) => item.text

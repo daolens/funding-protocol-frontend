@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import { GetServerSideProps } from 'next'
 import { fetchWorkspaceById } from '@lib/utils/workspace'
 import Form from '@components/grants/form'
+import ForceConnectWallet from '@components/common/force-connect-wallet'
 
 type Props = {
   workspaceTitle: string
@@ -41,12 +42,15 @@ const Create = ({ workspaceTitle = 'Workspace' }: Props) => {
   const onBack = () => router.push(`/workspaces/${workspaceId}`)
 
   return (
-    <Form
-      mutate={grantMutation.mutate}
-      onBack={onBack}
-      workspaceTitle={workspaceTitle}
-      isLoading={grantMutation.isLoading}
-    />
+    <>
+      <ForceConnectWallet />
+      <Form
+        mutate={grantMutation.mutate}
+        onBack={onBack}
+        workspaceTitle={workspaceTitle}
+        isLoading={grantMutation.isLoading}
+      />
+    </>
   )
 }
 

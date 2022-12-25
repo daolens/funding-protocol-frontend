@@ -1,4 +1,4 @@
-import ConnectWalletModal from '@components/common/connect-wallet-modal'
+import ForceConnectWallet from '@components/common/force-connect-wallet'
 import CommunityName from '@components/workspace/create/community-name'
 import SourceOfFunding from '@components/workspace/create/source-of-funding'
 import Success from '@components/workspace/create/success'
@@ -6,8 +6,7 @@ import { WORKSPACE_STEPS } from '@lib/constants/workspace'
 import { SupportedNetworkIdType } from '@lib/types/common'
 import { CreateWorkspaceStepType } from '@lib/types/workspace'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
-import { useAccount } from 'wagmi'
+import {  useState } from 'react'
 
 const Create = () => {
   const [activeStep, setActiveStep] = useState<CreateWorkspaceStepType>('name')
@@ -16,17 +15,10 @@ const Create = () => {
   const [networkId, setNetworkId] = useState<SupportedNetworkIdType | null>(
     null
   )
-  const [isConnectWalletModalOpen, setIsConnectWalletModalOpen] =
-    useState(false)
-
-  const { address } = useAccount()
-
-  useEffect(() => {
-    !address && setIsConnectWalletModalOpen(true)
-  }, [address, isConnectWalletModalOpen])
 
   return (
     <div className="bg-gray-900 h-screen w-screen flex px-5">
+      <ForceConnectWallet />
       <div className="flex h-screen my-auto items-center w-full max-w-6xl mx-auto relative">
         <div className="w-1/2 flex items-center justify-center relative h-full">
           <Image
@@ -78,11 +70,6 @@ const Create = () => {
           />
         </div>
       </div>
-      <ConnectWalletModal
-        isOpen={isConnectWalletModalOpen}
-        setIsOpen={setIsConnectWalletModalOpen}
-        isCloseButtonHidden
-      />
     </div>
   )
 }

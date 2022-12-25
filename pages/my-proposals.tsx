@@ -1,5 +1,6 @@
 import ApplicationCard from '@components/application/application-card'
 import Background from '@components/common/background'
+import ForceConnectWallet from '@components/common/force-connect-wallet'
 import Navbar from '@components/common/navbar'
 import Spinner from '@components/common/spinner'
 import { WalletAddressType } from '@lib/types/common'
@@ -23,6 +24,7 @@ const MyProposals = () => {
 
   return (
     <Background>
+      <ForceConnectWallet />
       <Navbar />
       <div className="flex flex-col gap-9 py-11 max-w-5xl mx-auto">
         <h1 className="text-3xl font-semibold">My proposals</h1>
