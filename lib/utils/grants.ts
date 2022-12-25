@@ -203,13 +203,30 @@ export const fetchApplications = async (
 
   if (!response) throw new Error('response is not defined')
 
+  log('getGrantApplications response', response)
+
   const applications: ApplicationType[] = []
 
   for (let index = 0; index < response.length; index++) {
     const applicationFromContract = response[index]
-    const application: ApplicationType = JSON.parse(
-      await getFromIPFS(applicationFromContract.metadataHash)
-    )
+    if (!applicationFromContract.metadataHash) {
+      console.error(
+        'metadata hash not found for application: ',
+        applicationFromContract.id
+      )
+      continue
+    }
+
+    const metadata = await getFromIPFS(applicationFromContract.metadataHash)
+    if (!metadata) {
+      console.error(
+        'metadata not found for application: ',
+        applicationFromContract.id
+      )
+      continue
+    }
+
+    const application: ApplicationType = JSON.parse(metadata)
     application.status = APPLICATION_STATUSES[applicationFromContract.state]
     application.completedMilestoneCount = parseInt(
       applicationFromContract.milestoneCount._hex,

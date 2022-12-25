@@ -1,7 +1,9 @@
 import ApplicationForm from '@components/application/form'
-import { ApplicationType, FundingMethodType } from '@lib/types/grants'
-import { postApplicationDataAndCallSmartContractFn } from '@lib/utils/grants'
-import { fetchWorkspaceById } from '@lib/utils/workspace'
+import { ApplicationType } from '@lib/types/grants'
+import {
+  fetchApplicationById,
+  updateApplicationMetadataSC,
+} from '@lib/utils/application'
 import { useMutation } from '@tanstack/react-query'
 import cogoToast, { CTReturn } from 'cogo-toast'
 import { GetServerSideProps } from 'next'
@@ -9,12 +11,10 @@ import { useRouter } from 'next/router'
 import React, { useRef } from 'react'
 
 type Props = {
-  grantName: string
-  currency?: string
-  fundingMethod: FundingMethodType
+  application: ApplicationType
 }
 
-const Apply = ({ grantName, currency = 'USDC', fundingMethod }: Props) => {
+const Update = ({ application }: Props) => {
   const loadingToastRef = useRef<CTReturn | null>(null)
 
   const router = useRouter()
@@ -22,11 +22,10 @@ const Apply = ({ grantName, currency = 'USDC', fundingMethod }: Props) => {
   const grantAddress = router.query.grantAddress as string
 
   const applicationMutation = useMutation({
-    mutationFn: (data: ApplicationType) =>
-      postApplicationDataAndCallSmartContractFn(data),
+    mutationFn: (data: ApplicationType) => updateApplicationMetadataSC(data),
     onMutate: () => {
       loadingToastRef.current = cogoToast.loading(
-        'Submitting application. This may take a while.',
+        'Updating application. This may take a while.',
         {
           hideAfter: 0,
         }
@@ -34,46 +33,50 @@ const Apply = ({ grantName, currency = 'USDC', fundingMethod }: Props) => {
     },
     onSuccess: () => {
       loadingToastRef.current?.hide?.()
-      cogoToast.success('Applied successfully')
-      router.push(`/workspaces/${workspaceId}/grants/${grantAddress}`)
+      cogoToast.success('Updated successfully')
+      router.push(`/workspaces/${workspaceId}/grants/${grantAddress}/applications/${application.id}`)
     },
     onError: (error) => {
       loadingToastRef.current?.hide?.()
       console.error(error)
-      cogoToast.error('Something went wrong while applying.')
+      cogoToast.error('Something went wrong while updating.')
     },
   })
 
   const onBack = () =>
-    router.push(`/workspaces/${workspaceId}/grants/${grantAddress}`)
+    router.push(
+      `/workspaces/${workspaceId}/grants/${grantAddress}/applications/${application.id}`
+    )
 
   return (
     <ApplicationForm
       onBack={onBack}
       isLoading={applicationMutation.isLoading}
       onSubmit={(application) => applicationMutation.mutate(application)}
-      currency={currency}
-      fundingMethod={fundingMethod}
-      grantName={grantName}
+      application={application}
+      isUpdateForm
     />
   )
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { query } = ctx
-  const { workspaceId, grantAddress } = query
+  const applicationId = query.applicationId as `0x${string}`
 
-  const { grants } = await fetchWorkspaceById(workspaceId as any)
-  const grant = grants.find((grant) => grant.address === grantAddress)
+  const application = await fetchApplicationById(applicationId)
 
-  if (!grant) return { notFound: true }
+  if (!application)
+    return {
+      notFound: true,
+    }
 
   const props: Props = {
-    fundingMethod: grant?.fundingMethod,
-    grantName: grant?.title,
+    application,
   }
 
-  return { props }
+  return {
+    props,
+  }
 }
 
-export default Apply
+export default Update

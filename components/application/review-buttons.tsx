@@ -1,3 +1,4 @@
+import FeedbackModal from '@components/application/feedback-modal'
 import ClientOnly from '@components/common/client-only'
 import CountDownTimer from '@components/common/count-down-timer'
 import Funds from '@components/grants/details/funds'
@@ -13,7 +14,7 @@ import { useMutation } from '@tanstack/react-query'
 import classNames from 'classnames'
 import cogoToast, { CTReturn } from 'cogo-toast'
 import { useRouter } from 'next/router'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { useEnsName } from 'wagmi'
 
 type Props = {
@@ -76,13 +77,12 @@ const ReviewButtons = ({
     },
   })
 
+  const [isSuggestChangesModalOpen, setIsSuggestChangesModalOpen] =
+    useState(false)
+
   const onApprove = () => mutate('Approved')
 
   const onReject = () => mutate('Rejected')
-
-  const onSuggestChanges = () => {
-    // TODO: handle
-  }
 
   const onReviewDecision = () => {
     // TODO: handle
@@ -90,7 +90,7 @@ const ReviewButtons = ({
 
   return (
     <ClientOnly>
-      <div className="grid grid-cols-2 gap-5">
+      <>
         {isReviewer && status === 'Submitted' && (
           <>
             <button
@@ -115,7 +115,7 @@ const ReviewButtons = ({
             </button>
             <button
               className="col-span-2 inline-flex items-center justify-center rounded-xl border border-gray-800 bg-gray-800 bg-opacity-20 px-4 py-2 text-base font-medium text-gray-200 shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              onClick={onSuggestChanges}
+              onClick={() => setIsSuggestChangesModalOpen(true)}
             >
               Suggest some changes
               <ArrowRightIcon
@@ -126,7 +126,7 @@ const ReviewButtons = ({
           </>
         )}
 
-        {status === 'Resubmit' && (
+        {isReviewer && status === 'Resubmit' && (
           <div className="col-span-2 bg-indigo-500 bg-opacity-10 border border-indigo-500 p-5 rounded-xl flex flex-col gap-3">
             <p className="text-lg text-gray-200">Sent back with feedback</p>
             {reviewer && (
@@ -222,7 +222,14 @@ const ReviewButtons = ({
             </div>
           </>
         )}
-      </div>
+      </>
+      <FeedbackModal
+        applicationId={applicationId}
+        grantAddress={grantAddress}
+        workspaceId={workspaceId}
+        isOpen={isSuggestChangesModalOpen}
+        setIsOpen={setIsSuggestChangesModalOpen}
+      />
     </ClientOnly>
   )
 }

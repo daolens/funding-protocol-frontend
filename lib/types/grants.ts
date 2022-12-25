@@ -66,6 +66,7 @@ export type ApplicationType = {
   fundingMethod?: FundingMethodType
   grantTitle?: string
   workspaceTitle?: string
+  feedback?: string
 }
 
 export type GrantTreasuryType = {

@@ -20,6 +20,7 @@ type UpdateApplicationStatusSCOptions = {
   workspaceId: string
   status: ApplicationStatusType
   grantAddress: string
+  reason?: string
 }
 
 // TODO: test reject
@@ -28,13 +29,14 @@ export const updateApplicationStatusSC = async ({
   grantAddress,
   status,
   workspaceId,
+  reason,
 }: UpdateApplicationStatusSCOptions) => {
+  const ipfsHash = reason ? await uploadToIPFS(JSON.stringify({ reason })) : ''
   const args = [
     applicationId,
     workspaceId,
     APPLICATION_STATUSES.findIndex((currStatus) => currStatus === status),
-    // TODO: replace with ipfsHash which stores reason
-    '',
+    ipfsHash,
     grantAddress,
   ]
   log('updateApplicationState called', { args })
@@ -73,7 +75,7 @@ export const fetchApplicationById = async (applicationId: `0x${string}`) => {
   })) as [
     FetchApplicationResponseType,
     WalletAddressType[],
-    number,
+    { _hex: string },
     FundingMethodType
   ]
 
@@ -97,12 +99,16 @@ export const fetchApplicationById = async (applicationId: `0x${string}`) => {
   )
   application.owner = applicationFromContract.owner as WalletAddressType
   application.status = APPLICATION_STATUSES[applicationFromContract.state]
-  application.reviewTimestamp = new Date(reviewTimestamp).toISOString()
+  application.reviewTimestamp = new Date(
+    parseInt(reviewTimestamp._hex, 16)
+  ).toISOString()
   application.reviewer = reviewers
   application.grantAddress = applicationFromContract.grantAddress
   application.workspaceId = applicationFromContract.workspaceId
     ._hex as `0x${string}`
   application.fundingMethod = fundingMethod
+  // TODO: populate feedback here
+  application.feedback = ''
 
   return application
 }
@@ -225,4 +231,23 @@ export const fetchCurrentUserApplications = async (
   }
 
   return applications
+}
+
+export const updateApplicationMetadataSC = async (data: ApplicationType) => {
+  const ipfsHash = (await uploadToIPFS(JSON.stringify(data))).hash
+  const args = [data.id, ipfsHash, data.milestones.length]
+  log('updateApplicationMetadata called', { args })
+  const result = await writeSmartContractFunction({
+    contractObj: CONTRACTS.application,
+    args,
+    functionName:
+      CONTRACT_FUNCTION_NAME_MAP.application.updateApplicationMetadata,
+  })
+
+  if (!result.hash)
+    throw new Error('updateApplicationMetadata smart contract call failed')
+
+  const txnConfirmation = await result.wait()
+  log(`updateApplicationMetadata call successful. Hash: ${result.hash}`)
+  log({ txnConfirmation })
 }

@@ -1,4 +1,5 @@
 import Description from '@components/application/description'
+import FeedbackCard from '@components/application/feedback-card'
 import MilestoneReporting from '@components/application/milestone-reporting'
 import ReviewButtons from '@components/application/review-buttons'
 import ApplicationSectionTabs from '@components/application/section-tabs'
@@ -113,7 +114,7 @@ const ApplicationDetails = ({
               />
             )}
           </div>
-          <div className="flex flex-col gap-5">
+          <div className="grid grid-cols-2 gap-5">
             <ReviewButtons
               status={application.status as ApplicationStatusType}
               grantBalance={grantBalance || 0}
@@ -124,11 +125,20 @@ const ApplicationDetails = ({
               isReviewer={isReviewer}
               reviewTimestamp={application.reviewTimestamp}
             />
-            <SideInfoBar
-              deadline={application.expectedProjectDeadline}
-              milestones={application.milestones}
-              seekingFunds={application.seekingFunds as number}
-            />
+            {application.status === 'Resubmit' && (
+              <div className="col-span-2">
+                <FeedbackCard
+                  feedback={application.feedback as string}
+                />
+              </div>
+            )}
+            <div className="col-span-2">
+              <SideInfoBar
+                deadline={application.expectedProjectDeadline}
+                milestones={application.milestones}
+                seekingFunds={application.seekingFunds as number}
+              />
+            </div>
           </div>
         </div>
       </div>

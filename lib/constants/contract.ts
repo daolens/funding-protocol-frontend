@@ -3,7 +3,12 @@ import GrantContractAbi from '@lib/abi/GrantsAbi.json'
 import ApplicationContractAbi from '@lib/abi/ApplicationAbi.json'
 import { ContractNameType, ContractType } from '@lib/types/contract'
 
-export const CONTRACT_NAMES = ['workspace', 'application', 'grant'] as const
+export const CONTRACT_NAMES = [
+  'workspace',
+  'application',
+  'grant',
+  'individualGrant',
+] as const
 
 export const CONTRACT_FUNCTION_NAME_MAP = {
   workspace: {
@@ -23,7 +28,7 @@ export const CONTRACT_FUNCTION_NAME_MAP = {
   application: {
     /** args: [applicationId] */
     getApplicationDetail: 'getApplicationDetail',
-    /** args: [grantAddress, workspaceId, ipfsHash, milestoneCount, milestonePayments[]] */
+    /** args: [grantAddress, workspaceId, ipfsHash, milestoneCount, milestonePayments[], seekingFunds] */
     submitApplication: 'submitApplication',
     /** args: [grantAddress, numberOfApplications] */
     getGrantApplications: 'getGrantApplications',
@@ -52,7 +57,14 @@ export const CONTRACT_FUNCTION_NAME_MAP = {
      */
     approveMilestone: 'approveMilestone',
     /** Call client side */
-    fetchMyApplications: 'fetchMyApplications'
+    fetchMyApplications: 'fetchMyApplications',
+    /** To reject: args: [applicationId, grantAddress]
+     */
+    revertTransactions: 'revertTransactions',
+  },
+  individualGrant: {
+    /** To approve: args: [applicationId] */
+    revertTransactions: 'revertTransactions',
   },
 } as const
 
@@ -72,4 +84,6 @@ export const CONTRACTS: Record<ContractNameType, ContractType> = {
     polygonMumbaiAddress: '0xe561BF9EE2cAF74E502dE79e97c7A0C0392dFD10',
     abi: GrantContractAbi,
   },
+  // address will be the grantAddress of the grant
+  individualGrant: { address: '', polygonMumbaiAddress: '', abi: null },
 }

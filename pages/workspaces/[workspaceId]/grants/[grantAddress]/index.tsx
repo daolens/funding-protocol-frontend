@@ -74,29 +74,31 @@ const GrantDetails = ({
                 applicantCount={grant.applicantCount as number}
                 approvedCount={grant.approvedCount as number}
               />
-              <Link
-                href={
-                  isApplied
-                    ? '#'
-                    : `/workspaces/${workspaceId}/grants/${grantAddress}/apply`
-                }
-                className={classNames(
-                  'inline-flex items-center rounded-xl border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 justify-center',
-                  { 'cursor-not-allowed opacity-50': isApplied }
-                )}
-              >
-                {isApplied ? (
-                  'Applied'
-                ) : (
-                  <>
-                    Apply for Grant
-                    <ArrowRightIcon
-                      className="ml-3 -mr-1 h-5 w-5"
-                      aria-hidden="true"
-                    />
-                  </>
-                )}
-              </Link>
+              {grant.status === 'open' && (
+                <Link
+                  href={
+                    isApplied
+                      ? '#'
+                      : `/workspaces/${workspaceId}/grants/${grantAddress}/apply`
+                  }
+                  className={classNames(
+                    'inline-flex items-center rounded-xl border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 justify-center',
+                    { 'cursor-not-allowed opacity-50': isApplied }
+                  )}
+                >
+                  {isApplied ? (
+                    'Applied'
+                  ) : (
+                    <>
+                      Apply for Grant
+                      <ArrowRightIcon
+                        className="ml-3 -mr-1 h-5 w-5"
+                        aria-hidden="true"
+                      />
+                    </>
+                  )}
+                </Link>
+              )}
             </div>
           </div>
         </div>

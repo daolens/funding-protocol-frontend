@@ -4,7 +4,7 @@ import { getNumberWithCommas } from '@lib/utils/common'
 import classNames from 'classnames'
 import React from 'react'
 
-const Card = ({ children }: { children: React.ReactNode }) => (
+export const ApplicationCard = ({ children }: { children: React.ReactNode }) => (
   <div className="bg-gray-800 bg-opacity-20 border border-gray-800 p-5 rounded-xl">
     {children}
   </div>
@@ -19,15 +19,15 @@ type Props = {
 const SideInfoBar = ({ deadline, milestones, seekingFunds }: Props) => {
   return (
     <div className="grid grid-cols-1 gap-5">
-      <Card>
+      <ApplicationCard>
         <div className="flex flex-col gap-2">
           <span className="text-sm text-gray-500">Seeking Funds</span>
           <span className="font-semibold text-2xl">
             ${getNumberWithCommas(seekingFunds)}
           </span>
         </div>
-      </Card>
-      <Card>
+      </ApplicationCard>
+      <ApplicationCard>
         <div className="flex items-center gap-2">
           <CalendarIcon className="w-5 h-5" />
           <p className="text-sm">
@@ -37,9 +37,9 @@ const SideInfoBar = ({ deadline, milestones, seekingFunds }: Props) => {
             </span>
           </p>
         </div>
-      </Card>
+      </ApplicationCard>
       {milestones.length > 0 && (
-        <Card>
+        <ApplicationCard>
           <div className="flex flex-col">
             {milestones.map((milestone, index) => (
               <div
@@ -61,7 +61,7 @@ const SideInfoBar = ({ deadline, milestones, seekingFunds }: Props) => {
               </div>
             ))}
           </div>
-        </Card>
+        </ApplicationCard>
       )}
     </div>
   )
