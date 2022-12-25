@@ -1,6 +1,7 @@
 import Modal from '@components/common/modal'
 import { Dialog } from '@headlessui/react'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
+import classNames from 'classnames'
 import React, { Dispatch, SetStateAction } from 'react'
 
 type Props = {
@@ -10,6 +11,7 @@ type Props = {
   isOpen: boolean
   setIsOpen: Dispatch<SetStateAction<boolean>>
   ctaText: string
+  isLoading?: boolean
 }
 
 const AlertModal = ({
@@ -19,6 +21,7 @@ const AlertModal = ({
   title,
   text,
   ctaText,
+  isLoading,
 }: Props) => {
   return (
     <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
@@ -42,8 +45,14 @@ const AlertModal = ({
         <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
           <button
             type="button"
-            className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+            className={classNames(
+              'inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm',
+              {
+                'opacity-50 cursor-not-allowed': isLoading,
+              }
+            )}
             onClick={onCtaClick}
+            disabled={isLoading}
           >
             {ctaText}
           </button>

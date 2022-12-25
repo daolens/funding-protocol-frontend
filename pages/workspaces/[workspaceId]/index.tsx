@@ -60,7 +60,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         .map((grant) => grant.applicantCount)
         .reduce((prev = 0, curr = 0) => prev + curr, 0) || 0,
     // TODO: update
-    totalGrantReceipients: 4,
+    // totalGrantReceipients: 4,
   }
 
   const props: Props = {

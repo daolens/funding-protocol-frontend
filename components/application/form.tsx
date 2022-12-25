@@ -92,15 +92,13 @@ const ApplicationForm = ({
         : application.previousSuccessfulProposalLinks
     )
   const [milestones, setMilestones] = useState<ApplicationMilestoneType[]>(
-    application?.milestones.length === 0 || !application?.milestones
-      ? [
-          {
-            id: nanoid(),
-            funds: null,
-            text: '',
-          },
-        ]
-      : application?.milestones
+    application?.milestones || [
+      {
+        id: nanoid(),
+        funds: null,
+        text: '',
+      },
+    ]
   )
   const [fieldErrors, setFieldErrors] = useState<
     Record<keyof ApplicationType, string>

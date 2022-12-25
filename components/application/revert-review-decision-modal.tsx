@@ -65,6 +65,7 @@ const RevertReviewDecisionModal = ({
       } the application. Are you sure you want to continue?`}
       ctaText="Revert"
       onCtaClick={() => revertDecisionMutation.mutate(status)}
+      isLoading={revertDecisionMutation.isLoading}
     />
   )
 }

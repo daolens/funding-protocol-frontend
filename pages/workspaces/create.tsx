@@ -22,10 +22,11 @@ const Create = () => {
       <div className="flex h-screen my-auto items-center w-full max-w-6xl mx-auto relative">
         <div className="w-1/2 flex items-center justify-center relative h-full">
           <Image
-            src="/images/workspace/create/circles-graphic.png"
+            src="/images/workspace/create/circles-graphic.svg"
             alt="Circles"
             width={658}
             height={759}
+            className="absolute -mt-20"
           />
         </div>
         <div className="w-1/2">

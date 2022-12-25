@@ -123,7 +123,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const treasury: GrantTreasuryType = {
     left: grant.balance as number,
-    // TODO: add correct token symbol
     token: grant.token,
   }
 

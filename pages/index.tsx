@@ -6,6 +6,7 @@ import { WorkspaceCardType } from '@lib/types/home'
 import { useAccount } from 'wagmi'
 import { fetchWorkspaces } from '@lib/utils/workspace'
 import Navbar from '@components/common/navbar'
+import ClientOnly from '@components/common/client-only'
 
 type Props = {
   workspaceCards: WorkspaceCardType[]
@@ -22,9 +23,11 @@ const HomePage = ({ workspaceCards }: Props) => {
   return (
     <Background>
       <Navbar />
-      {ownedWorkspaces.length > 0 && (
-        <WorkspacesYouOwn workspaceList={ownedWorkspaces} />
-      )}
+      <ClientOnly>
+        {ownedWorkspaces.length > 0 && (
+          <WorkspacesYouOwn workspaceList={ownedWorkspaces} />
+        )}
+      </ClientOnly>
       <Discover workspaceList={remainingWorkspaces} />
     </Background>
   )

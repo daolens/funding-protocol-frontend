@@ -19,7 +19,9 @@ const Stats = ({
 }: WorkspaceStatsType) => {
   return (
     <div className="bg-gray-800 border border-gray-800 bg-opacity-20 rounded-xl flex flex-col p-5 gap-6 h-fit">
-      <Stat data={totalGrantReceipients} label="Total Grant receipients" />
+      {totalGrantReceipients && (
+        <Stat data={totalGrantReceipients} label="Total Grant receipients" />
+      )}
       <Stat data={totalApplicants} label="Total Applicants" />
     </div>
   )

@@ -73,6 +73,7 @@ const ReviewButtons = ({
       window.location.reload()
     },
     onError: (error) => {
+      loadingToastRef.current?.hide?.()
       console.error(error)
       cogoToast.error('Something went wrong while updating application status.')
     },

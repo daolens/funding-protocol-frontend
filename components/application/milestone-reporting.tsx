@@ -167,7 +167,6 @@ const MilestoneReporting = ({
       (milestone) => milestone.id === milestoneId
     )
     setIsApproveMilestoneModalOpen(false)
-    // TODO: verify whether to pass index or someother ID
     approveMilestoneMutation.mutate(milestoneIndex.toString())
   }
 

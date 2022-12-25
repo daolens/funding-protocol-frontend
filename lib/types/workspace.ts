@@ -21,7 +21,7 @@ export type WorkspaceType = {
 export type CreateWorkspaceStepType = typeof WORKSPACE_STEPS[number]
 
 export type WorkspaceStatsType = {
-  totalGrantReceipients: number
+  totalGrantReceipients?: number
   totalApplicants: number
 }
 
