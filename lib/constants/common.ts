@@ -62,7 +62,6 @@ export const DEFAULT_TOKENS: TokenType[] = [
     image: '/images/tokens/bankless-dao.png',
     address: '0x2d94aa3e47d9d5024503ca8491fce9a2fb4da198',
   },
- 
 
   // { chain: 'Ethereum', name: 'Matic Token', image: '' },
   // { chain: 'Ethereum', name: 'Shiba Inu', image: '' },

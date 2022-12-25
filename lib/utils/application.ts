@@ -315,9 +315,13 @@ export const revertApproveDecisionSC = async (
   })
 
   if (!result.hash)
-    throw new Error('individualGrant.revertTransactions smart contract call failed')
+    throw new Error(
+      'individualGrant.revertTransactions smart contract call failed'
+    )
 
   const txnConfirmation = await result.wait()
-  log(`individualGrant.revertTransactions call successful. Hash: ${result.hash}`)
+  log(
+    `individualGrant.revertTransactions call successful. Hash: ${result.hash}`
+  )
   log({ txnConfirmation })
 }

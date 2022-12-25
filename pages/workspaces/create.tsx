@@ -6,7 +6,7 @@ import { WORKSPACE_STEPS } from '@lib/constants/workspace'
 import { SupportedNetworkIdType } from '@lib/types/common'
 import { CreateWorkspaceStepType } from '@lib/types/workspace'
 import Image from 'next/image'
-import {  useState } from 'react'
+import { useState } from 'react'
 
 const Create = () => {
   const [activeStep, setActiveStep] = useState<CreateWorkspaceStepType>('name')
