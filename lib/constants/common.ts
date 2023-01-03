@@ -75,7 +75,8 @@ export const IRON_OPTIONS = {
   },
 }
 
-export const IS_PROD = process.env.NODE_ENV === 'production'
+// TODO: correct this
+export const IS_PROD = false
 
 export const ERROR_MESSAGES = {
   fieldRequired: 'This field is required',
