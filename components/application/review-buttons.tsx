@@ -21,6 +21,7 @@ import { useEnsName } from 'wagmi'
 type Props = {
   status: ApplicationStatusType
   grantBalance: number
+  grantBalanceInUsd: number
   isInsufficientBalance: boolean
   isAdmin: boolean
   token: string
@@ -32,6 +33,7 @@ type Props = {
 const ReviewButtons = ({
   status,
   grantBalance,
+  grantBalanceInUsd,
   isInsufficientBalance,
   isAdmin,
   token,
@@ -222,6 +224,7 @@ const ReviewButtons = ({
               <Funds
                 isAdmin={isAdmin}
                 treasury={{ left: grantBalance, token }}
+                treasuryInUsd={{ left: grantBalanceInUsd, token: '$' }}
               />
             </div>
           </>

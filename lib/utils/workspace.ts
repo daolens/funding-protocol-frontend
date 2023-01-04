@@ -1,4 +1,4 @@
-import { IS_PROD } from '@lib/constants/common'
+import { DEFAULT_TOKENS, IS_PROD } from '@lib/constants/common'
 import { CONTRACTS, CONTRACT_FUNCTION_NAME_MAP } from '@lib/constants/contract'
 import { GrantType } from '@lib/types/grants'
 import { WorkspaceType } from '@lib/types/workspace'
@@ -8,6 +8,7 @@ import {
   writeSmartContractFunction,
 } from '@lib/utils/contract'
 import { getFromIPFS, uploadToIPFS } from '@lib/utils/ipfs'
+import { calculateUSDValue } from '@lib/utils/token'
 import { fetchTransaction } from '@wagmi/core'
 import { ethers } from 'ethers'
 
@@ -159,6 +160,14 @@ export const fetchWorkspaceById = async (workspaceId: `0x${string}`) => {
     grant.balance = parseInt(grantFromContract.balance._hex, 16)
     grant.status =
       new Date() < new Date(grant.proposalDeadline) ? 'open' : 'close'
+    grant.recommendedSeekingAmountInUsd = await calculateUSDValue(
+      grant.recommendedSeekingAmount,
+      DEFAULT_TOKENS.find((token) => token.name === grant.token)?.pair
+    )
+    grant.balanceInUsd = await calculateUSDValue(
+      grant.balance,
+      DEFAULT_TOKENS.find((token) => token.name === grant.token)?.pair
+    )
     grants.push(grant)
   }
 

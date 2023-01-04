@@ -48,6 +48,7 @@ const ApplicationDetails = ({
   const grantAddress = router.query.grantAddress as string
 
   const grantBalance = grant.balance
+  const grantBalanceInUsd = grant.balanceInUsd
   const grantBalanceToken = grant.token
   const grantFundingMethod = grant.fundingMethod
   const isAdmin = workspace.owner === address
@@ -123,6 +124,7 @@ const ApplicationDetails = ({
               <ReviewButtons
                 status={application.status as ApplicationStatusType}
                 grantBalance={grantBalance || 0}
+                grantBalanceInUsd={grantBalanceInUsd || 0}
                 isAdmin={isAdmin}
                 isInsufficientBalance={isInsufficientBalance}
                 token={grantBalanceToken}
@@ -170,8 +172,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     application,
     grant,
     workspace,
-    // TODO: convert grant balance to USD and compare with seeking amount
-    isInsufficientBalance: false,
+    isInsufficientBalance:
+      (grant.balanceInUsd || 0) < (application.seekingFunds || 0),
   }
 
   return {

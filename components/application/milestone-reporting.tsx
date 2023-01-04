@@ -15,6 +15,7 @@ type MilestoneCardProps = {
   areDetailsShown: boolean
   isReviewer: boolean
   onApprove?: () => void
+  onSendFeedback?: () => void
   index: number
 }
 
@@ -26,6 +27,7 @@ const MilestoneCard = ({
   isReviewer,
   index,
   onApprove,
+  onSendFeedback,
 }: MilestoneCardProps) => (
   <div className="rounded-xl border border-gray-800  bg-gray-800/20 backdrop-blur">
     <button
@@ -65,15 +67,14 @@ const MilestoneCard = ({
         </p>
         {isReviewer && state !== 'completed' && (
           <div className="space-x-2 flex w-full max-w-7xl items-end justify-end p-2 border rounded-2xl border-gray-700 bg-gray-900 bg-opacity-50 border-opacity-50 backdrop-blur-md">
-            {/* TODO: enable post v1 launch */}
-            {/* <button
+            <button
               className={classNames(
                 'inline-flex items-center rounded-xl border border-transparent bg-red-900 bg-opacity-20 px-4 py-3 text-sm font-medium shadow-sm hover:bg-red-800 hover:bg-opacity-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 justify-center text-red-400'
               )}
               onClick={onSendFeedback}
             >
               Send back with feedback
-            </button> */}
+            </button>
             <button
               className={classNames(
                 'inline-flex items-center rounded-xl border border-transparent bg-green-900 bg-opacity-20 px-4 py-3 text-sm font-medium shadow-sm hover:bg-green-800 hover:bg-opacity-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 justify-center text-green-400'
@@ -136,6 +137,8 @@ const MilestoneReporting = ({
   const [activeMilestoneId, setActiveMilestoneId] = useState('')
   const [isApproveMilestoneModalOpen, setIsApproveMilestoneModalOpen] =
     useState(false)
+    // TODO: continue from here
+  const [isSendFeedbackModalOpen, setIsSendFeedbackModalOpen] = useState(false)
 
   const completedMilestones = milestones.filter(
     (_, index) => index < completedMilestoneCount
@@ -218,6 +221,7 @@ const MilestoneReporting = ({
             isReviewer={!!isReviewer}
             milestone={milestone}
             onApprove={() => setIsApproveMilestoneModalOpen(true)}
+            onSendFeedback={() => setIsSendFeedbackModalOpen(true)}
             onClick={() => onMilestoneClick(milestone)}
             state={
               index + completedMilestones.length === completedMilestoneCount

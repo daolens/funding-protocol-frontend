@@ -21,6 +21,7 @@ export type GrantType = {
   tags?: string[]
   token: string
   recommendedSeekingAmount: number
+  recommendedSeekingAmountInUsd?: number
   selectionProcess: SelectionProcessType
   fundingMethod: FundingMethodType
   reviewers: WalletAddressType[]
@@ -31,6 +32,7 @@ export type GrantType = {
   applicantCount?: number
   approvedCount?: number
   balance?: number
+  balanceInUsd?: number
 }
 
 export type ApplicationMilestoneType = {

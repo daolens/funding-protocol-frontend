@@ -6,7 +6,10 @@ import {
   ShareIcon,
 } from '@heroicons/react/24/outline'
 import { GrantType } from '@lib/types/grants'
-import { getTokenSymbol, onCopyText } from '@lib/utils/common'
+import {
+  getNumberWithCommas,
+  onCopyText,
+} from '@lib/utils/common'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
@@ -22,7 +25,6 @@ const Info = ({ grant, workspaceName, isAdmin }: Props) => {
 
   const workspaceId = router.query.workspaceId
   const grantAddress = router.query.grantAddress
-  const tokenSymbol = getTokenSymbol(grant.token)
 
   const fundingMethodData = {
     heading:
@@ -93,7 +95,7 @@ const Info = ({ grant, workspaceName, isAdmin }: Props) => {
               Avg grant amount per proposal
             </span>
             <span className="font-semibold">
-              {tokenSymbol} {grant.recommendedSeekingAmount}
+              ${getNumberWithCommas(grant.recommendedSeekingAmountInUsd || 0)}
             </span>
           </div>
         </div>

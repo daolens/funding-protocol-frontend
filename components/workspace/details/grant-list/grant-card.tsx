@@ -4,7 +4,7 @@ import {
   UserIcon,
 } from '@heroicons/react/24/outline'
 import { GrantType } from '@lib/types/grants'
-import { getNumberWithCommas, getTokenSymbol } from '@lib/utils/common'
+import { getNumberWithCommas } from '@lib/utils/common'
 import Link from 'next/link'
 import React from 'react'
 
@@ -32,14 +32,11 @@ const GrantCard = ({
   title,
   applicantCount,
   proposalDeadline,
-  recommendedSeekingAmount,
-  token,
+  recommendedSeekingAmountInUsd,
   tags,
   workspaceId,
   address,
 }: GrantType) => {
-  const tokenSymbol = getTokenSymbol(token)
-
   return (
     <Link
       href={`/workspaces/${workspaceId}/grants/${address}`}
@@ -55,8 +52,8 @@ const GrantCard = ({
         <span className="text-gray-500 text-xs">|</span>
         <Info
           icon="currency-dollar"
-          text={`Avg grant of ${tokenSymbol} ${getNumberWithCommas(
-            recommendedSeekingAmount || 0
+          text={`Avg grant of $${getNumberWithCommas(
+            recommendedSeekingAmountInUsd || 0
           )}`}
         />
         <span className="text-gray-500 text-xs">|</span>

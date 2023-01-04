@@ -37,6 +37,7 @@ export const DEFAULT_TOKENS: TokenType[] = [
     symbol: 'AAVE',
     image: '/images/tokens/aave.png',
     address: '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9',
+    pair: '0xdfc14d2af169b0d36c4eff567ada9b2e0cae044f',
   },
   {
     id: '2',
@@ -45,6 +46,7 @@ export const DEFAULT_TOKENS: TokenType[] = [
     symbol: 'COMP',
     image: '/images/tokens/compound.png',
     address: '0xc00e94cb662c3520282e6f5717214004a7f26888',
+    pair: '0xcffdded873554f362ac02f8fb1f02e5ada10516f',
   },
   {
     id: '3',
@@ -53,6 +55,7 @@ export const DEFAULT_TOKENS: TokenType[] = [
     symbol: 'UNI',
     image: '/images/tokens/uniswap.png',
     address: '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984',
+    pair: '0xd3d2e2692501a5c9ca623199d38826e513033a17',
   },
   {
     id: '4',
@@ -61,6 +64,16 @@ export const DEFAULT_TOKENS: TokenType[] = [
     symbol: 'BANK',
     image: '/images/tokens/bankless-dao.png',
     address: '0x2d94aa3e47d9d5024503ca8491fce9a2fb4da198',
+    pair: '0x59c1349bc6f28a427e78ddb6130ec669c2f39b48',
+  },
+  {
+    id: '5',
+    image: '/chain_assets/weth.svg',
+    symbol: 'WETH',
+    address: '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6',
+    pair: '0x0',
+    chain: 'Ethereum',
+    name: 'Ether(Wrapped)'
   },
 
   // { chain: 'Ethereum', name: 'Matic Token', image: '' },

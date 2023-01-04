@@ -24,6 +24,8 @@
     "eslint": "8.29.0",
     "eslint-config-next": "13.0.6",
     "ethers": "^5.7.2",
+    "graphql": "^16.6.0",
+    "graphql-request": "^5.1.0",
     "lottie-react": "^2.3.1",
     "nanoid": "^4.0.0",
     "next": "13.0.6",

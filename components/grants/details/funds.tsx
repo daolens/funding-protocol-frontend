@@ -6,10 +6,11 @@ import React, { useState } from 'react'
 
 type Props = {
   treasury: GrantTreasuryType
+  treasuryInUsd?: GrantTreasuryType
   isAdmin: boolean
 }
 
-const Funds = ({ treasury, isAdmin }: Props) => {
+const Funds = ({ treasury, isAdmin, treasuryInUsd }: Props) => {
   const router = useRouter()
 
   const grantAddress = router.query.grantAddress
@@ -22,11 +23,16 @@ const Funds = ({ treasury, isAdmin }: Props) => {
       <span className="text-gray-500 text-sm">Grant Treasury Left</span>
       <div className="flex gap-2 mb-5">
         <span className="text-2xl font-semibold leading-none">
-          {tokenSymbol} {getNumberWithCommas(treasury.left)}
+          {treasuryInUsd ? '$' : tokenSymbol + ' '}
+          {getNumberWithCommas(
+            treasuryInUsd ? treasuryInUsd?.left : treasury.left
+          )}
         </span>
-        {/* <span className="text-xs text-gray-500 self-end">
-          of {tokenSymbol} {treasury.total}
-        </span> */}
+        {treasuryInUsd && (
+          <span className="text-xs text-gray-500 self-end">
+            ({tokenSymbol} {getNumberWithCommas(treasury.left)})
+          </span>
+        )}
       </div>
       {isAdmin && (
         <button
