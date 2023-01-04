@@ -1,6 +1,6 @@
 import AddFundsModal from '@components/grants/details/add-funds-moda'
 import { GrantTreasuryType } from '@lib/types/grants'
-import { getTokenSymbol } from '@lib/utils/common'
+import { getNumberWithCommas, getTokenSymbol } from '@lib/utils/common'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 
@@ -22,7 +22,7 @@ const Funds = ({ treasury, isAdmin }: Props) => {
       <span className="text-gray-500 text-sm">Grant Treasury Left</span>
       <div className="flex gap-2 mb-5">
         <span className="text-2xl font-semibold leading-none">
-          {tokenSymbol} {treasury.left}
+          {tokenSymbol} {getNumberWithCommas(treasury.left)}
         </span>
         {/* <span className="text-xs text-gray-500 self-end">
           of {tokenSymbol} {treasury.total}

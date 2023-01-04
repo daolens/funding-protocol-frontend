@@ -3,6 +3,7 @@ import { Fragment } from 'react'
 import { WorkspaceCardType } from '@lib/types/home'
 import CommunityAvatar from '@components/common/community-avatar'
 import Link from 'next/link'
+import { getNumberWithCommas } from '@lib/utils/common'
 
 type Props = {
   workspaceList: WorkspaceCardType[]
@@ -35,7 +36,7 @@ const WorkspaceCardList = ({ workspaceList }: Props) => {
                     <span>{workspace.activeGrants} Active grants</span>
                   </p>
                   <p className="px-3 py-[6px] bg-[#1F2937CC] text-xs rounded-2xl">
-                    💰 ${workspace?.treasuryAmount.toLocaleString()}
+                    💰 ${getNumberWithCommas(workspace?.treasuryAmount)}
                   </p>
                 </div>
               </div>
@@ -50,7 +51,7 @@ const WorkspaceCardList = ({ workspaceList }: Props) => {
               <p className="flex justify-center items-center gap-[6px]">
                 <CurrencyDollarIcon className="w-4 h-4" />
                 <span>
-                  ${workspace.sentInGrants.toLocaleString()} sent in grants
+                  ${getNumberWithCommas(workspace.sentInGrants)} sent in grants
                 </span>
               </p>
             </div>

@@ -29,6 +29,18 @@ export const writeData = async ({
 }
 
 export const getNumberWithCommas = (x: number) => {
+  if (x >= 10 ** 3 && x < 10 ** 6) {
+    const newNum = x / 10 ** 3
+    return newNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + 'K'
+  }
+  if (x >= 10 ** 6 && x < 10 ** 9) {
+    const newNum = x / 10 ** 6
+    return newNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + 'M'
+  }
+  if (x >= 10 ** 9) {
+    const newNum = x / 10 ** 9
+    return newNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + 'B'
+  }
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 
