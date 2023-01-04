@@ -1,7 +1,10 @@
 import Modal from '@components/common/modal'
 import Textarea from '@components/common/textarea'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
-import { updateApplicationStatusSC } from '@lib/utils/application'
+import {
+  sendFeedbackMilestoneSC,
+  updateApplicationStatusSC,
+} from '@lib/utils/application'
 import { useMutation } from '@tanstack/react-query'
 import classNames from 'classnames'
 import cogoToast, { CTReturn } from 'cogo-toast'
@@ -13,6 +16,7 @@ type Props = {
   applicationId: string
   grantAddress: string
   workspaceId: string
+  isMilestoneFeedback?: boolean
 }
 
 const FeedbackModal = ({
@@ -21,17 +25,20 @@ const FeedbackModal = ({
   applicationId,
   grantAddress,
   workspaceId,
+  isMilestoneFeedback = false,
 }: Props) => {
   const loadingToastRef = useRef<CTReturn | null>(null)
   const sendFeedbackMutation = useMutation({
     mutationFn: (feedbackData: string) =>
-      updateApplicationStatusSC({
-        applicationId,
-        grantAddress,
-        status: 'Resubmit',
-        workspaceId,
-        reason: feedbackData,
-      }),
+      isMilestoneFeedback
+        ? sendFeedbackMilestoneSC({ reason: feedbackData })
+        : updateApplicationStatusSC({
+            applicationId,
+            grantAddress,
+            status: 'Resubmit',
+            workspaceId,
+            reason: feedbackData,
+          }),
     onMutate: () => {
       loadingToastRef.current = cogoToast.loading(
         'Submitting feedback. This may take a while.',
@@ -64,7 +71,9 @@ const FeedbackModal = ({
         </h3>
         <Textarea
           label="Feedback (Optional)"
-          placeholder="Write here how the applicant can improve and redo this milestone"
+          placeholder={`Write here how the applicant can improve and redo this${
+            isMilestoneFeedback ? ' milestone.' : '.'
+          }`}
           value={feedback}
           onChange={(e) => setFeedback(e.currentTarget.value)}
         />

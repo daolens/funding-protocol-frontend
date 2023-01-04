@@ -206,6 +206,14 @@ export const approveMilestoneSC = async ({
   log({ txnConfirmation })
 }
 
+type SendFeedbackMilestoneSCOptions = {
+  reason: string
+}
+
+export const sendFeedbackMilestoneSC = async ({reason: _}: SendFeedbackMilestoneSCOptions) => {
+  // TODO: complete
+}
+
 export const fetchCurrentUserApplications = async (
   address: WalletAddressType
 ) => {

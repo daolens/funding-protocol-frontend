@@ -1,3 +1,4 @@
+import FeedbackModal from '@components/application/feedback-modal'
 import AlertModal from '@components/common/alert-modal'
 import { CheckCircleIcon, CurrencyDollarIcon } from '@heroicons/react/24/solid'
 import { ApplicationMilestoneType } from '@lib/types/grants'
@@ -137,7 +138,6 @@ const MilestoneReporting = ({
   const [activeMilestoneId, setActiveMilestoneId] = useState('')
   const [isApproveMilestoneModalOpen, setIsApproveMilestoneModalOpen] =
     useState(false)
-    // TODO: continue from here
   const [isSendFeedbackModalOpen, setIsSendFeedbackModalOpen] = useState(false)
 
   const completedMilestones = milestones.filter(
@@ -238,6 +238,14 @@ const MilestoneReporting = ({
         ctaText="Approve"
         title={`Approve Milestone ${activeMilestoneIndex + 1}`}
         text="Approving this milestone will credit the requested funds to applicant's wallet."
+      />
+      <FeedbackModal
+        isMilestoneFeedback
+        isOpen={isSendFeedbackModalOpen}
+        setIsOpen={setIsSendFeedbackModalOpen}
+        applicationId={applicationId as string}
+        grantAddress={grantAddress as string}
+        workspaceId={workspaceId as string}
       />
     </>
   )
