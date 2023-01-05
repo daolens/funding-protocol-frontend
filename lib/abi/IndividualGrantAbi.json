@@ -424,6 +424,19 @@
   },
   {
     "inputs": [],
+    "name": "getToken",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "incrementApplicant",
     "outputs": [],
     "stateMutability": "nonpayable",

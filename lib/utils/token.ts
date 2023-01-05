@@ -1,7 +1,6 @@
 import { GraphQLClient, gql } from 'graphql-request'
 
-export const calculateUSDValue = async (
-  value: number | string,
+export const getUSDConversionRate = async (
   tokenPair: `0x${string}` | null | undefined
 ) => {
   const wethPriceQuery = gql`
@@ -23,7 +22,7 @@ export const calculateUSDValue = async (
       }
     }
   `
-  let amount = 0
+  let rate = 0
 
   const client = new GraphQLClient(
     'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2',
@@ -32,17 +31,14 @@ export const calculateUSDValue = async (
 
   async function fetchWethPrice() {
     const data = await client.request(wethPriceQuery)
-    amount =
-      data.bundle.ethPrice *
-      (typeof value === 'string' ? parseInt(value) : value)
+    rate = data.bundle.ethPrice
   }
 
   async function fetchTokenPrice() {
     const data = await client.request(priceQuery)
-    amount =
+    rate =
       (data?.pair?.token0 ? data.pair.token0.derivedETH : 0) *
-      data.bundle.ethPrice *
-      (typeof value === 'string' ? parseInt(value) : value)
+      data.bundle.ethPrice
   }
 
   if (tokenPair === '0x0') {
@@ -50,5 +46,16 @@ export const calculateUSDValue = async (
   } else if (tokenPair !== undefined) {
     await fetchTokenPrice()
   }
+
+  return rate
+}
+
+export const calculateUSDValue = async (
+  value: number | string,
+  tokenPair: `0x${string}` | null | undefined
+) => {
+  const rate = await getUSDConversionRate(tokenPair)
+  const amount = rate * (typeof value === 'string' ? parseInt(value) : value)
+
   return amount
 }

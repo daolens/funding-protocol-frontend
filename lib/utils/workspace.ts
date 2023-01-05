@@ -1,5 +1,6 @@
 import { DEFAULT_TOKENS, IS_PROD } from '@lib/constants/common'
 import { CONTRACTS, CONTRACT_FUNCTION_NAME_MAP } from '@lib/constants/contract'
+import { WalletAddressType } from '@lib/types/common'
 import { GrantType } from '@lib/types/grants'
 import { WorkspaceType } from '@lib/types/workspace'
 import { log } from '@lib/utils/common'
@@ -8,7 +9,7 @@ import {
   writeSmartContractFunction,
 } from '@lib/utils/contract'
 import { getFromIPFS, uploadToIPFS } from '@lib/utils/ipfs'
-import { calculateUSDValue } from '@lib/utils/token'
+import { calculateUSDValue, getUSDConversionRate } from '@lib/utils/token'
 import { fetchTransaction } from '@wagmi/core'
 import { ethers } from 'ethers'
 
@@ -64,6 +65,46 @@ type FetchWorkspaceResponseType = {
   }
 }
 
+const getAggregateBalances = async (
+  balance: number[][],
+  balanceSpent: number[][],
+  tokenAddress: WalletAddressType[][]
+) => {
+  const rateTokenMap: Record<WalletAddressType, number> = {}
+  const result: { balances: number[]; balancesSpent: number[] } = {
+    balances: [],
+    balancesSpent: [],
+  }
+  for (
+    let workspaceIndex = 0;
+    workspaceIndex < balance.length;
+    workspaceIndex++
+  ) {
+    let _balance = 0
+    let _balanceSpent = 0
+    for (
+      let grantIndex = 0;
+      grantIndex < balance[workspaceIndex].length;
+      grantIndex++
+    ) {
+      const _tokenAddress = tokenAddress[workspaceIndex][grantIndex]
+      const rate =
+        rateTokenMap[_tokenAddress] ||
+        (await getUSDConversionRate(
+          DEFAULT_TOKENS.find((token) => token.address === _tokenAddress)?.pair
+        ))
+
+      rateTokenMap[_tokenAddress] = rate
+
+      _balance += rate * balance[workspaceIndex][grantIndex]
+      _balanceSpent += rate * balanceSpent[workspaceIndex][grantIndex]
+    }
+    result.balances.push(_balance)
+    result.balancesSpent.push(_balanceSpent)
+  }
+  return result
+}
+
 export const fetchWorkspaces = async () => {
   const args = [
     IS_PROD ? CONTRACTS.grant.address : CONTRACTS.grant.polygonMumbaiAddress,
@@ -75,10 +116,11 @@ export const fetchWorkspaces = async () => {
     args,
   })) as [
     FetchWorkspaceResponseType[],
-    /** totalAmts */
-    { _hex: string }[],
-    /** amtSpends */
-    { _hex: string }[]
+    /** balance[workspaceIndex][grantIndex] */
+    { _hex: string }[][],
+    /** balanceSpent[workspaceIndex][grantIndex] */
+    { _hex: string }[][],
+    WalletAddressType[][]
   ]
 
   if (!response) throw new Error('response is not defined')
@@ -87,10 +129,26 @@ export const fetchWorkspaces = async () => {
 
   const workspaces: WorkspaceType[] = []
 
+  // Determining aggregate balances in USD
+  const [, hexBalances, hexBalancesSpent, tokenAddress] = response
+
+  const numBalances = hexBalances.map((grantBalances) =>
+    grantBalances.map((bal) => parseInt(bal._hex, 16))
+  )
+  const numBalancesSpent = hexBalancesSpent.map((grantBalances) =>
+    grantBalances.map((bal) => parseInt(bal._hex, 16))
+  )
+
+  const { balances, balancesSpent } = await getAggregateBalances(
+    numBalances,
+    numBalancesSpent,
+    tokenAddress
+  )
+
   for (let index = 0; index < response[0].length; index++) {
     const workspaceFromContract = response[0][index]
-    const totalFunds = parseInt(response[1][index]._hex, 16)
-    const totalFundsSpent = parseInt(response[2][index]._hex, 16)
+    const totalFunds = balances[index]
+    const totalFundsSpent = balancesSpent[index]
     const totalApplicants = parseInt(
       workspaceFromContract.applicationCount._hex,
       16
