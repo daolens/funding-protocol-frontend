@@ -31,7 +31,9 @@ export const updateApplicationStatusSC = async ({
   workspaceId,
   reason,
 }: UpdateApplicationStatusSCOptions) => {
-  const ipfsHash = reason ? await uploadToIPFS(JSON.stringify({ reason })) : ''
+  const ipfsHash = reason
+    ? (await uploadToIPFS(JSON.stringify({ reason }))).hash
+    : ''
   const args = [
     applicationId,
     workspaceId,
@@ -83,13 +85,21 @@ export const fetchApplicationById = async (applicationId: `0x${string}`) => {
     WalletAddressType[],
     { _hex: string },
     FundingMethodType,
-    FetchMilestoneResponseType[]
+    FetchMilestoneResponseType[],
+    // Feedback hash
+    string
   ]
 
   if (!response) throw new Error('response is not defined')
 
-  const [applicationFromContract, reviewers, reviewTimestamp, fundingMethod] =
-    response
+  const [
+    applicationFromContract,
+    reviewers,
+    reviewTimestamp,
+    fundingMethod,
+    ,
+    feedbackHash,
+  ] = response
 
   log('getApplicationDetail response:', response)
 
@@ -114,8 +124,12 @@ export const fetchApplicationById = async (applicationId: `0x${string}`) => {
   application.workspaceId = applicationFromContract.workspaceId
     ._hex as `0x${string}`
   application.fundingMethod = fundingMethod
-  // TODO: populate feedback here
-  application.feedback = ''
+  if (feedbackHash) {
+    const feedbackData = await getFromIPFS(feedbackHash)
+    if (feedbackData) {
+      application.feedback = JSON.parse(feedbackData)?.reason || ''
+    }
+  }
 
   const milestonesFromSC = response[4]
 
@@ -123,16 +137,33 @@ export const fetchApplicationById = async (applicationId: `0x${string}`) => {
     const milestone = application.milestones[index]
     const milestoneFromSC = milestonesFromSC[index]
 
-    if (!milestoneFromSC.applicantHash) continue
-    const milestoneDetailsJsonString = await getFromIPFS(
-      milestoneFromSC.applicantHash
-    )
-    if (!milestoneDetailsJsonString) continue
-    const milestoneDetails = JSON.parse(
-      milestoneDetailsJsonString
-    ).milestoneDetails
-    milestone.details = milestoneDetails
-    application.milestones[index] = milestone
+    // Populating proof of work
+    if (milestoneFromSC.applicantHash) {
+      const milestoneDetailsJsonString = await getFromIPFS(
+        milestoneFromSC.applicantHash
+      )
+      if (milestoneDetailsJsonString) {
+        const milestoneDetails = JSON.parse(
+          milestoneDetailsJsonString
+        ).milestoneDetails
+        milestone.details = milestoneDetails
+        application.milestones[index] = milestone
+      }
+    }
+
+    // Populating feedback
+    if (milestoneFromSC.reviewerHash) {
+      const milestoneFeedbackJsonString = await getFromIPFS(
+        milestoneFromSC.reviewerHash
+      )
+      if (milestoneFeedbackJsonString) {
+        const milestoneFeedback = JSON.parse(
+          milestoneFeedbackJsonString
+        ).milestoneFeedback
+        milestone.feedback = milestoneFeedback
+        application.milestones[index] = milestone
+      }
+    }
   }
 
   return application
@@ -210,8 +241,14 @@ type SendFeedbackMilestoneSCOptions = {
   reason: string
 }
 
-export const sendFeedbackMilestoneSC = async ({reason: _}: SendFeedbackMilestoneSCOptions) => {
+export const sendFeedbackMilestoneSC = async ({
+  reason,
+}: SendFeedbackMilestoneSCOptions) => {
   // TODO: complete
+  const ipfsHash = (
+    await uploadToIPFS(JSON.stringify({ milestoneFeedback: reason }))
+  ).hash
+  console.log(ipfsHash)
 }
 
 export const fetchCurrentUserApplications = async (

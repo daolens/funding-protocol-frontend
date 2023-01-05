@@ -55,6 +55,8 @@ export const postGrantDataAndCallSmartContractFn = async (data: GrantType) => {
     IS_PROD
       ? DEFAULT_TOKENS.find((token) => token.name === data.token)?.address
       : // token address in dev
+        // Get test tokens from here: https://faucet.polygon.technology/
+        // Select Mumbai & Test ERC20 PoS
         '0xfe4f5145f6e09952a5ba9e956ed0c25e3fa4c7f1',
     data.fundingMethod,
   ]

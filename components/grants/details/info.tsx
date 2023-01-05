@@ -6,10 +6,7 @@ import {
   ShareIcon,
 } from '@heroicons/react/24/outline'
 import { GrantType } from '@lib/types/grants'
-import {
-  getNumberWithCommas,
-  onCopyText,
-} from '@lib/utils/common'
+import { getNumberWithCommas, onCopyText } from '@lib/utils/common'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
@@ -33,8 +30,8 @@ const Info = ({ grant, workspaceName, isAdmin }: Props) => {
         : 'Upfront payout',
     subHeading:
       grant.fundingMethod === 'UPFRONT'
-        ? 'Split into multiple progressive steps'
-        : 'As soon as proposals are approved',
+        ? 'As soon as proposals are approved'
+        : 'Split into multiple progressive steps',
   }
 
   const FundingMethodIcon =

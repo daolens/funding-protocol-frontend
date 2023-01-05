@@ -532,6 +532,11 @@
         "internalType": "struct ApplicationRegistry.MilestoneStateApp[]",
         "name": "",
         "type": "tuple[]"
+      },
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
       }
     ],
     "stateMutability": "view",
