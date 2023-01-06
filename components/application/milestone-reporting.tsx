@@ -128,6 +128,7 @@ const MilestoneReporting = ({
     onSuccess: () => {
       loadingToastRef.current?.hide?.()
       cogoToast.success('Milestone approved')
+      window.location.reload()
     },
     onError: (error) => {
       loadingToastRef.current?.hide?.()

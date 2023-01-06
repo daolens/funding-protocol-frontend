@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "format": "yarn prettier --write .",
+    "type-check": "tsc",
     "format-check": "yarn prettier --check ."
   },
   "dependencies": {

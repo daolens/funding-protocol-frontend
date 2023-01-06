@@ -73,7 +73,7 @@ export const DEFAULT_TOKENS: TokenType[] = [
     address: '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6',
     pair: '0x0',
     chain: 'Ethereum',
-    name: 'Ether(Wrapped)'
+    name: 'Ether(Wrapped)',
   },
 
   // { chain: 'Ethereum', name: 'Matic Token', image: '' },

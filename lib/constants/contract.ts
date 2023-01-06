@@ -71,18 +71,18 @@ export const CONTRACT_FUNCTION_NAME_MAP = {
 
 export const CONTRACTS: Record<ContractNameType, ContractType> = {
   workspace: {
-    address: '0xc1427b020E39C87b094e98DDeB35a498DfDd7ea0',
-    polygonMumbaiAddress: '0xc1427b020E39C87b094e98DDeB35a498DfDd7ea0',
+    address: '0x8c3a98e34f769162933337b2aC4dBBECBDFDac22',
+    polygonMumbaiAddress: '0x8c3a98e34f769162933337b2aC4dBBECBDFDac22',
     abi: WorkspaceContractAbi,
   },
   application: {
-    address: '0xC628971ab3832fe1caC9488586f4dC509ea493aE',
-    polygonMumbaiAddress: '0xC628971ab3832fe1caC9488586f4dC509ea493aE',
+    address: '0x09B0706547776f0fa875f7F47A4d6e062F98778e',
+    polygonMumbaiAddress: '0x09B0706547776f0fa875f7F47A4d6e062F98778e',
     abi: ApplicationContractAbi,
   },
   grant: {
-    address: '0x7a326f637DdDe98331A200D6C2CF97841F294ef0',
-    polygonMumbaiAddress: '0x7a326f637DdDe98331A200D6C2CF97841F294ef0',
+    address: '0x9f5de1593af49C4cB991Cc823C95A064ac5bf57f',
+    polygonMumbaiAddress: '0x9f5de1593af49C4cB991Cc823C95A064ac5bf57f',
     abi: GrantContractAbi,
   },
   // address will be the grantAddress of the grant

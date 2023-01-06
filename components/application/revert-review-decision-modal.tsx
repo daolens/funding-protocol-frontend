@@ -32,8 +32,10 @@ const RevertReviewDecisionModal = ({
     onMutate: () => {
       loadingToastRef.current = cogoToast.loading(
         `${
-          status === 'RejectPending' ? 'Approving' : 'Rejecting'
-        } application. This may take a while.`,
+          status === 'RejectPending'
+            ? 'Rolling back decision.'
+            : 'Rejecting application.'
+        } This may take a while.`,
         {
           hideAfter: 0,
         }
@@ -42,9 +44,9 @@ const RevertReviewDecisionModal = ({
     onSuccess: () => {
       loadingToastRef.current?.hide?.()
       cogoToast.success(
-        `Application ${
-          status === 'RejectPending' ? 'approved' : 'rejected'
-        } successfully`
+        status === 'RejectPending'
+          ? `Application rolled back successfully`
+          : `Application rejected successfully`
       )
       window.location.reload()
     },
@@ -55,14 +57,17 @@ const RevertReviewDecisionModal = ({
     },
   })
 
+  const text =
+    status === 'RejectPending'
+      ? 'Reverting the decision will roll back the application to "Under review" state. Are you sure you want to continue?'
+      : 'Reverting the decision will reject the application. Are you sure you want to continue?'
+
   return (
     <AlertModal
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       title="Revert decision"
-      text={`Reverting the decision will ${
-        status === 'RejectPending' ? 'approve' : 'reject'
-      } the application. Are you sure you want to continue?`}
+      text={text}
       ctaText="Revert"
       onCtaClick={() => revertDecisionMutation.mutate(status)}
       isLoading={revertDecisionMutation.isLoading}

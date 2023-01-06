@@ -175,11 +175,7 @@ const ReviewButtons = ({
                 <span className="text-gray-500 text-xs">
                   Made a mistake? Review the decision within
                 </span>
-                {revertDeadline && (
-                  <CountDownTimer
-                    endTime={revertDeadline}
-                  />
-                )}
+                {revertDeadline && <CountDownTimer endTime={revertDeadline} />}
               </div>
               <button
                 className="w-full text-indigo-500 bg-indigo-800 hover:bg-indigo-600 hover:bg-opacity-20 bg-opacity-20 rounded-lg border-dashed border border-indigo-800 p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
