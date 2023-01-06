@@ -26,13 +26,13 @@ const RevertReviewDecisionModal = ({
   const loadingToastRef = useRef<CTReturn | null>(null)
   const revertDecisionMutation = useMutation({
     mutationFn: (currStatus: ApplicationStatusType) =>
-      currStatus === 'Rejected'
+      currStatus === 'RejectPending'
         ? revertRejectDecisionSC(applicationId, grantAddress)
         : revertApproveDecisionSC(applicationId, grantAddress),
     onMutate: () => {
       loadingToastRef.current = cogoToast.loading(
         `${
-          status === 'Rejected' ? 'Approving' : 'Rejecting'
+          status === 'RejectPending' ? 'Approving' : 'Rejecting'
         } application. This may take a while.`,
         {
           hideAfter: 0,
@@ -43,7 +43,7 @@ const RevertReviewDecisionModal = ({
       loadingToastRef.current?.hide?.()
       cogoToast.success(
         `Application ${
-          status === 'Rejected' ? 'approved' : 'rejected'
+          status === 'RejectPending' ? 'approved' : 'rejected'
         } successfully`
       )
       window.location.reload()
@@ -61,7 +61,7 @@ const RevertReviewDecisionModal = ({
       setIsOpen={setIsOpen}
       title="Revert decision"
       text={`Reverting the decision will ${
-        status === 'Rejected' ? 'approve' : 'reject'
+        status === 'RejectPending' ? 'approve' : 'reject'
       } the application. Are you sure you want to continue?`}
       ctaText="Revert"
       onCtaClick={() => revertDecisionMutation.mutate(status)}

@@ -10,7 +10,7 @@ import {
 import { WalletAddressType } from '@lib/types/common'
 import { ApplicationStatusType } from '@lib/types/grants'
 import { updateApplicationStatusSC } from '@lib/utils/application'
-import { addDays, getTruncatedWalletAddress } from '@lib/utils/common'
+import { getTruncatedWalletAddress } from '@lib/utils/common'
 import { useMutation } from '@tanstack/react-query'
 import classNames from 'classnames'
 import cogoToast, { CTReturn } from 'cogo-toast'
@@ -26,7 +26,7 @@ type Props = {
   isAdmin: boolean
   token: string
   reviewers?: WalletAddressType[]
-  reviewTimestamp?: string
+  revertDeadline?: string
   isReviewer?: boolean
 }
 
@@ -38,7 +38,7 @@ const ReviewButtons = ({
   isAdmin,
   token,
   reviewers,
-  reviewTimestamp,
+  revertDeadline,
   isReviewer,
 }: Props) => {
   const loadingToastRef = useRef<CTReturn | null>(null)
@@ -139,25 +139,23 @@ const ReviewButtons = ({
           </div>
         )}
 
-        {status === 'Rejected' &&
-          new Date() >= addDays(reviewTimestamp as string, 3) && (
-            <div className="col-span-2 bg-red-500 bg-opacity-10 border border-red-800 p-5 rounded-xl flex flex-col gap-3">
-              <p className="text-lg text-gray-200">Application Rejected</p>
-              {reviewer && (
-                <span className="text-gray-500 text-xs">
-                  by {reviewerEnsName || getTruncatedWalletAddress(reviewer)}
-                </span>
-              )}
-            </div>
-          )}
+        {status === 'Rejected' && (
+          <div className="col-span-2 bg-red-500 bg-opacity-10 border border-red-800 p-5 rounded-xl flex flex-col gap-3">
+            <p className="text-lg text-gray-200">Application Rejected</p>
+            {reviewer && (
+              <span className="text-gray-500 text-xs">
+                by {reviewerEnsName || getTruncatedWalletAddress(reviewer)}
+              </span>
+            )}
+          </div>
+        )}
 
         {isReviewer &&
-          (status === 'Approved' || status === 'Rejected') &&
-          new Date() < addDays(reviewTimestamp as string, 3) && (
+          (status === 'ApprovePending' || status === 'RejectPending') && (
             <div
               style={{
                 background:
-                  status === 'Approved'
+                  status === 'ApprovePending'
                     ? 'linear-gradient(180deg, rgba(0, 175, 117, 0.12) 0%, rgba(0, 0, 0, 0) 100%)'
                     : 'linear-gradient(180deg, rgba(220, 38, 38, 0.12) 0%, rgba(0, 0, 0, 0) 100%)',
               }}
@@ -168,7 +166,7 @@ const ReviewButtons = ({
                 {reviewer && (
                   <span className="text-gray-500 text-xs">
                     application{' '}
-                    {status === 'Approved' ? 'approved' : 'rejected'} by{' '}
+                    {status === 'ApprovePending' ? 'approved' : 'rejected'} by{' '}
                     {reviewerEnsName || getTruncatedWalletAddress(reviewer)}
                   </span>
                 )}
@@ -177,9 +175,9 @@ const ReviewButtons = ({
                 <span className="text-gray-500 text-xs">
                   Made a mistake? Review the decision within
                 </span>
-                {reviewTimestamp && (
+                {revertDeadline && (
                   <CountDownTimer
-                    endTime={addDays(reviewTimestamp, 3).toISOString()}
+                    endTime={revertDeadline}
                   />
                 )}
               </div>
@@ -192,23 +190,22 @@ const ReviewButtons = ({
             </div>
           )}
 
-        {status === 'Approved' &&
-          new Date() >= addDays(reviewTimestamp as string, 3) && (
-            <div
-              style={{
-                background:
-                  'linear-gradient(180deg, rgba(0, 175, 117, 0.12) 0%, rgba(0, 0, 0, 0) 100%)',
-              }}
-              className="rounded-xl p-5 border border-gray-800 flex flex-col gap-3 col-span-2"
-            >
-              <p className="text-lg text-gray-200">Application Approved</p>
-              {reviewer && (
-                <span className="text-gray-500 text-xs">
-                  by {reviewerEnsName || getTruncatedWalletAddress(reviewer)}
-                </span>
-              )}
-            </div>
-          )}
+        {status === 'Approved' && (
+          <div
+            style={{
+              background:
+                'linear-gradient(180deg, rgba(0, 175, 117, 0.12) 0%, rgba(0, 0, 0, 0) 100%)',
+            }}
+            className="rounded-xl p-5 border border-gray-800 flex flex-col gap-3 col-span-2"
+          >
+            <p className="text-lg text-gray-200">Application Approved</p>
+            {reviewer && (
+              <span className="text-gray-500 text-xs">
+                by {reviewerEnsName || getTruncatedWalletAddress(reviewer)}
+              </span>
+            )}
+          </div>
+        )}
         {(isReviewer || isAdmin) && isInsufficientBalance && (
           <>
             <div className="flex col-span-2 items-center gap-2">

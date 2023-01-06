@@ -17,6 +17,8 @@ export const APPLICATION_STATUSES = [
   'Approved',
   'Rejected',
   'Complete',
+  'RejectPending',
+  'ApprovePending',
 ] as const
 
 export const APPLICATION_STATUS_OBJ: Record<
@@ -27,5 +29,7 @@ export const APPLICATION_STATUS_OBJ: Record<
   Resubmit: { color: 'yellow', label: 'Under review' },
   Approved: { color: 'cyan', label: 'Accepted' },
   Rejected: { color: 'red', label: 'Rejected' },
+  ApprovePending: { color: 'cyan', label: 'Accepted' },
+  RejectPending: { color: 'red', label: 'Rejected' },
   Complete: { color: 'green', label: 'Complete' },
 }

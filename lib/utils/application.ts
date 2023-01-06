@@ -83,6 +83,7 @@ export const fetchApplicationById = async (applicationId: `0x${string}`) => {
   })) as [
     FetchApplicationResponseType,
     WalletAddressType[],
+    // Timestamp when transcation will be done
     { _hex: string },
     FundingMethodType,
     FetchMilestoneResponseType[],
@@ -116,8 +117,8 @@ export const fetchApplicationById = async (applicationId: `0x${string}`) => {
   )
   application.owner = applicationFromContract.owner as WalletAddressType
   application.status = APPLICATION_STATUSES[applicationFromContract.state]
-  application.reviewTimestamp = new Date(
-    parseInt(reviewTimestamp._hex, 16)
+  application.revertDeadline = new Date(
+    parseInt(reviewTimestamp._hex, 16) * 1000
   ).toISOString()
   application.reviewer = reviewers
   application.grantAddress = applicationFromContract.grantAddress
@@ -146,7 +147,7 @@ export const fetchApplicationById = async (applicationId: `0x${string}`) => {
         const milestoneDetails = JSON.parse(
           milestoneDetailsJsonString
         ).milestoneDetails
-        milestone.details = milestoneDetails
+        milestone.details = milestoneDetails || ''
         application.milestones[index] = milestone
       }
     }

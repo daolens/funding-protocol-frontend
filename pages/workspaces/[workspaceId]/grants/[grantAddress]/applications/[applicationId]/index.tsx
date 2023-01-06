@@ -57,7 +57,7 @@ const ApplicationDetails = ({
 
   const isApproved =
     application.status === 'Approved' &&
-    new Date() >= addDays(application.reviewTimestamp as string, 3)
+    new Date() >= addDays(application.revertDeadline as string, 3)
 
   const [activeSection, setActiveSection] = useState<ApplicationSectionType>(
     isApproved && grantFundingMethod === 'MILESTONE'
@@ -130,7 +130,7 @@ const ApplicationDetails = ({
                 token={grantBalanceToken}
                 reviewers={application.reviewer}
                 isReviewer={isReviewer}
-                reviewTimestamp={application.reviewTimestamp}
+                revertDeadline={application.revertDeadline}
               />
               {isApplicant && application.status === 'Resubmit' && (
                 <div className="col-span-2">

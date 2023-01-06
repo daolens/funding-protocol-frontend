@@ -44,8 +44,9 @@ type Props = {
 
 /** Applicant facing */
 const ApplicationCard = ({ application }: Props) => {
-  const reviewTimeString = application.reviewTimestamp
-    ? new Date(application.reviewTimestamp).toDateString()
+  // TODO: subtract 3 days from this
+  const reviewTimeString = application.revertDeadline
+    ? new Date(application.revertDeadline).toDateString()
     : ''
   const workspaceId = application.workspaceId
   const grantAddress = application.grantAddress
@@ -74,13 +75,17 @@ const ApplicationCard = ({ application }: Props) => {
           label="In Review"
           state={
             application.status === 'Submitted' ||
-            application.status === 'Resubmit'
+            application.status === 'Resubmit' ||
+            application.status === 'RejectPending' ||
+            application.status === 'ApprovePending'
               ? 'Active'
               : 'Completed'
           }
         />
         {(application.status === 'Submitted' ||
-          application.status === 'Resubmit') && (
+          application.status === 'Resubmit' ||
+          application.status === 'RejectPending' ||
+          application.status === 'ApprovePending') && (
           <Pill label="Results" state="Upcoming" isLastPill />
         )}
 

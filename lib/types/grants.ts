@@ -66,7 +66,7 @@ export type ApplicationType = {
   completedMilestoneCount?: number
   status?: ApplicationStatusType
   reviewer?: WalletAddressType[]
-  reviewTimestamp?: string
+  revertDeadline?: string
   fundingMethod?: FundingMethodType
   grantTitle?: string
   workspaceTitle?: string
