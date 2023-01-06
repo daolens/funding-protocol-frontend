@@ -100,6 +100,7 @@ const ApplicationCard = ({ application }: Props) => {
               reviewTimeString ? `Accepted on ${reviewTimeString}` : 'Accepted'
             }
             state="Completed"
+            isLastPill={application.fundingMethod === 'UPFRONT'}
           />
         )}
 

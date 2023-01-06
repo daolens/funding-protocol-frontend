@@ -297,6 +297,7 @@ export const fetchCurrentUserApplications = async (
       ._hex as `0x${string}`
     application.workspaceTitle = workspace.communityName
     application.grantTitle = grant.title
+    application.fundingMethod = grant.fundingMethod
     applications.push(application)
   }
 

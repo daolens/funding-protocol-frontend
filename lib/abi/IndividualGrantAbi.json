@@ -503,32 +503,19 @@
         "internalType": "uint256",
         "name": "applicationId",
         "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "isMilestone",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "milestoneId",
+        "type": "uint256"
       }
     ],
     "name": "payApplicant",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "applicationId",
-        "type": "uint256"
-      }
-    ],
-    "name": "queueTransactions",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
