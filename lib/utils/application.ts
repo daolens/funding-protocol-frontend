@@ -243,13 +243,13 @@ type SendFeedbackMilestoneSCOptions = {
 }
 
 export const sendFeedbackMilestoneSC = async ({
-  reason,
+  reason: _,
 }: SendFeedbackMilestoneSCOptions) => {
   // TODO: complete
-  const ipfsHash = (
-    await uploadToIPFS(JSON.stringify({ milestoneFeedback: reason }))
-  ).hash
-  console.log(ipfsHash)
+  // const ipfsHash = (
+  //   await uploadToIPFS(JSON.stringify({ milestoneFeedback: reason }))
+  // ).hash
+  // console.log(ipfsHash)
 }
 
 export const fetchCurrentUserApplications = async (
