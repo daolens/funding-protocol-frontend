@@ -44,6 +44,12 @@ export default function TokenAmountInput({
           placeholder="0.00"
           value={(amount || '') as number}
           onChange={(e) => setAmount(parseInt(e.currentTarget.value) || null)}
+          // To prevent negative values
+          min={0}
+          onInput={(e) =>
+            e.currentTarget.validity.valid || (e.currentTarget.value = '')
+          }
+          onWheel={(e) => e.currentTarget.blur()}
         />
         <Listbox value={tokenName} onChange={setTokenName}>
           {({ open }) => (

@@ -197,7 +197,7 @@ const ApplicationForm = ({
             <FundsInput
               currency={currency as string}
               label="Seeking Funds"
-              value={seekingFunds as number}
+              value={(seekingFunds || '') as number}
               onChange={(e) => setseekingFunds(e.currentTarget.value as any)}
               error={fieldErrors['seekingFunds']}
             />
