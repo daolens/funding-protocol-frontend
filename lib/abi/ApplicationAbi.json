@@ -874,11 +874,6 @@
         "type": "uint256"
       },
       {
-        "internalType": "address",
-        "name": "_grantAddress",
-        "type": "address"
-      },
-      {
         "internalType": "enum ApplicationRegistry.ApplicationState",
         "name": "_state",
         "type": "uint8"
@@ -900,11 +895,6 @@
         "internalType": "uint256",
         "name": "_milestoneId",
         "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "_grantAddress",
-        "type": "address"
       },
       {
         "internalType": "enum ApplicationRegistry.MilestoneState",
