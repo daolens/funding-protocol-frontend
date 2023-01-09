@@ -62,7 +62,7 @@ export default function TokenAmountInput({
                       alt=""
                       width={24}
                       height={24}
-                      className="h-6 w-6 flex-shrink-0 rounded-full"
+                      className="h-6 w-6 flex-shrink-0 rounded-full bg-white"
                     />
                     <span className="ml-3 block truncate">
                       {selected?.name}
@@ -105,7 +105,7 @@ export default function TokenAmountInput({
                                 alt=""
                                 width={24}
                                 height={24}
-                                className="h-6 w-6 flex-shrink-0 rounded-full"
+                                className="h-6 w-6 flex-shrink-0 rounded-full bg-white"
                               />
                               <span
                                 className={classNames(

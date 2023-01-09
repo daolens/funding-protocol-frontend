@@ -104,7 +104,9 @@ const ApplicationForm = ({
       },
     ]
   )
-  const [discordHandle, setDiscordHandle] = useState('')
+  const [discordHandle, setDiscordHandle] = useState(
+    application?.discordHandle || ''
+  )
   const [fieldErrors, setFieldErrors] = useState<
     Record<keyof ApplicationType, string>
   >({} as any)

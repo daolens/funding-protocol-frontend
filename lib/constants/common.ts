@@ -68,7 +68,7 @@ export const DEFAULT_TOKENS: TokenType[] = [
   },
   {
     id: '5',
-    image: '/chain_assets/weth.svg',
+    image: '/images/tokens/weth.svg',
     symbol: 'WETH',
     address: '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6',
     pair: '0x0',
