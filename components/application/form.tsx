@@ -51,7 +51,7 @@ const ApplicationForm = ({
     application?.walletAddress || ''
   )
   const [description, setDescription] = useState(application?.description || '')
-  const [seekingFunds, setseekingFunds] = useState<number | null>(
+  const [seekingFunds, setSeekingFunds] = useState<number | null>(
     application?.seekingFunds || null
   )
   const [expectedProjectDeadline, setExpectedProjectDeadline] =
@@ -104,6 +104,17 @@ const ApplicationForm = ({
     Record<keyof ApplicationType, string>
   >({} as any)
 
+  const fundsInputValue =
+    fundingMethod === 'MILESTONE'
+      ? milestones
+          .map((milestone) =>
+            typeof milestone.funds === 'string'
+              ? parseInt(milestone.funds)
+              : milestone.funds || 0
+          )
+          .reduce((prev, curr) => prev + curr)
+      : ((seekingFunds || '') as number)
+
   const onApply = () => {
     setFieldErrors({} as any)
     const _application: ApplicationType = {
@@ -120,7 +131,7 @@ const ApplicationForm = ({
       previousSuccessfulProposalLinks: previousSuccessfulProposalLinks.filter(
         (item) => item.text
       ),
-      seekingFunds: seekingFunds,
+      seekingFunds: fundsInputValue,
       teamMemberDetails: teamMemberDetails.filter((item) => item.text),
       walletAddress,
       id: application?.id,
@@ -137,6 +148,7 @@ const ApplicationForm = ({
 
     onSubmit(_application)
   }
+
   return (
     <Background>
       <Navbar />
@@ -197,9 +209,10 @@ const ApplicationForm = ({
             <FundsInput
               currency={currency as string}
               label="Seeking Funds"
-              value={(seekingFunds || '') as number}
-              onChange={(e) => setseekingFunds(e.currentTarget.value as any)}
+              value={fundsInputValue}
+              onChange={(e) => setSeekingFunds(e.currentTarget.value as any)}
               error={fieldErrors['seekingFunds']}
+              disabled={fundingMethod === 'MILESTONE'}
             />
           )}
           <DatePicker
@@ -260,6 +273,7 @@ const ApplicationForm = ({
             items={milestones}
             setItems={setMilestones}
             error={fieldErrors['milestones']}
+            totalFundsSeeking={fundsInputValue}
           />
         )}
       </div>

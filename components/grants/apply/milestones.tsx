@@ -49,6 +49,12 @@ function Item({
           value={funds}
           type="number"
           onChange={(e) => onFundsChange(e.currentTarget.value as any)}
+          // To prevent negative values
+          min={0}
+          onInput={(e) =>
+            e.currentTarget.validity.valid || (e.currentTarget.value = '')
+          }
+          onWheel={(e) => e.currentTarget.blur()}
         />
       </div>
     </div>
@@ -59,9 +65,10 @@ type Props = {
   items: ApplicationMilestoneType[]
   setItems: Dispatch<SetStateAction<ApplicationMilestoneType[]>>
   error?: string
+  totalFundsSeeking: number
 }
 
-function Milestones({ items, setItems, error }: Props) {
+function Milestones({ items, setItems, error, totalFundsSeeking }: Props) {
   const isAddNewItemButtonDisabled =
     !items?.[items.length - 1]?.text || !items?.[items.length - 1]?.funds
 
@@ -125,6 +132,14 @@ function Milestones({ items, setItems, error }: Props) {
       </button>
 
       <p className="mt-1 text-sm text-red-600">{error}</p>
+      {!!totalFundsSeeking && (
+        <p className="mt-1 text-xs text-gray-400">
+          Total seeking funds:{' '}
+          <span className="text-gray-300 fond-semibold">
+            {totalFundsSeeking} USDC
+          </span>
+        </p>
+      )}
     </div>
   )
 }

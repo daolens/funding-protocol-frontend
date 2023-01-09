@@ -29,7 +29,11 @@ const FundsInput = ({ label, error, currency, ...inputProps }: Props) => {
           {...inputProps}
           className={classNames(
             `block w-full rounded-xl focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm bg-gray-800 text-gray-200 p-3 pr-12 bg-opacity-20 border ${inputProps.className}`,
-            { 'border-gray-800': !error, 'border-red-800': error }
+            {
+              'border-gray-800': !error,
+              'border-red-800': error,
+              'opacity-50 cursor-not-allowed': inputProps.disabled,
+            }
           )}
         />
         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
