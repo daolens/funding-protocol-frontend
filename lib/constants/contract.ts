@@ -57,6 +57,10 @@ export const CONTRACT_FUNCTION_NAME_MAP = {
      * args: [applicationId, milestoneId, workspaceId, grantAddress, reasonMetadataHash]
      */
     approveMilestone: 'approveMilestone',
+    /**
+     * args: [applicationId, milestoneId, workspaceId, grantAddress, reasonMetadataHash]
+     */
+    submitMilestoneFeedback: 'submitMilestoneFeedback',
     /** Call client side */
     fetchMyApplications: 'fetchMyApplications',
     /** To reject: args: [applicationId, grantAddress]
@@ -71,18 +75,18 @@ export const CONTRACT_FUNCTION_NAME_MAP = {
 
 export const CONTRACTS: Record<ContractNameType, ContractType> = {
   workspace: {
-    address: '0x930bD65056fEb0eF3998a95b0A6Bc54A6102619a',
-    polygonMumbaiAddress: '0x930bD65056fEb0eF3998a95b0A6Bc54A6102619a',
+    address: '0x72597540045338CF15dEFBeaec40C54B845F5EB3',
+    polygonMumbaiAddress: '0x72597540045338CF15dEFBeaec40C54B845F5EB3',
     abi: WorkspaceContractAbi,
   },
   application: {
-    address: '0xfe29f46a5f00f1cE2990a20913aDAeC12A6E5844',
-    polygonMumbaiAddress: '0xfe29f46a5f00f1cE2990a20913aDAeC12A6E5844',
+    address: '0x04431Fa8cBe7821F2CCC3598c58e5925D05fa464',
+    polygonMumbaiAddress: '0x04431Fa8cBe7821F2CCC3598c58e5925D05fa464',
     abi: ApplicationContractAbi,
   },
   grant: {
-    address: '0x76E6a92ae899D6B43D177cbCBccdA42b83e9deF9',
-    polygonMumbaiAddress: '0x76E6a92ae899D6B43D177cbCBccdA42b83e9deF9',
+    address: '0xB9d5E7B96832C5e2DCF287433491073eA6AdFD7E',
+    polygonMumbaiAddress: '0xB9d5E7B96832C5e2DCF287433491073eA6AdFD7E',
     abi: GrantContractAbi,
   },
   // address will be the grantAddress of the grant

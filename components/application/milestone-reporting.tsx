@@ -1,13 +1,14 @@
 import FeedbackModal from '@components/application/feedback-modal'
 import AlertModal from '@components/common/alert-modal'
 import { CheckCircleIcon, CurrencyDollarIcon } from '@heroicons/react/24/solid'
+import { MILESTONE_STATUSES } from '@lib/constants/application'
 import { ApplicationMilestoneType } from '@lib/types/grants'
 import { approveMilestoneSC } from '@lib/utils/application'
 import classNames from 'classnames'
 import cogoToast, { CTReturn } from 'cogo-toast'
 import { useRouter } from 'next/router'
 import { useRef, useState } from 'react'
-import { useMutation } from 'wagmi'
+import { useAccount, useMutation } from 'wagmi'
 
 type MilestoneCardProps = {
   milestone: ApplicationMilestoneType
@@ -71,23 +72,28 @@ const MilestoneCard = ({
         </p>
         {isReviewer && state !== 'completed' && (
           <div className="space-x-2 flex w-full max-w-7xl items-end justify-end p-2 border rounded-2xl border-gray-700 bg-gray-900 bg-opacity-50 border-opacity-50 backdrop-blur-md">
-            <button
-              className={classNames(
-                // TODO: unhide this when API integrated
-                'inline-flex- hidden items-center rounded-xl border border-transparent bg-red-900 bg-opacity-20 px-4 py-3 text-sm font-medium shadow-sm hover:bg-red-800 hover:bg-opacity-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 justify-center text-red-400'
-              )}
-              onClick={onSendFeedback}
-            >
-              Send back with feedback
-            </button>
-            <button
-              className={classNames(
-                'inline-flex items-center rounded-xl border border-transparent bg-green-900 bg-opacity-20 px-4 py-3 text-sm font-medium shadow-sm hover:bg-green-800 hover:bg-opacity-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 justify-center text-green-400'
-              )}
-              onClick={onApprove}
-            >
-              Approve
-            </button>
+            {milestone.status === 'Resubmit' ? (
+              <p className="text-gray-500 px-3 py-3">Feedback sent</p>
+            ) : (
+              <>
+                <button
+                  className={classNames(
+                    'inline-flex items-center rounded-xl border border-transparent bg-red-900 bg-opacity-20 px-4 py-3 text-sm font-medium shadow-sm hover:bg-red-800 hover:bg-opacity-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 justify-center text-red-400'
+                  )}
+                  onClick={onSendFeedback}
+                >
+                  Send back with feedback
+                </button>
+                <button
+                  className={classNames(
+                    'inline-flex items-center rounded-xl border border-transparent bg-green-900 bg-opacity-20 px-4 py-3 text-sm font-medium shadow-sm hover:bg-green-800 hover:bg-opacity-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 justify-center text-green-400'
+                  )}
+                  onClick={onApprove}
+                >
+                  Approve
+                </button>
+              </>
+            )}
           </div>
         )}
       </div>
@@ -108,6 +114,7 @@ const MilestoneReporting = ({
   isReviewer,
   isApplicant,
 }: Props) => {
+  const { address } = useAccount()
   const loadingToastRef = useRef<CTReturn | null>(null)
   const router = useRouter()
   const { workspaceId, grantAddress, applicationId } = router.query
@@ -122,7 +129,11 @@ const MilestoneReporting = ({
         milestoneFeedbacks: [
           ...(milestones.find((milestone) => milestone.id === milestoneId)
             ?.feedbacks || []),
-          { text: 'Approved', timestamp: new Date().toISOString() },
+          {
+            text: MILESTONE_STATUSES[2],
+            timestamp: new Date().toISOString(),
+            sender: address!,
+          },
         ],
       }),
     onMutate: () => {
@@ -174,6 +185,14 @@ const MilestoneReporting = ({
         : null
       return
     }
+
+    if (isApplicant && milestone.status === 'Resubmit') {
+      router.push(
+        `/workspaces/${workspaceId}/grants/${grantAddress}/applications/${applicationId}/milestones/${milestone.id}`
+      )
+      return
+    }
+
     setActiveMilestoneId((prev) => (prev === milestone.id ? '' : milestone.id))
   }
 

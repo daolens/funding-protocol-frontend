@@ -1,9 +1,11 @@
+import { StatusProps } from '@components/application/milestone-statuses'
 import { MILESTONE_STATUSES } from '@lib/constants/application'
 import { CONTRACTS, CONTRACT_FUNCTION_NAME_MAP } from '@lib/constants/contract'
 import { APPLICATION_STATUSES } from '@lib/constants/grants'
 import { WalletAddressType } from '@lib/types/common'
 import {
   ApplicationMilestoneStateDetailType,
+  ApplicationMilestoneType,
   ApplicationStatusType,
   ApplicationType,
   FundingMethodType,
@@ -25,7 +27,6 @@ type UpdateApplicationStatusSCOptions = {
   reason?: string
 }
 
-// TODO: test reject
 export const updateApplicationStatusSC = async ({
   applicationId,
   grantAddress,
@@ -73,7 +74,7 @@ type FetchApplicationResponseType = {
 
 type FetchMilestoneResponseType = {
   state: number
-  reviewerHash: string
+  reviewersHash: string
   applicantHash: string
 }
 
@@ -141,6 +142,7 @@ export const fetchApplicationById = async (applicationId: `0x${string}`) => {
     const milestoneFromSC = milestonesFromSC[index]
 
     milestone.status = MILESTONE_STATUSES[milestoneFromSC.state]
+    milestone.id = index.toString()
 
     // Populating proof of work
     if (milestoneFromSC.applicantHash) {
@@ -156,9 +158,9 @@ export const fetchApplicationById = async (applicationId: `0x${string}`) => {
     }
 
     // Populating feedback
-    if (milestoneFromSC.reviewerHash) {
+    if (milestoneFromSC.reviewersHash) {
       const milestoneFeedbackJsonString = await getFromIPFS(
-        milestoneFromSC.reviewerHash
+        milestoneFromSC.reviewersHash
       )
       if (milestoneFeedbackJsonString) {
         const milestoneFeedbacks = JSON.parse(
@@ -240,18 +242,30 @@ export const approveMilestoneSC = async ({
   log({ txnConfirmation })
 }
 
-type SendFeedbackMilestoneSCOptions = {
-  milestoneFeedbacks: ApplicationMilestoneStateDetailType[]
-}
-
 export const sendFeedbackMilestoneSC = async ({
-  milestoneFeedbacks: _,
-}: SendFeedbackMilestoneSCOptions) => {
-  // TODO: complete
-  // const ipfsHash = (
-  //   await uploadToIPFS(JSON.stringify({ milestoneFeedbacks }))
-  // ).hash
-  // console.log(ipfsHash)
+  applicationId,
+  grantAddress,
+  milestoneId,
+  workspaceId,
+  milestoneFeedbacks,
+}: ApproveMilestoneSCOptions) => {
+  const ipfsHash = (await uploadToIPFS(JSON.stringify({ milestoneFeedbacks })))
+    .hash
+  const args = [applicationId, milestoneId, workspaceId, grantAddress, ipfsHash]
+  log('submitMilestoneFeedback called', { args })
+  const result = await writeSmartContractFunction({
+    contractObj: CONTRACTS.application,
+    args,
+    functionName:
+      CONTRACT_FUNCTION_NAME_MAP.application.submitMilestoneFeedback,
+  })
+
+  if (!result.hash)
+    throw new Error('submitMilestoneFeedback smart contract call failed')
+
+  const txnConfirmation = await result.wait()
+  log(`submitMilestoneFeedback call successful. Hash: ${result.hash}`)
+  log({ txnConfirmation })
 }
 
 export const fetchCurrentUserApplications = async (
@@ -373,4 +387,59 @@ export const revertApproveDecisionSC = async (
     `individualGrant.revertTransactions call successful. Hash: ${result.hash}`
   )
   log({ txnConfirmation })
+}
+
+export const getListOfStatuses = (milestones: ApplicationMilestoneType[]) => {
+  // Initial default status
+  let statuses: StatusProps[] = [
+    { title: 'Application Approved', color: 'green' },
+  ]
+
+  for (
+    let milestoneIndex = 0;
+    milestoneIndex < milestones.length;
+    milestoneIndex++
+  ) {
+    const milestone = milestones[milestoneIndex]
+
+    const proofOfWorkArray: StatusProps[] =
+      milestone?.proofOfWorkArray?.map(
+        (item) =>
+          ({
+            color: 'yellow',
+            title: `Milestone ${milestoneIndex + 1}: In Review`,
+            sender: item.sender,
+            timestamp: item.timestamp,
+          } as StatusProps)
+      ) || []
+
+    const feedbacks: StatusProps[] =
+      milestone?.feedbacks?.map(
+        (item) =>
+          ({
+            color: item.text === MILESTONE_STATUSES[2] ? 'green' : 'yellow',
+            title: `Milestone ${milestoneIndex + 1}: ${
+              item.text === MILESTONE_STATUSES[2] ? 'Approved' : 'Feedback'
+            }`,
+            content:
+              item.text === MILESTONE_STATUSES[2] ? undefined : item.text,
+            sender: item.sender,
+            timestamp: item.timestamp,
+          } as StatusProps)
+      ) || []
+
+    const currStatus: StatusProps[] = [...proofOfWorkArray, ...feedbacks].sort(
+      (statusA, statusB) =>
+        new Date(statusB.timestamp!).getTime() -
+        new Date(statusA.timestamp!).getTime()
+    )
+
+    statuses = [...currStatus, ...statuses]
+
+    const isComplete =
+      milestone.status === 'Approved' || milestone.status === 'ApprovePending'
+    // Current milestone is incomplete so next milestones are incomplete too. Skipping them.
+    if (!isComplete) break
+  }
+  return statuses
 }

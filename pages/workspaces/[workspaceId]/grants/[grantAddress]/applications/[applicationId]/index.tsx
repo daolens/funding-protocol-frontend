@@ -1,6 +1,7 @@
 import Description from '@components/application/description'
 import FeedbackCard from '@components/application/feedback-card'
 import MilestoneReporting from '@components/application/milestone-reporting'
+import MilestoneStatuses from '@components/application/milestone-statuses'
 import ReviewButtons from '@components/application/review-buttons'
 import ApplicationSectionTabs from '@components/application/section-tabs'
 import SideInfoBar from '@components/application/side-info-bar'
@@ -65,6 +66,11 @@ const ApplicationDetails = ({
       : 'application'
   )
 
+  const isMilestoneReviewState =
+    grantFundingMethod === 'MILESTONE' &&
+    application.status === 'Approved' &&
+    application.milestones[0].status !== 'Submitted'
+
   return (
     <ClientOnly>
       <Background>
@@ -121,17 +127,22 @@ const ApplicationDetails = ({
               )}
             </div>
             <div className="grid grid-cols-2 gap-5 h-fit">
-              <ReviewButtons
-                status={application.status as ApplicationStatusType}
-                grantBalance={grantBalance || 0}
-                grantBalanceInUsd={grantBalanceInUsd || 0}
-                isAdmin={isAdmin}
-                isInsufficientBalance={isInsufficientBalance}
-                token={grantBalanceToken}
-                reviewers={application.reviewer}
-                isReviewer={isReviewer}
-                revertDeadline={application.revertDeadline}
-              />
+              {!isMilestoneReviewState && (
+                <ReviewButtons
+                  status={application.status as ApplicationStatusType}
+                  grantBalance={grantBalance || 0}
+                  grantBalanceInUsd={grantBalanceInUsd || 0}
+                  isAdmin={isAdmin}
+                  isInsufficientBalance={isInsufficientBalance}
+                  token={grantBalanceToken}
+                  reviewers={application.reviewer}
+                  isReviewer={isReviewer}
+                  revertDeadline={application.revertDeadline}
+                />
+              )}
+              {isMilestoneReviewState && (
+                <MilestoneStatuses application={application} isReviewer={isReviewer} />
+              )}
               {isApplicant && application.status === 'Resubmit' && (
                 <div className="col-span-2">
                   <FeedbackCard feedback={application.feedback as string} />

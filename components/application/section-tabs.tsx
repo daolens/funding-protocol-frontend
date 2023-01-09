@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction } from 'react'
 
 const TABS: { name: string; id: ApplicationSectionType }[] = [
   { name: 'Milestone Reporting', id: 'milestone-reporting' },
-  { name: 'Applications', id: 'application' },
+  { name: 'Application', id: 'application' },
 ]
 
 function classNames(...classes: string[]) {

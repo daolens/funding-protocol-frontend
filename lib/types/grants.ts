@@ -39,6 +39,7 @@ export type GrantType = {
 export type ApplicationMilestoneStateDetailType = {
   timestamp: string
   text: string
+  sender: WalletAddressType
 }
 
 export type ApplicationMilestoneType = {

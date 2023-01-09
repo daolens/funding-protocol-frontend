@@ -10,6 +10,7 @@ import { useMutation } from '@tanstack/react-query'
 import classNames from 'classnames'
 import cogoToast, { CTReturn } from 'cogo-toast'
 import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
+import { useAccount } from 'wagmi'
 
 type Props = {
   isOpen: boolean
@@ -30,6 +31,7 @@ const FeedbackModal = ({
   isMilestoneFeedback = false,
   milestone,
 }: Props) => {
+  const { address } = useAccount()
   const loadingToastRef = useRef<CTReturn | null>(null)
   const sendFeedbackMutation = useMutation({
     mutationFn: (feedbackData: string) =>
@@ -37,8 +39,16 @@ const FeedbackModal = ({
         ? sendFeedbackMilestoneSC({
             milestoneFeedbacks: [
               ...(milestone?.feedbacks || []),
-              { text: feedbackData, timestamp: new Date().toISOString() },
+              {
+                text: feedbackData,
+                timestamp: new Date().toISOString(),
+                sender: address!,
+              },
             ],
+            applicationId,
+            grantAddress,
+            milestoneId: milestone!.id,
+            workspaceId,
           })
         : updateApplicationStatusSC({
             applicationId,
