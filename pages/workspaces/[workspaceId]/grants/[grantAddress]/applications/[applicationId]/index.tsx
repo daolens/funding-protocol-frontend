@@ -143,6 +143,7 @@ const ApplicationDetails = ({
                   milestones={application.milestones}
                   seekingFunds={application.seekingFunds as number}
                   fundingMethod={grant.fundingMethod}
+                  discordHandle={application.discordHandle}
                 />
               </div>
             </div>

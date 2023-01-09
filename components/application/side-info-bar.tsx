@@ -1,24 +1,36 @@
 import { CalendarIcon } from '@heroicons/react/24/solid'
 import { ApplicationMilestoneType, FundingMethodType } from '@lib/types/grants'
-import { getNumberWithCommas } from '@lib/utils/common'
+import { getNumberWithCommas, onCopyText } from '@lib/utils/common'
 import classNames from 'classnames'
+import Image from 'next/image'
 import React from 'react'
 
 export const ApplicationCard = ({
   children,
+  onClick,
 }: {
   children: React.ReactNode
-}) => (
-  <div className="bg-gray-800 bg-opacity-20 border border-gray-800 p-5 rounded-xl">
-    {children}
-  </div>
-)
+  onClick?: () => void
+}) =>
+  onClick ? (
+    <button
+      onClick={onClick}
+      className="bg-gray-800 bg-opacity-20 border border-gray-800 p-5 rounded-xl hover:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+    >
+      {children}
+    </button>
+  ) : (
+    <div className="bg-gray-800 bg-opacity-20 border border-gray-800 p-5 rounded-xl">
+      {children}
+    </div>
+  )
 
 type Props = {
   seekingFunds: number
   deadline: string
   milestones: ApplicationMilestoneType[]
   fundingMethod: FundingMethodType
+  discordHandle: string
 }
 
 const SideInfoBar = ({
@@ -26,6 +38,7 @@ const SideInfoBar = ({
   milestones,
   seekingFunds,
   fundingMethod,
+  discordHandle,
 }: Props) => {
   return (
     <div className="grid grid-cols-1 gap-5">
@@ -70,6 +83,24 @@ const SideInfoBar = ({
                 <p className="font-semibold">{milestone.text}</p>
               </div>
             ))}
+          </div>
+        </ApplicationCard>
+      )}
+      {discordHandle && (
+        <ApplicationCard onClick={() => onCopyText(discordHandle)}>
+          <div className="flex flex-col gap-2 items-start">
+            <div className="flex gap-1 items-center">
+              <span>{discordHandle.split('#')[0]}</span>
+              <Image
+                src="/images/common/discord.svg"
+                width={18.4}
+                height={13.6}
+                alt="dicord logo"
+              />
+            </div>
+            <span className="text-gray-500 text-xs">
+              #{discordHandle.split('#')[1]}
+            </span>
           </div>
         </ApplicationCard>
       )}
