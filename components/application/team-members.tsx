@@ -22,12 +22,17 @@ const TeamMembers = ({ teamMembers }: Props) => {
             </span>
             <div className="flex flex-col space-y-1">
               <span className="text-gray-400">{member.text}</span>
-              <div className="flex items-center gap-1 text-indigo-500">
-                <AtSymbolIcon className="w-5 h-5" />
-                <a href={`mailto:${member.email}`} className="hover:underline">
-                  {member.email}
-                </a>
-              </div>
+              {member.email && (
+                <div className="flex items-center gap-1 text-indigo-500">
+                  <AtSymbolIcon className="w-5 h-5" />
+                  <a
+                    href={`mailto:${member.email}`}
+                    className="hover:underline"
+                  >
+                    {member.email}
+                  </a>
+                </div>
+              )}
             </div>
           </div>
         ))}
