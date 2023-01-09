@@ -1,9 +1,10 @@
+import { AtSymbolIcon } from '@heroicons/react/24/outline'
 import { UsersIcon } from '@heroicons/react/24/solid'
-import { DynamicInputItemType } from '@lib/types/common'
+import { ApplicationTeamMemberType } from '@lib/types/grants'
 import React from 'react'
 
 type Props = {
-  teamMembers: DynamicInputItemType[]
+  teamMembers: ApplicationTeamMemberType[]
 }
 
 const TeamMembers = ({ teamMembers }: Props) => {
@@ -16,10 +17,18 @@ const TeamMembers = ({ teamMembers }: Props) => {
       <div className="flex flex-col gap-3">
         {teamMembers.map((member, index) => (
           <div className="flex text-sm gap-2" key={member.id}>
-            <span className="w-5 h-5 rounded-full text-xs bg-indigo-600 flex justify-center items-center">
+            <span className="w-5 h-5 rounded-full text-xs bg-indigo-600 flex justify-center items-center min-w-[20px]">
               {index + 1}
             </span>
-            <span className="text-gray-400">{member.text}</span>
+            <div className="flex flex-col space-y-1">
+              <span className="text-gray-400">{member.text}</span>
+              <div className="flex items-center gap-1 text-indigo-500">
+                <AtSymbolIcon className="w-5 h-5" />
+                <a href={`mailto:${member.email}`} className="hover:underline">
+                  {member.email}
+                </a>
+              </div>
+            </div>
           </div>
         ))}
       </div>
