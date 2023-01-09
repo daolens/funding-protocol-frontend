@@ -100,6 +100,7 @@ const ApplicationForm = ({
         id: nanoid(),
         funds: null,
         text: '',
+        status: 'Submitted',
       },
     ]
   )

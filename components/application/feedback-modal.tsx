@@ -1,6 +1,7 @@
 import Modal from '@components/common/modal'
 import Textarea from '@components/common/textarea'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
+import { ApplicationMilestoneType } from '@lib/types/grants'
 import {
   sendFeedbackMilestoneSC,
   updateApplicationStatusSC,
@@ -17,6 +18,7 @@ type Props = {
   grantAddress: string
   workspaceId: string
   isMilestoneFeedback?: boolean
+  milestone?: ApplicationMilestoneType
 }
 
 const FeedbackModal = ({
@@ -26,12 +28,18 @@ const FeedbackModal = ({
   grantAddress,
   workspaceId,
   isMilestoneFeedback = false,
+  milestone,
 }: Props) => {
   const loadingToastRef = useRef<CTReturn | null>(null)
   const sendFeedbackMutation = useMutation({
     mutationFn: (feedbackData: string) =>
       isMilestoneFeedback
-        ? sendFeedbackMilestoneSC({ reason: feedbackData })
+        ? sendFeedbackMilestoneSC({
+            milestoneFeedbacks: [
+              ...(milestone?.feedbacks || []),
+              { text: feedbackData, timestamp: new Date().toISOString() },
+            ],
+          })
         : updateApplicationStatusSC({
             applicationId,
             grantAddress,

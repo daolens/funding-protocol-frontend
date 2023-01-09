@@ -64,7 +64,10 @@ const MilestoneCard = ({
       <div className="pt-5">
         <h4 className="px-5">{milestone.text}</h4>
         <p className="whitespace-pre-wrap h-full break-words text-gray-500 max-h-[300px] overflow-y-auto mb-4 px-5">
-          {milestone.details}
+          {
+            milestone.proofOfWorkArray?.[milestone.proofOfWorkArray?.length - 1]
+              .text
+          }
         </p>
         {isReviewer && state !== 'completed' && (
           <div className="space-x-2 flex w-full max-w-7xl items-end justify-end p-2 border rounded-2xl border-gray-700 bg-gray-900 bg-opacity-50 border-opacity-50 backdrop-blur-md">
@@ -116,6 +119,11 @@ const MilestoneReporting = ({
         grantAddress: grantAddress as string,
         milestoneId,
         workspaceId: workspaceId as string,
+        milestoneFeedbacks: [
+          ...(milestones.find((milestone) => milestone.id === milestoneId)
+            ?.feedbacks || []),
+          { text: 'Approved', timestamp: new Date().toISOString() },
+        ],
       }),
     onMutate: () => {
       loadingToastRef.current = cogoToast.loading(
@@ -154,7 +162,9 @@ const MilestoneReporting = ({
   )
 
   const onMilestoneClick = (milestone: ApplicationMilestoneType) => {
-    if (!milestone.details) {
+    if (
+      !milestone.proofOfWorkArray?.[milestone.proofOfWorkArray?.length - 1].text
+    ) {
       isReviewer
         ? cogoToast.error('Please wait for applicant to submit proof of work')
         : isApplicant
@@ -243,6 +253,9 @@ const MilestoneReporting = ({
       />
       <FeedbackModal
         isMilestoneFeedback
+        milestone={milestones.find(
+          (milestone) => milestone.id === activeMilestoneId
+        )}
         isOpen={isSendFeedbackModalOpen}
         setIsOpen={setIsSendFeedbackModalOpen}
         applicationId={applicationId as string}

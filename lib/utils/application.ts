@@ -1,7 +1,9 @@
+import { MILESTONE_STATUSES } from '@lib/constants/application'
 import { CONTRACTS, CONTRACT_FUNCTION_NAME_MAP } from '@lib/constants/contract'
 import { APPLICATION_STATUSES } from '@lib/constants/grants'
 import { WalletAddressType } from '@lib/types/common'
 import {
+  ApplicationMilestoneStateDetailType,
   ApplicationStatusType,
   ApplicationType,
   FundingMethodType,
@@ -138,6 +140,8 @@ export const fetchApplicationById = async (applicationId: `0x${string}`) => {
     const milestone = application.milestones[index]
     const milestoneFromSC = milestonesFromSC[index]
 
+    milestone.status = MILESTONE_STATUSES[milestoneFromSC.state]
+
     // Populating proof of work
     if (milestoneFromSC.applicantHash) {
       const milestoneDetailsJsonString = await getFromIPFS(
@@ -147,8 +151,7 @@ export const fetchApplicationById = async (applicationId: `0x${string}`) => {
         const milestoneDetails = JSON.parse(
           milestoneDetailsJsonString
         ).milestoneDetails
-        milestone.details = milestoneDetails || ''
-        application.milestones[index] = milestone
+        milestone.proofOfWorkArray = milestoneDetails || []
       }
     }
 
@@ -158,13 +161,13 @@ export const fetchApplicationById = async (applicationId: `0x${string}`) => {
         milestoneFromSC.reviewerHash
       )
       if (milestoneFeedbackJsonString) {
-        const milestoneFeedback = JSON.parse(
+        const milestoneFeedbacks = JSON.parse(
           milestoneFeedbackJsonString
-        ).milestoneFeedback
-        milestone.feedback = milestoneFeedback
-        application.milestones[index] = milestone
+        ).milestoneFeedbacks
+        milestone.feedbacks = milestoneFeedbacks || []
       }
     }
+    application.milestones[index] = milestone
   }
 
   return application
@@ -173,7 +176,7 @@ export const fetchApplicationById = async (applicationId: `0x${string}`) => {
 type SubmitMilestoneDetailsSCOptions = {
   applicationId: string
   milestoneId: string
-  milestoneDetails: string
+  milestoneDetails: ApplicationMilestoneStateDetailType[]
   workspaceId: string
   grantAddress: string
 }
@@ -209,7 +212,7 @@ type ApproveMilestoneSCOptions = {
   milestoneId: string
   workspaceId: string
   grantAddress: string
-  reason?: string
+  milestoneFeedbacks?: ApplicationMilestoneStateDetailType[]
 }
 
 export const approveMilestoneSC = async ({
@@ -217,11 +220,10 @@ export const approveMilestoneSC = async ({
   grantAddress,
   milestoneId,
   workspaceId,
-  reason,
+  milestoneFeedbacks,
 }: ApproveMilestoneSCOptions) => {
-  const ipfsHash = (
-    await uploadToIPFS(JSON.stringify({ milestoneReviewReason: reason }))
-  ).hash
+  const ipfsHash = (await uploadToIPFS(JSON.stringify({ milestoneFeedbacks })))
+    .hash
   const args = [applicationId, milestoneId, workspaceId, grantAddress, ipfsHash]
   log('approveMilestone called', { args })
   const result = await writeSmartContractFunction({
@@ -239,15 +241,15 @@ export const approveMilestoneSC = async ({
 }
 
 type SendFeedbackMilestoneSCOptions = {
-  reason: string
+  milestoneFeedbacks: ApplicationMilestoneStateDetailType[]
 }
 
 export const sendFeedbackMilestoneSC = async ({
-  reason: _,
+  milestoneFeedbacks: _,
 }: SendFeedbackMilestoneSCOptions) => {
   // TODO: complete
   // const ipfsHash = (
-  //   await uploadToIPFS(JSON.stringify({ milestoneFeedback: reason }))
+  //   await uploadToIPFS(JSON.stringify({ milestoneFeedbacks }))
   // ).hash
   // console.log(ipfsHash)
 }

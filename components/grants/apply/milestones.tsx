@@ -94,6 +94,7 @@ function Milestones({ items, setItems, error, totalFundsSeeking }: Props) {
       id: nanoid(),
       text: '',
       funds: null,
+      status: 'Submitted',
     }
 
     setItems((prev) => [...prev, newItem])

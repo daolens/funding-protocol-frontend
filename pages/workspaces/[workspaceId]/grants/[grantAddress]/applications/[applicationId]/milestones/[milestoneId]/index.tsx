@@ -36,7 +36,10 @@ const MilestoneDetails = ({
   const milestoneSubmissionMutation = useMutation({
     mutationFn: (milestoneDetails: string) =>
       submitMilestoneDetailsSC({
-        milestoneDetails,
+        milestoneDetails: [
+          ...(milestone.proofOfWorkArray || []),
+          { text: milestoneDetails, timestamp: new Date().toISOString() },
+        ],
         applicationId,
         grantAddress,
         milestoneId: milestoneIndex.toString(),
