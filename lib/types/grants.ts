@@ -71,6 +71,7 @@ export type ApplicationType = {
   grantTitle?: string
   workspaceTitle?: string
   feedback?: string
+  discordHandle: string
 }
 
 export type GrantTreasuryType = {

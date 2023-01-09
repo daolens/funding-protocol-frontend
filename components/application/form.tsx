@@ -100,6 +100,7 @@ const ApplicationForm = ({
       },
     ]
   )
+  const [discordHandle, setDiscordHandle] = useState('')
   const [fieldErrors, setFieldErrors] = useState<
     Record<keyof ApplicationType, string>
   >({} as any)
@@ -135,6 +136,7 @@ const ApplicationForm = ({
       teamMemberDetails: teamMemberDetails.filter((item) => item.text),
       walletAddress,
       id: application?.id,
+      discordHandle,
     }
 
     const errors = validateGrantApplicationData(
@@ -192,6 +194,13 @@ const ApplicationForm = ({
             error={fieldErrors['walletAddress']}
           />
         </div>
+        <Input
+          label="Discord Handle"
+          placeholder="username#0001"
+          value={discordHandle}
+          onChange={(e) => setDiscordHandle(e.currentTarget.value)}
+          error={fieldErrors.discordHandle}
+        />
         <Textarea
           value={description}
           onChange={(e) => setDescription(e.currentTarget.value)}

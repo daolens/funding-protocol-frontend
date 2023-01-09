@@ -141,6 +141,9 @@ export const validateGrantApplicationData = (
     errors.milestones =
       'Seeking funds and sum of funds in milestone are not equal'
 
+  if (!data.discordHandle.match(/^((.+?)#\d{4})/))
+    errors.discordHandle = ERROR_MESSAGES.discordHandleNotValid
+
   return errors
 }
 

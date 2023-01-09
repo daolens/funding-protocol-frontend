@@ -95,5 +95,7 @@ export const ERROR_MESSAGES = {
   fieldRequired: 'This field is required',
   addressNotValid: 'Please enter a valid address',
   urlNotValid: "Please enter a valid URL. Eg. 'https://example.com'.",
+  discordHandleNotValid:
+    "Please enter a valid discord handle. Eg. 'username#0001'.",
   emailNotValid: 'Please enter a valid email',
 }
