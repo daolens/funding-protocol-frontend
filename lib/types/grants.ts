@@ -44,6 +44,12 @@ export type ApplicationMilestoneType = {
   status?: ApplicationStatusType
 }
 
+export type ApplicationTeamMemberType = {
+  id: string
+  text: string
+  email: string
+}
+
 export type ApplicationStatusType = typeof APPLICATION_STATUSES[number]
 
 export type ApplicationType = {
@@ -60,7 +66,7 @@ export type ApplicationType = {
   /** ISO data string */
   expectedProjectDeadline: string
   links: DynamicInputItemType[]
-  teamMemberDetails: DynamicInputItemType[]
+  teamMemberDetails: ApplicationTeamMemberType[]
   previousSuccessfulProposalLinks: DynamicInputItemType[]
   milestones: ApplicationMilestoneType[]
   completedMilestoneCount?: number

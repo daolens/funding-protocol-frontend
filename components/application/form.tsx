@@ -7,10 +7,12 @@ import Navbar from '@components/common/navbar'
 import Textarea from '@components/common/textarea'
 import FundsInput from '@components/grants/apply/funds-input'
 import Milestones from '@components/grants/apply/milestones'
+import TeamMembers from '@components/grants/apply/team-members'
 import { ArrowRightIcon } from '@heroicons/react/24/solid'
 import { DynamicInputItemType, WalletAddressType } from '@lib/types/common'
 import {
   ApplicationMilestoneType,
+  ApplicationTeamMemberType,
   ApplicationType,
   FundingMethodType,
 } from '@lib/types/grants'
@@ -67,7 +69,7 @@ const ApplicationForm = ({
       : application.links
   )
   const [teamMemberDetails, setTeamMemberDetails] = useState<
-    DynamicInputItemType[]
+    ApplicationTeamMemberType[]
   >(
     application?.teamMemberDetails.length === 0 ||
       !application?.teamMemberDetails
@@ -75,6 +77,7 @@ const ApplicationForm = ({
           {
             id: nanoid(),
             text: '',
+            email: '',
           },
         ]
       : application.teamMemberDetails
@@ -133,7 +136,7 @@ const ApplicationForm = ({
         (item) => item.text
       ),
       seekingFunds: fundsInputValue,
-      teamMemberDetails: teamMemberDetails.filter((item) => item.text),
+      teamMemberDetails: teamMemberDetails,
       walletAddress,
       id: application?.id,
       discordHandle,
@@ -250,16 +253,10 @@ const ApplicationForm = ({
           label="Proposal Links/Docs (optional)"
           areNumbersHidden
         />
-        <DynamicInputList
-          inputProps={{
-            placeholder:
-              'Eg. Elon Tusk, our team member is a professional tweeter',
-          }}
+        <TeamMembers
           items={teamMemberDetails}
           setItems={setTeamMemberDetails}
-          error={fieldErrors['teamMemberDetails']}
-          label="Team member details"
-          areNumbersHidden
+          error={fieldErrors.teamMemberDetails}
         />
         <h2 className="text-indigo-500 text-sm font-semibold">
           EXPECTATIONS{' '}

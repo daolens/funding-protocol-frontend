@@ -103,8 +103,16 @@ export const validateGrantApplicationData = (
     if (!data[key]) errors[key] = ERROR_MESSAGES.fieldRequired
   })
 
-  if (data.teamMemberDetails.length === 0)
+  if (
+    data.teamMemberDetails.some(
+      (teamMember) => !teamMember.email || !teamMember.text
+    )
+  )
     errors.teamMemberDetails = ERROR_MESSAGES.fieldRequired
+  else if (
+    data.teamMemberDetails.some((teamMember) => !checkIsEmail(teamMember.email))
+  )
+    errors.teamMemberDetails = ERROR_MESSAGES.emailNotValid
 
   if (
     fundingMethod === 'MILESTONE' &&
