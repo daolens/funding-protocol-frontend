@@ -141,7 +141,10 @@ const ApplicationDetails = ({
                 />
               )}
               {isMilestoneReviewState && (
-                <MilestoneStatuses application={application} isReviewer={isReviewer} />
+                <MilestoneStatuses
+                  application={application}
+                  isReviewer={isReviewer}
+                />
               )}
               {isApplicant && application.status === 'Resubmit' && (
                 <div className="col-span-2">
@@ -155,6 +158,7 @@ const ApplicationDetails = ({
                   seekingFunds={application.seekingFunds as number}
                   fundingMethod={grant.fundingMethod}
                   discordHandle={application.discordHandle}
+                  isMilestoneTabActive={activeSection === 'milestone-reporting'}
                 />
               </div>
             </div>

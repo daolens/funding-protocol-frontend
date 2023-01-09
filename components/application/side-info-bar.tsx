@@ -31,6 +31,7 @@ type Props = {
   milestones: ApplicationMilestoneType[]
   fundingMethod: FundingMethodType
   discordHandle: string
+  isMilestoneTabActive?: boolean
 }
 
 const SideInfoBar = ({
@@ -39,17 +40,20 @@ const SideInfoBar = ({
   seekingFunds,
   fundingMethod,
   discordHandle,
+  isMilestoneTabActive = false,
 }: Props) => {
   return (
     <div className="grid grid-cols-1 gap-5">
-      <ApplicationCard>
-        <div className="flex flex-col gap-2">
-          <span className="text-sm text-gray-500">Seeking Funds</span>
-          <span className="font-semibold text-2xl">
-            ${getNumberWithCommas(seekingFunds)}
-          </span>
-        </div>
-      </ApplicationCard>
+      {!isMilestoneTabActive && (
+        <ApplicationCard>
+          <div className="flex flex-col gap-2">
+            <span className="text-sm text-gray-500">Seeking Funds</span>
+            <span className="font-semibold text-2xl">
+              ${getNumberWithCommas(seekingFunds)}
+            </span>
+          </div>
+        </ApplicationCard>
+      )}
       <ApplicationCard>
         <div className="flex items-center gap-2">
           <CalendarIcon className="w-5 h-5" />
@@ -61,31 +65,33 @@ const SideInfoBar = ({
           </p>
         </div>
       </ApplicationCard>
-      {fundingMethod === 'MILESTONE' && milestones.length > 0 && (
-        <ApplicationCard>
-          <div className="flex flex-col">
-            {milestones.map((milestone, index) => (
-              <div
-                className={classNames(
-                  'flex flex-col gap-4',
-                  index !== milestones.length - 1 &&
-                    'pb-6 border-b border-gray-800',
-                  index !== 0 && 'pt-6'
-                )}
-                key={milestone.id}
-              >
-                <p className="text-xs font-semibold text-gray-500">
-                  MILESTONE {index + 1} -{' '}
-                  <span className="text-indigo-500 font-bold">
-                    ${getNumberWithCommas((milestone.funds as number) || 0)}
-                  </span>
-                </p>
-                <p className="font-semibold">{milestone.text}</p>
-              </div>
-            ))}
-          </div>
-        </ApplicationCard>
-      )}
+      {!isMilestoneTabActive &&
+        fundingMethod === 'MILESTONE' &&
+        milestones.length > 0 && (
+          <ApplicationCard>
+            <div className="flex flex-col">
+              {milestones.map((milestone, index) => (
+                <div
+                  className={classNames(
+                    'flex flex-col gap-4',
+                    index !== milestones.length - 1 &&
+                      'pb-6 border-b border-gray-800',
+                    index !== 0 && 'pt-6'
+                  )}
+                  key={milestone.id}
+                >
+                  <p className="text-xs font-semibold text-gray-500">
+                    MILESTONE {index + 1} -{' '}
+                    <span className="text-indigo-500 font-bold">
+                      ${getNumberWithCommas((milestone.funds as number) || 0)}
+                    </span>
+                  </p>
+                  <p className="font-semibold">{milestone.text}</p>
+                </div>
+              ))}
+            </div>
+          </ApplicationCard>
+        )}
       {discordHandle && (
         <ApplicationCard onClick={() => onCopyText(discordHandle)}>
           <div className="flex flex-col gap-2 items-start">
