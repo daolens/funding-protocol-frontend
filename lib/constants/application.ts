@@ -3,5 +3,5 @@ export const MILESTONE_STATUSES = [
   'Requested',
   'Approved',
   'ApprovePending',
-  'Resubmit'
+  'Resubmit',
 ] as const

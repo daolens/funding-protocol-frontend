@@ -1,4 +1,4 @@
-import { MILESTONE_STATUSES } from "@lib/constants/application"
+import { MILESTONE_STATUSES } from '@lib/constants/application'
 
 export type ApplicationSectionType = 'milestone-reporting' | 'application'
 
