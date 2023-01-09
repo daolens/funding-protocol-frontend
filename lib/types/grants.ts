@@ -2,6 +2,7 @@ import {
   APPLICATION_STATUSES,
   PROPOSAL_GRANT_FORM_FIELDS,
 } from '@lib/constants/grants'
+import { MilestoneStatusType } from '@lib/types/application'
 import { DynamicInputItemType, WalletAddressType } from '@lib/types/common'
 import { GrantStatusType } from '@lib/types/workspace'
 
@@ -35,13 +36,19 @@ export type GrantType = {
   balanceInUsd?: number
 }
 
+export type ApplicationMilestoneStateDetailType = {
+  timestamp: string
+  text: string
+  sender: WalletAddressType
+}
+
 export type ApplicationMilestoneType = {
   id: string
   text: string
   funds: number | null
-  details?: string
-  feedback?: string
-  status?: ApplicationStatusType
+  status: MilestoneStatusType
+  feedbacks?: ApplicationMilestoneStateDetailType[]
+  proofOfWorkArray?: ApplicationMilestoneStateDetailType[]
 }
 
 export type ApplicationTeamMemberType = {

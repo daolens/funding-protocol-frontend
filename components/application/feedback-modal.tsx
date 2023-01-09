@@ -1,6 +1,7 @@
 import Modal from '@components/common/modal'
 import Textarea from '@components/common/textarea'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
+import { ApplicationMilestoneType } from '@lib/types/grants'
 import {
   sendFeedbackMilestoneSC,
   updateApplicationStatusSC,
@@ -9,6 +10,7 @@ import { useMutation } from '@tanstack/react-query'
 import classNames from 'classnames'
 import cogoToast, { CTReturn } from 'cogo-toast'
 import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
+import { useAccount } from 'wagmi'
 
 type Props = {
   isOpen: boolean
@@ -17,6 +19,7 @@ type Props = {
   grantAddress: string
   workspaceId: string
   isMilestoneFeedback?: boolean
+  milestone?: ApplicationMilestoneType
 }
 
 const FeedbackModal = ({
@@ -26,12 +29,27 @@ const FeedbackModal = ({
   grantAddress,
   workspaceId,
   isMilestoneFeedback = false,
+  milestone,
 }: Props) => {
+  const { address } = useAccount()
   const loadingToastRef = useRef<CTReturn | null>(null)
   const sendFeedbackMutation = useMutation({
     mutationFn: (feedbackData: string) =>
       isMilestoneFeedback
-        ? sendFeedbackMilestoneSC({ reason: feedbackData })
+        ? sendFeedbackMilestoneSC({
+            milestoneFeedbacks: [
+              ...(milestone?.feedbacks || []),
+              {
+                text: feedbackData,
+                timestamp: new Date().toISOString(),
+                sender: address!,
+              },
+            ],
+            applicationId,
+            grantAddress,
+            milestoneId: milestone!.id,
+            workspaceId,
+          })
         : updateApplicationStatusSC({
             applicationId,
             grantAddress,

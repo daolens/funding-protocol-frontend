@@ -15,6 +15,7 @@ import cogoToast, { CTReturn } from 'cogo-toast'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import { useRef, useState } from 'react'
+import { useAccount } from 'wagmi'
 
 type Props = {
   application: ApplicationType
@@ -27,6 +28,7 @@ const MilestoneDetails = ({
   milestone,
   milestoneIndex,
 }: Props) => {
+  const { address } = useAccount()
   const loadingToastRef = useRef<CTReturn | null>(null)
   const router = useRouter()
   const workspaceId = router.query.workspaceId as string
@@ -36,7 +38,14 @@ const MilestoneDetails = ({
   const milestoneSubmissionMutation = useMutation({
     mutationFn: (milestoneDetails: string) =>
       submitMilestoneDetailsSC({
-        milestoneDetails,
+        milestoneDetails: [
+          ...(milestone.proofOfWorkArray || []),
+          {
+            text: milestoneDetails,
+            timestamp: new Date().toISOString(),
+            sender: address!,
+          },
+        ],
         applicationId,
         grantAddress,
         milestoneId: milestoneIndex.toString(),
@@ -64,7 +73,10 @@ const MilestoneDetails = ({
     },
   })
 
-  const [details, setDetails] = useState('')
+  const [details, setDetails] = useState(
+    milestone.proofOfWorkArray?.[milestone.proofOfWorkArray?.length - 1]
+      ?.text || ''
+  )
   const [fieldErrors, setFieldErrors] = useState<{ details: string } | null>(
     null
   )

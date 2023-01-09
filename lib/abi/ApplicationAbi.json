@@ -800,6 +800,39 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_applicationId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_milestoneId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_workspaceId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_grantAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "_feedbackMetadataHash",
+        "type": "string"
+      }
+    ],
+    "name": "submitMilestoneFeedback",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "newOwner",
         "type": "address"
