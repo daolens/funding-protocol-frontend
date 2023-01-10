@@ -166,7 +166,7 @@ export const fetchWorkspaces = async () => {
     workspace.totalApplicants = totalApplicants
     workspace.totalGrant = totalGrants
     workspace.owner = workspaceFromContract.owner
-    workspace.totalApplicants = workspaces.push(workspace)
+    workspaces.push(workspace)
   }
 
   return workspaces
