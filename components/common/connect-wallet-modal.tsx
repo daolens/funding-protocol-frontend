@@ -21,6 +21,10 @@ const ConnectWalletModal = ({
     },
     onError: (error) => {
       console.error(error)
+      if (error.name === 'ConnectorAlreadyConnectedError') {
+        setIsOpen(false)
+        return
+      }
       cogoToast.error('Something went wrong while connecting to your wallet')
     },
   })

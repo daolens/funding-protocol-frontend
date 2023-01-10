@@ -4,13 +4,7 @@ import { Inter } from '@next/font/google'
 import type { AppProps } from 'next/app'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import {
-  configureChains,
-  createClient,
-  mainnet,
-  WagmiConfig,
-  goerli,
-} from 'wagmi'
+import { configureChains, createClient, WagmiConfig } from 'wagmi'
 import { publicProvider } from 'wagmi/providers/public'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
@@ -24,7 +18,12 @@ const inter = Inter({ subsets: ['latin'] })
 const queryClient = new QueryClient()
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [mainnet, goerli, polygonMumbai],
+  [
+    // TODO: uncomment when contract deployed on them
+    // mainnet,
+    // goerli,
+    polygonMumbai,
+  ],
   [publicProvider()]
 )
 
