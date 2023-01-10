@@ -1,29 +1,47 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useAccount, useDisconnect, useEnsName, useNetwork } from 'wagmi'
 import { getTruncatedWalletAddress } from '@lib/utils/common'
 import { CreditCardIcon } from '@heroicons/react/24/solid'
 import { Chain as getChainDetails } from '@lib/utils/wallet'
-import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
+import {
+  ArrowTopRightOnSquareIcon,
+  ExclamationTriangleIcon,
+} from '@heroicons/react/24/outline'
 import ClientOnly from '@components/common/client-only'
 import ConnectWalletModal from '@components/common/connect-wallet-modal'
+import { polygonMumbai } from 'wagmi/chains'
+import AlertModal from '@components/common/alert-modal'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function WalletDropdown() {
-  const { address } = useAccount()
+  const { address, connector } = useAccount()
   const { data: ensName } = useEnsName({ address })
   const { chain } = useNetwork()
   const { disconnect } = useDisconnect()
 
   const [isConnectWalletModalOpen, setIsConnectWalletModalOpen] =
     useState(false)
+  const [isSwitchNetworkModalOpen, setIsSwitchNetworkModalOpen] =
+    useState(false)
 
+  const isPolygonMumbai = chain?.id === polygonMumbai.id
+  const canSwitchChains = !!connector?.switchChain
   const chainDetails = chain?.id ? getChainDetails(chain?.id) : null
   const blockExplorerLink = chainDetails?.blockExplorers?.default?.url
+
+  useEffect(() => {
+    if (!isPolygonMumbai) setIsSwitchNetworkModalOpen(true)
+  }, [isPolygonMumbai])
+
+  const onSwitchToPolygonMumbai = () => {
+    connector?.switchChain?.(polygonMumbai.id)
+    setIsSwitchNetworkModalOpen(false)
+  }
 
   return (
     <ClientOnly>
@@ -71,7 +89,7 @@ export default function WalletDropdown() {
             <div className="py-1">
               <Menu.Item>
                 {() => (
-                  <div className="px-4 py-2 text-xs flex flex-col border-b border-gray-800">
+                  <div className="px-4 py-2 text-xs flex flex-col gap-1 border-b border-gray-800">
                     <div className="flex justify-between">
                       <span>Network</span>
                       <span className="inline-flex items-center gap-1">
@@ -79,7 +97,27 @@ export default function WalletDropdown() {
                         {chainDetails?.name}
                       </span>
                     </div>
-                    {/* TODO: add alert if not polygon mumbai */}
+                    {!isPolygonMumbai && (
+                      <div className="flex border border-gray-800 rounded-lg p-2 gap-2 items-center">
+                        <ExclamationTriangleIcon
+                          className="h-8 w-8 text-red-600"
+                          aria-hidden="true"
+                        />
+                        <div className="flex flex-col items-start gap-1">
+                          <p className="whitespace-nowrap">
+                            Only Polygon Mumbai support currently.
+                          </p>
+                          {canSwitchChains && (
+                            <button
+                              className="hover:underline text-indigo-500"
+                              onClick={onSwitchToPolygonMumbai}
+                            >
+                              Switch to Polygon Mumbai
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </Menu.Item>
@@ -108,6 +146,18 @@ export default function WalletDropdown() {
       <ConnectWalletModal
         isOpen={isConnectWalletModalOpen}
         setIsOpen={setIsConnectWalletModalOpen}
+      />
+      <AlertModal
+        isOpen={isSwitchNetworkModalOpen}
+        setIsOpen={setIsSwitchNetworkModalOpen}
+        ctaText={canSwitchChains ? 'Switch to Polygon Mumbai' : 'Okay'}
+        onCtaClick={() =>
+          canSwitchChains
+            ? onSwitchToPolygonMumbai()
+            : setIsSwitchNetworkModalOpen(false)
+        }
+        text="Current version of the product only supports Polygon Mumbai. Please switch the network for the ideal experience."
+        title={`${chainDetails?.name} is not supported`}
       />
     </ClientOnly>
   )
