@@ -16,7 +16,6 @@
 3. Deploy to Cloud Run:
    ````
     gcloud run deploy --image gcr.io/ardent-quarter-361905/gmp-frontend --project ardent-quarter-361905 --platform managed
-    ```
    ````
 
 > Read more: https://github.com/vercel/next.js/tree/canary/examples/with-docker#deploying-to-google-cloud-run
