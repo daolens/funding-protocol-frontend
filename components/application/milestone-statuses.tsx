@@ -1,8 +1,9 @@
+import ApprovePending from '@components/application/milestone/approve-pending'
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/solid'
 import { WalletAddressType } from '@lib/types/common'
 import { ApplicationType } from '@lib/types/grants'
 import { getListOfStatuses } from '@lib/utils/application'
-import { getTruncatedWalletAddress } from '@lib/utils/common'
+import { addDays, getTruncatedWalletAddress } from '@lib/utils/common'
 import React, { useState } from 'react'
 import { useEnsName } from 'wagmi'
 
@@ -11,16 +12,40 @@ export type StatusProps = {
   content?: string
   sender?: WalletAddressType
   timestamp?: string
+  isTimerShown: boolean
   color: 'yellow' | 'green'
+  milestoneId?: string
+  grantAddress?: string
+  applicationId?: string
 }
 
-const Status = ({ timestamp, title, content, sender }: StatusProps) => {
+const Status = ({
+  timestamp,
+  title,
+  content,
+  sender,
+  isTimerShown,
+  applicationId,
+  grantAddress,
+  milestoneId,
+}: StatusProps) => {
   const { data: ensName } = useEnsName({ address: sender })
   const formatedTimestamp = timestamp
     ? `${new Date(timestamp).toLocaleTimeString()}, ${new Date(
         timestamp
       ).toLocaleDateString()}`
     : ''
+
+  if (isTimerShown)
+    return (
+      <ApprovePending
+        reviewer={sender!}
+        revertDeadline={addDays(timestamp!, 3).toISOString()}
+        applicationId={applicationId!}
+        grantAddress={grantAddress!}
+        milestoneId={milestoneId!}
+      />
+    )
   return (
     <div className="flex flex-col gap-2 items-start border-b border-gray-800 pb-3">
       <h3 className="text-gray-300 text-lg">{title}</h3>
@@ -44,7 +69,7 @@ type Props = {
   isReviewer: boolean
 }
 
-const MilestoneStatuses = ({ application }: Props) => {
+const MilestoneStatuses = ({ application, isReviewer }: Props) => {
   const [isShowAll, setIsShowAll] = useState(false)
   const statuses = getListOfStatuses(application.milestones)
 
@@ -62,11 +87,17 @@ const MilestoneStatuses = ({ application }: Props) => {
         {statuses
           .filter((_, index) => isShowAll || index === 0)
           .map((status) => (
-            <Status {...status} key={status.timestamp} />
+            <Status
+              {...status}
+              key={status.timestamp}
+              applicationId={application.id}
+              grantAddress={application.grantAddress}
+              isTimerShown={status.isTimerShown && isReviewer}
+            />
           ))}
       </div>
       <button
-        className="inline-flex text-xs text-gray-500 items-center justify-center gap-1"
+        className="inline-flex text-xs text-gray-500 items-center justify-center gap-1 hover:underline self-center"
         onClick={() => setIsShowAll((prev) => !prev)}
       >
         {isShowAll ? 'View current status' : 'View all status'}

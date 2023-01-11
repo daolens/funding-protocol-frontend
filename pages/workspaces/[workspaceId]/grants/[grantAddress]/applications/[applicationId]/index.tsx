@@ -120,7 +120,6 @@ const ApplicationDetails = ({
               {activeSection === 'milestone-reporting' && (
                 <MilestoneReporting
                   milestones={application.milestones}
-                  completedMilestoneCount={application.completedMilestoneCount}
                   isReviewer={isReviewer}
                   isApplicant={isApplicant}
                 />

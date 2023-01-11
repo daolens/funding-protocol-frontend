@@ -2,6 +2,7 @@ import FeedbackModal from '@components/application/feedback-modal'
 import AlertModal from '@components/common/alert-modal'
 import { CheckCircleIcon, CurrencyDollarIcon } from '@heroicons/react/24/solid'
 import { MILESTONE_STATUSES } from '@lib/constants/application'
+import { MilestoneStatusType } from '@lib/types/application'
 import { ApplicationMilestoneType } from '@lib/types/grants'
 import { approveMilestoneSC } from '@lib/utils/application'
 import classNames from 'classnames'
@@ -103,17 +104,11 @@ const MilestoneCard = ({
 
 type Props = {
   milestones: ApplicationMilestoneType[]
-  completedMilestoneCount?: number
   isReviewer?: boolean
   isApplicant?: boolean
 }
 
-const MilestoneReporting = ({
-  milestones,
-  completedMilestoneCount = 1,
-  isReviewer,
-  isApplicant,
-}: Props) => {
+const MilestoneReporting = ({ milestones, isReviewer, isApplicant }: Props) => {
   const { address } = useAccount()
   const loadingToastRef = useRef<CTReturn | null>(null)
   const router = useRouter()
@@ -161,11 +156,28 @@ const MilestoneReporting = ({
     useState(false)
   const [isSendFeedbackModalOpen, setIsSendFeedbackModalOpen] = useState(false)
 
+  const firstIncompleteMilestoneIndex = (() => {
+    for (
+      let milestoneIndex = 0;
+      milestoneIndex < milestones.length;
+      milestoneIndex++
+    ) {
+      if (
+        (['ApprovePending', 'Approved'] as MilestoneStatusType[]).includes(
+          milestones[milestoneIndex].status
+        )
+      )
+        continue
+      return milestoneIndex
+    }
+    return milestones.length
+  })()
+
   const completedMilestones = milestones.filter(
-    (_, index) => index < completedMilestoneCount
+    (_, index) => index < firstIncompleteMilestoneIndex
   )
   const pendingMilestones = milestones.filter(
-    (_, index) => index >= completedMilestoneCount
+    (_, index) => index >= firstIncompleteMilestoneIndex
   )
 
   const activeMilestoneIndex = milestones.findIndex(
@@ -221,7 +233,7 @@ const MilestoneReporting = ({
           )}
         </span>
       </div>
-      {completedMilestoneCount > 0 && (
+      {firstIncompleteMilestoneIndex > 0 && (
         <div className="text-sm text-gray-400">COMPLETED MILESTONES</div>
       )}
       <div className="flex flex-col gap-8 relative">
@@ -238,8 +250,8 @@ const MilestoneReporting = ({
           />
         ))}
       </div>
-      {completedMilestoneCount > 0 &&
-        completedMilestoneCount < milestones.length && (
+      {firstIncompleteMilestoneIndex > 0 &&
+        firstIncompleteMilestoneIndex < milestones.length && (
           <div className="text-sm text-gray-400">UPCOMING MILESTONES</div>
         )}
       <div className="flex flex-col gap-8 relative">
@@ -255,7 +267,8 @@ const MilestoneReporting = ({
             onSendFeedback={() => setIsSendFeedbackModalOpen(true)}
             onClick={() => onMilestoneClick(milestone)}
             state={
-              index + completedMilestones.length === completedMilestoneCount
+              index + completedMilestones.length ===
+              firstIncompleteMilestoneIndex
                 ? 'ongoing'
                 : 'upcoming'
             }

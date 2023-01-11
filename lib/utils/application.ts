@@ -12,7 +12,7 @@ import {
   GrantType,
 } from '@lib/types/grants'
 import { WorkspaceType } from '@lib/types/workspace'
-import { log } from '@lib/utils/common'
+import { addDays, log } from '@lib/utils/common'
 import {
   readSmartContractFunction,
   writeSmartContractFunction,
@@ -389,10 +389,41 @@ export const revertApproveDecisionSC = async (
   log({ txnConfirmation })
 }
 
+export const revertMilestoneApproveDecisionSC = async (
+  applicationId: string,
+  milestoneId: string,
+  grantAddress: string
+) => {
+  const args = [applicationId, milestoneId]
+  log('individualGrant.revertMilestoneTransactions called', { args })
+  const result = await writeSmartContractFunction({
+    contractObj: {
+      abi: CONTRACTS.individualGrant.abi,
+      address: grantAddress,
+      polygonMumbaiAddress: grantAddress,
+      goerliAddress: grantAddress,
+    },
+    args,
+    functionName:
+      CONTRACT_FUNCTION_NAME_MAP.individualGrant.revertMilestoneTransactions,
+  })
+
+  if (!result.hash)
+    throw new Error(
+      'individualGrant.revertMilestoneTransactions smart contract call failed'
+    )
+
+  const txnConfirmation = await result.wait()
+  log(
+    `individualGrant.revertMilestoneTransactions call successful. Hash: ${result.hash}`
+  )
+  log({ txnConfirmation })
+}
+
 export const getListOfStatuses = (milestones: ApplicationMilestoneType[]) => {
   // Initial default status
   let statuses: StatusProps[] = [
-    { title: 'Application Approved', color: 'green' },
+    { title: 'Application Approved', color: 'green', isTimerShown: false },
   ]
 
   for (
@@ -404,29 +435,56 @@ export const getListOfStatuses = (milestones: ApplicationMilestoneType[]) => {
 
     const proofOfWorkArray: StatusProps[] =
       milestone?.proofOfWorkArray?.map(
-        (item) =>
+        (item, index) =>
           ({
             color: 'yellow',
             title: `Milestone ${milestoneIndex + 1}: In Review`,
             sender: item.sender,
             timestamp: item.timestamp,
+            isTimerShown: false,
+            milestoneId: index.toString(),
           } as StatusProps)
       ) || []
 
+    let lastApproveFeedback = -1
+    milestone.feedbacks?.forEach(
+      (item, index) =>
+        item.text === MILESTONE_STATUSES[2] && (lastApproveFeedback = index)
+    )
     const feedbacks: StatusProps[] =
-      milestone?.feedbacks?.map(
-        (item) =>
-          ({
-            color: item.text === MILESTONE_STATUSES[2] ? 'green' : 'yellow',
-            title: `Milestone ${milestoneIndex + 1}: ${
-              item.text === MILESTONE_STATUSES[2] ? 'Approved' : 'Feedback'
-            }`,
-            content:
-              item.text === MILESTONE_STATUSES[2] ? undefined : item.text,
-            sender: item.sender,
-            timestamp: item.timestamp,
-          } as StatusProps)
-      ) || []
+      milestone?.feedbacks
+        // Keeping only last approval feedback, filtering out the rest.
+        // This case happens when approval is reverted and milestone is eventually approved again
+        ?.filter((item, index) => {
+          if (item.text !== MILESTONE_STATUSES[2]) return true
+          if (index === lastApproveFeedback) return true
+          return false
+        })
+        // Filtering out approval feedbacks if the milestone is not approved
+        // This case happens when approval is reverted
+        ?.filter(
+          (item) =>
+            item.text !== MILESTONE_STATUSES[2] ||
+            milestone.status === 'ApprovePending' ||
+            milestone.status === 'Approved'
+        )
+        ?.map(
+          (item) =>
+            ({
+              color: item.text === MILESTONE_STATUSES[2] ? 'green' : 'yellow',
+              title: `Milestone ${milestoneIndex + 1}: ${
+                item.text === MILESTONE_STATUSES[2] ? 'Approved' : 'Feedback'
+              }`,
+              content:
+                item.text === MILESTONE_STATUSES[2] ? undefined : item.text,
+              sender: item.sender,
+              timestamp: item.timestamp,
+              milestoneId: milestone.id,
+              isTimerShown:
+                item.text === MILESTONE_STATUSES[2] &&
+                addDays(item.timestamp, 3) > new Date(),
+            } as StatusProps)
+        ) || []
 
     const currStatus: StatusProps[] = [...proofOfWorkArray, ...feedbacks].sort(
       (statusA, statusB) =>
