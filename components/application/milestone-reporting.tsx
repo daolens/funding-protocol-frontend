@@ -1,5 +1,6 @@
 import FeedbackModal from '@components/application/feedback-modal'
 import AlertModal from '@components/common/alert-modal'
+import DisplayRichText from '@components/common/rich-text/display-rich-text'
 import { CheckCircleIcon, CurrencyDollarIcon } from '@heroicons/react/24/solid'
 import { MILESTONE_STATUSES } from '@lib/constants/application'
 import { MilestoneStatusType } from '@lib/types/application'
@@ -66,10 +67,13 @@ const MilestoneCard = ({
       <div className="pt-5">
         <h4 className="px-5">{milestone.text}</h4>
         <p className="whitespace-pre-wrap h-full break-words text-gray-500 max-h-[300px] overflow-y-auto mb-4 px-5">
-          {
-            milestone.proofOfWorkArray?.[milestone.proofOfWorkArray?.length - 1]
-              .text
-          }
+          <DisplayRichText
+            content={
+              milestone.proofOfWorkArray?.[
+                milestone.proofOfWorkArray?.length - 1
+              ].text || ''
+            }
+          />
         </p>
         {isReviewer && state !== 'completed' && (
           <div className="space-x-2 flex w-full max-w-7xl items-end justify-end p-2 border rounded-2xl border-gray-700 bg-gray-900 bg-opacity-50 border-opacity-50 backdrop-blur-md">

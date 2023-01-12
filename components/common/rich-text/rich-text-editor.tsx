@@ -54,9 +54,17 @@ type Props = {
   setContent: Dispatch<SetStateAction<string>>
   label?: string
   error?: string
+  placeholder?: string
 }
 
-const RichTextEditor = ({ content, setContent, id, label, error }: Props) => {
+const RichTextEditor = ({
+  content,
+  setContent,
+  id,
+  label,
+  error,
+  placeholder,
+}: Props) => {
   return (
     <div>
       <label htmlFor={id} className="block text-sm font-medium text-gray-400">
@@ -71,7 +79,7 @@ const RichTextEditor = ({ content, setContent, id, label, error }: Props) => {
           modules={MODULES}
           formats={FORMATS}
           bounds={'.editor'}
-          placeholder={'Type here...'}
+          placeholder={placeholder}
         />
       </div>
       <p className="mt-1 text-sm text-red-600">{error}</p>

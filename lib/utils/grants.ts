@@ -7,7 +7,12 @@ import {
   FundingMethodType,
   GrantType,
 } from '@lib/types/grants'
-import { checkIsEmail, checkIsLink, log } from '@lib/utils/common'
+import {
+  checkIsEmail,
+  checkIsLink,
+  log,
+  removeTagsFromHtmlString,
+} from '@lib/utils/common'
 import {
   readSmartContractFunction,
   writeSmartContractFunction,
@@ -19,8 +24,9 @@ import { ethers } from 'ethers'
 export const validateGrantData = (grant: GrantType) => {
   const errors: Record<keyof GrantType, string> = {} as any
   if (!grant.title) errors['title'] = ERROR_MESSAGES.fieldRequired
-  if (!grant.subTitle) errors['subTitle'] = ERROR_MESSAGES.fieldRequired
-  if (grant.subTitle?.length > 300)
+  if (!removeTagsFromHtmlString(grant.subTitle))
+    errors['subTitle'] = ERROR_MESSAGES.fieldRequired
+  if (removeTagsFromHtmlString(grant.subTitle)?.length > 300)
     errors['subTitle'] = 'Please limit description to 300 characters'
   if (!grant.selectionProcess)
     errors['selectionProcess'] = ERROR_MESSAGES.fieldRequired
@@ -94,7 +100,6 @@ export const validateGrantApplicationData = (
   const requiredTextFields: (keyof ApplicationType)[] = [
     'name',
     'email',
-    'description',
     'walletAddress',
     'seekingFunds',
     'expectedProjectDeadline',
@@ -102,6 +107,9 @@ export const validateGrantApplicationData = (
   requiredTextFields.forEach((key) => {
     if (!data[key]) errors[key] = ERROR_MESSAGES.fieldRequired
   })
+
+  if (!removeTagsFromHtmlString(data.description))
+    errors['description'] = ERROR_MESSAGES.fieldRequired
 
   if (
     data.teamMemberDetails.some(

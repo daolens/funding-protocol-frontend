@@ -1,3 +1,7 @@
+.ql-editor {
+  @apply min-h-[300px];
+}
+
 .ql-editor,
 .ql-container {
   @apply block w-full rounded-xl border border-gray-800 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 bg-gray-800 bg-opacity-20 sm:text-sm text-base;
@@ -28,7 +32,7 @@
 }
 
 .quill > .ql-container > .ql-editor.ql-blank::before {
-  @apply text-gray-600 not-italic;
+  @apply text-gray-600 not-italic ml-1;
 }
 
 .ql-container.ql-snow {
@@ -36,21 +40,25 @@
 }
 
 .display-rich-text h1 {
-  @apply text-2xl
+  @apply text-2xl;
 }
 
 .display-rich-text h2 {
-  @apply text-xl
+  @apply text-xl;
 }
 
 .display-rich-text blockquote {
-  @apply p-4 my-4 border-l-4 border-gray-500 bg-gray-800 bg-opacity-50
+  @apply p-4 my-4 border-l-4 border-gray-500 bg-gray-800 bg-opacity-50;
 }
 
 .display-rich-text ul {
-  @apply list-disc
+  @apply list-disc;
 }
 
 .display-rich-text ol {
-  @apply list-decimal
+  @apply list-decimal;
+}
+
+.display-rich-text a {
+  @apply text-indigo-500 hover:underline;
 }

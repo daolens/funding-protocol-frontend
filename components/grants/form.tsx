@@ -5,12 +5,13 @@ import DynamicInputList from '@components/common/dynamic-input-list'
 import Input from '@components/common/input-with-trailing-icon'
 import MultiSelect from '@components/common/multi-select'
 import Navbar from '@components/common/navbar'
-import Textarea from '@components/common/textarea'
+import RichTextEditor from '@components/common/rich-text/rich-text-editor'
 import TokenAmountInput from '@components/common/token-amount-input'
 import FundingRadioSelect from '@components/grants/create/funding-radio-buttons'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import { DynamicInputItemType, WalletAddressType } from '@lib/types/common'
 import { FundingMethodType, GrantType } from '@lib/types/grants'
+import { removeTagsFromHtmlString } from '@lib/utils/common'
 import { validateGrantData } from '@lib/utils/grants'
 import classNames from 'classnames'
 import { nanoid } from 'nanoid'
@@ -116,11 +117,13 @@ const Form = ({
           label="Add tags"
           placeholder="Select which category your grants fall under"
         />
-        <Textarea
-          label={`Describe what you are looking for in a good proposal (${subTitle.length}/300)`}
+        <RichTextEditor
+          content={subTitle}
+          setContent={setSubTitle}
+          label={`Describe what you are looking for in a good proposal  (${
+            removeTagsFromHtmlString(subTitle).length
+          }/300)`}
           placeholder="Eg. Projects that boost the ecosystem with a deep focus on the climate"
-          value={subTitle}
-          onChange={(e) => setSubTitle(e.currentTarget.value)}
           error={fieldErrors['subTitle']}
         />
         <div

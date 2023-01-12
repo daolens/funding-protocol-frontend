@@ -1,3 +1,4 @@
+import DisplayRichText from '@components/common/rich-text/display-rich-text'
 import ApplicationList from '@components/grants/details/sections/application-list'
 import GrantSectionTabs from '@components/grants/details/sections/tabs'
 import { ApplicationType, GrantSectionType } from '@lib/types/grants'
@@ -16,7 +17,7 @@ const Sections = ({ applications, description }: Props) => {
         selectedTab={selectedTab}
         setSelectedTab={setSelectedTab}
       />
-      {selectedTab === 'about' && <p className="text-sm">{description}</p>}
+      {selectedTab === 'about' && <DisplayRichText content={description} />}
       {selectedTab === 'applications' && (
         <ApplicationList applications={applications} />
       )}

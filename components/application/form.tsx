@@ -4,7 +4,7 @@ import DatePicker from '@components/common/date-picker'
 import DynamicInputList from '@components/common/dynamic-input-list'
 import Input from '@components/common/input-with-trailing-icon'
 import Navbar from '@components/common/navbar'
-import Textarea from '@components/common/textarea'
+import RichTextEditor from '@components/common/rich-text/rich-text-editor'
 import FundsInput from '@components/grants/apply/funds-input'
 import Milestones from '@components/grants/apply/milestones'
 import TeamMembers from '@components/grants/apply/team-members'
@@ -207,9 +207,9 @@ const ApplicationForm = ({
           onChange={(e) => setDiscordHandle(e.currentTarget.value)}
           error={fieldErrors.discordHandle}
         />
-        <Textarea
-          value={description}
-          onChange={(e) => setDescription(e.currentTarget.value)}
+        <RichTextEditor
+          content={description}
+          setContent={setDescription}
           label="Description"
           placeholder="Eg. Project that boost the ecosystem with a deep focus on the ReFi with an attached link"
           error={fieldErrors['description']}

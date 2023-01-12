@@ -1,7 +1,7 @@
 import BackButton from '@components/common/back-button'
 import Background from '@components/common/background'
 import Navbar from '@components/common/navbar'
-import Textarea from '@components/common/textarea'
+import RichTextEditor from '@components/common/rich-text/rich-text-editor'
 import { ArrowRightIcon } from '@heroicons/react/24/solid'
 import { ERROR_MESSAGES } from '@lib/constants/common'
 import { ApplicationMilestoneType, ApplicationType } from '@lib/types/grants'
@@ -107,11 +107,10 @@ const MilestoneDetails = ({
       </div>
       <div className="text-sm text-gray-500 mb-6">Goal: {milestone.text}</div>
       <span className="text-gray-400">Proof of work</span>
-      <Textarea
+      <RichTextEditor
+        content={details}
+        setContent={setDetails}
         placeholder="Tell us all about the goals you achieved for this milestone"
-        className="h-[400px]"
-        value={details}
-        onChange={(e) => setDetails(e.currentTarget.value)}
         error={fieldErrors?.details}
       />
       <div className="w-full max-w-7xl fixed mx-auto left-0 right-0 bottom-0 mb-6 px-8">

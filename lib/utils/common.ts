@@ -78,3 +78,9 @@ export const onCopyText = (text: string) => {
   navigator.clipboard.writeText(text)
   cogoToast.success('Copied', { hideAfter: 1 })
 }
+
+export const removeTagsFromHtmlString = (html = '') => {
+  if (!html) return ''
+  const regex = /(<([^>]+)>)/gi
+  return html.replace(regex, '')
+}
