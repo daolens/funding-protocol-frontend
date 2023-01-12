@@ -1,20 +1,41 @@
+import Tooltip from '@components/common/tooltip'
+import { InformationCircleIcon } from '@heroicons/react/24/outline'
 import classNames from 'classnames'
 
 type Props = React.HTMLProps<HTMLInputElement> & {
   label: string
   error?: string
   currency: string
+  isTooltipShown: boolean
 }
 
-const FundsInput = ({ label, error, currency, ...inputProps }: Props) => {
+const FundsInput = ({
+  label,
+  error,
+  currency,
+  isTooltipShown,
+  ...inputProps
+}: Props) => {
   return (
     <div>
       <label
         htmlFor={inputProps.id}
-        className="block text-sm font-medium text-gray-400"
+        className="flex items-center text-sm font-medium text-gray-400 gap-1"
       >
-        {/* TODO: add tooltip */}
-        {label}
+        <span>{label}</span>
+        {isTooltipShown && (
+          <Tooltip
+            content={
+              <p className='max-w-xs'>
+                The total funds you would require for the project. It will be
+                the sum of funds requested across different milestones.
+              </p>
+            }
+            showOnHover
+          >
+            <InformationCircleIcon className="w-5 h-5 stroke-2 text-gray-400 cursor-pointer" />
+          </Tooltip>
+        )}
       </label>
       <div className="relative mt-1 rounded-md shadow-sm">
         <input

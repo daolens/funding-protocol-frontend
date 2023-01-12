@@ -228,6 +228,7 @@ const ApplicationForm = ({
               onChange={(e) => setSeekingFunds(e.currentTarget.value as any)}
               error={fieldErrors['seekingFunds']}
               disabled={fundingMethod === 'MILESTONE'}
+              isTooltipShown={fundingMethod === 'MILESTONE'}
             />
           )}
           <DatePicker
@@ -276,7 +277,6 @@ const ApplicationForm = ({
           label="Attach previous successful proposals (optional)"
           areNumbersHidden
         />
-        {/* TODO: add info to show how many funds are remaining after each milestone */}
         {!isUpdateForm && fundingMethod === 'MILESTONE' && (
           <Milestones
             items={milestones}
