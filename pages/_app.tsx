@@ -1,5 +1,6 @@
 import '@styles/globals.css'
 import '@styles/nprogress.css'
+import '@styles/quill.css'
 import { Inter } from '@next/font/google'
 import type { AppProps } from 'next/app'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
