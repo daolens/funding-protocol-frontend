@@ -1,9 +1,8 @@
 import RevertMilestoneApproveModal from '@components/application/milestone/revert-milestone-approve-modal'
 import CountDownTimer from '@components/common/count-down-timer'
+import WalletAddress from '@components/common/wallet-address'
 import { WalletAddressType } from '@lib/types/common'
-import { getTruncatedWalletAddress } from '@lib/utils/common'
 import React, { useState } from 'react'
-import { useEnsName } from 'wagmi'
 
 type Props = {
   reviewer: WalletAddressType
@@ -20,7 +19,6 @@ const ApprovePending = ({
   grantAddress,
   milestoneId,
 }: Props) => {
-  const { data: reviewerEnsName } = useEnsName({ address: reviewer })
   const [isRevertReviewDecisionModalOpen, setIsRevertReviewDecisionModalOpen] =
     useState(false)
   return (
@@ -30,8 +28,7 @@ const ApprovePending = ({
           Milestone {parseInt(milestoneId) + 1}: Pending confirmation
         </p>
         <span className="text-gray-500 text-xs">
-          milestone approved by{' '}
-          {reviewerEnsName || getTruncatedWalletAddress(reviewer)}
+          milestone approved by <WalletAddress address={reviewer} />
         </span>
       </div>
       <div className="flex flex-col gap-3">

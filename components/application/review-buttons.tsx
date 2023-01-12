@@ -2,6 +2,7 @@ import FeedbackModal from '@components/application/feedback-modal'
 import RevertReviewDecisionModal from '@components/application/revert-review-decision-modal'
 import ClientOnly from '@components/common/client-only'
 import CountDownTimer from '@components/common/count-down-timer'
+import WalletAddress from '@components/common/wallet-address'
 import Funds from '@components/grants/details/funds'
 import {
   ArrowRightIcon,
@@ -10,13 +11,11 @@ import {
 import { WalletAddressType } from '@lib/types/common'
 import { ApplicationStatusType } from '@lib/types/grants'
 import { updateApplicationStatusSC } from '@lib/utils/application'
-import { getTruncatedWalletAddress } from '@lib/utils/common'
 import { useMutation } from '@tanstack/react-query'
 import classNames from 'classnames'
 import cogoToast, { CTReturn } from 'cogo-toast'
 import { useRouter } from 'next/router'
 import React, { useRef, useState } from 'react'
-import { useEnsName } from 'wagmi'
 
 type Props = {
   status: ApplicationStatusType
@@ -43,7 +42,6 @@ const ReviewButtons = ({
 }: Props) => {
   const loadingToastRef = useRef<CTReturn | null>(null)
   const reviewer = reviewers?.[0]
-  const { data: reviewerEnsName } = useEnsName({ address: reviewer })
   const router = useRouter()
   const workspaceId = router.query.workspaceId as string
   const grantAddress = router.query.grantAddress as string
@@ -133,7 +131,7 @@ const ReviewButtons = ({
             <p className="text-lg text-gray-200">Sent back with feedback</p>
             {reviewer && (
               <span className="text-gray-500 text-xs">
-                by {reviewerEnsName || getTruncatedWalletAddress(reviewer)}
+                by <WalletAddress address={reviewer} />
               </span>
             )}
           </div>
@@ -144,7 +142,7 @@ const ReviewButtons = ({
             <p className="text-lg text-gray-200">Application Rejected</p>
             {reviewer && (
               <span className="text-gray-500 text-xs">
-                by {reviewerEnsName || getTruncatedWalletAddress(reviewer)}
+                by <WalletAddress address={reviewer} />
               </span>
             )}
           </div>
@@ -167,7 +165,7 @@ const ReviewButtons = ({
                   <span className="text-gray-500 text-xs">
                     application{' '}
                     {status === 'ApprovePending' ? 'approved' : 'rejected'} by{' '}
-                    {reviewerEnsName || getTruncatedWalletAddress(reviewer)}
+                    <WalletAddress address={reviewer} />
                   </span>
                 )}
               </div>
@@ -197,7 +195,7 @@ const ReviewButtons = ({
             <p className="text-lg text-gray-200">Application Approved</p>
             {reviewer && (
               <span className="text-gray-500 text-xs">
-                by {reviewerEnsName || getTruncatedWalletAddress(reviewer)}
+                by <WalletAddress address={reviewer} />
               </span>
             )}
           </div>

@@ -10,6 +10,7 @@ import BackButton from '@components/common/back-button'
 import Background from '@components/common/background'
 import ClientOnly from '@components/common/client-only'
 import Navbar from '@components/common/navbar'
+import WalletAddress from '@components/common/wallet-address'
 import { AtSymbolIcon } from '@heroicons/react/24/outline'
 import { ApplicationSectionType } from '@lib/types/application'
 import {
@@ -19,12 +20,12 @@ import {
 } from '@lib/types/grants'
 import { WorkspaceType } from '@lib/types/workspace'
 import { fetchApplicationById } from '@lib/utils/application'
-import { addDays, getTruncatedWalletAddress } from '@lib/utils/common'
+import { addDays } from '@lib/utils/common'
 import { fetchWorkspaceById } from '@lib/utils/workspace'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { useAccount, useEnsName } from 'wagmi'
+import { useAccount } from 'wagmi'
 
 type Props = {
   application: ApplicationType
@@ -40,9 +41,6 @@ const ApplicationDetails = ({
   workspace,
 }: Props) => {
   const { address } = useAccount()
-  const { data: enaName } = useEnsName({
-    address: application.owner as any,
-  })
   const router = useRouter()
 
   const workspaceId = router.query.workspaceId as string
@@ -84,9 +82,7 @@ const ApplicationDetails = ({
           <h1 className="text-2xl font-bold">{application.name}</h1>
           <div className="flex text-gray-500 items-center gap-2 text-sm">
             <span className="text-indigo-500">
-              by{' '}
-              {enaName ||
-                getTruncatedWalletAddress(application.walletAddress as any)}
+              by <WalletAddress address={application.walletAddress as any} />
             </span>
             <span>|</span>
             <div className="flex items-center gap-1">

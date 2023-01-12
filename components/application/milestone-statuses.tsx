@@ -1,11 +1,11 @@
 import ApprovePending from '@components/application/milestone/approve-pending'
+import WalletAddress from '@components/common/wallet-address'
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/solid'
 import { WalletAddressType } from '@lib/types/common'
 import { ApplicationType } from '@lib/types/grants'
 import { getListOfStatuses } from '@lib/utils/application'
-import { addDays, getTruncatedWalletAddress } from '@lib/utils/common'
+import { addDays } from '@lib/utils/common'
 import React, { useState } from 'react'
-import { useEnsName } from 'wagmi'
 
 export type StatusProps = {
   title: string
@@ -29,7 +29,6 @@ const Status = ({
   grantAddress,
   milestoneId,
 }: StatusProps) => {
-  const { data: ensName } = useEnsName({ address: sender })
   const formatedTimestamp = timestamp
     ? `${new Date(timestamp).toLocaleTimeString()}, ${new Date(
         timestamp
@@ -53,11 +52,9 @@ const Status = ({
       {(sender || timestamp) && (
         <div className="flex items-center gap-1 text-xs text-gray-500">
           {sender && (
-            <>
-              <span>{ensName || getTruncatedWalletAddress(sender)}</span>
-              <span>•</span>
-            </>
+            <WalletAddress address={sender} className="hover:underline" />
           )}
+          {formatedTimestamp && sender && <span>•</span>}
           {formatedTimestamp && <span>{formatedTimestamp}</span>}
         </div>
       )}
