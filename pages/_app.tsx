@@ -12,6 +12,7 @@ import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 import { polygonMumbai } from 'wagmi/chains'
 import NProgress from 'nprogress'
 import Router from 'next/router'
+import Head from 'next/head'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -57,13 +58,18 @@ Router.events.on('routeChangeError', () => NProgress.done())
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <WagmiConfig client={wagmiClient}>
-      <QueryClientProvider client={queryClient}>
-        <main className={inter.className}>
-          <Component {...pageProps} />
-        </main>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </WagmiConfig>
+    <>
+      <Head>
+        <title>GMP | DaoLens</title>
+      </Head>
+      <WagmiConfig client={wagmiClient}>
+        <QueryClientProvider client={queryClient}>
+          <main className={inter.className}>
+            <Component {...pageProps} />
+          </main>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      </WagmiConfig>
+    </>
   )
 }
