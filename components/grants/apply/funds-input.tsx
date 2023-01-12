@@ -26,7 +26,7 @@ const FundsInput = ({
         {isTooltipShown && (
           <Tooltip
             content={
-              <p className='max-w-xs'>
+              <p className="max-w-xs">
                 The total funds you would require for the project. It will be
                 the sum of funds requested across different milestones.
               </p>
