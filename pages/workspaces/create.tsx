@@ -1,4 +1,6 @@
+import Background from '@components/common/background'
 import ForceConnectWallet from '@components/common/force-connect-wallet'
+import Navbar from '@components/common/navbar'
 import CommunityName from '@components/workspace/create/community-name'
 import SourceOfFunding from '@components/workspace/create/source-of-funding'
 import Success from '@components/workspace/create/success'
@@ -17,61 +19,64 @@ const Create = () => {
   )
 
   return (
-    <div className="bg-gray-900 h-screen w-screen flex px-5">
-      <ForceConnectWallet />
-      <div className="flex h-screen my-auto items-center w-full max-w-6xl mx-auto relative">
-        <div className="w-1/2 flex items-center justify-center relative h-full">
-          <Image
-            src="/images/workspace/create/circles-graphic.svg"
-            alt="Circles"
-            width={658}
-            height={759}
-            className="absolute -mt-20"
-          />
-        </div>
-        <div className="w-1/2">
-          {activeStep === 'name' && (
-            <CommunityName
-              communityName={communityName}
-              setCommunityName={setCommunityName}
-              onNext={() => setActiveStep('source-of-funding')}
+    <Background>
+      <div className="h-screen flex flex-col">
+        <Navbar />
+        <ForceConnectWallet />
+        <div className="flex h-full my-auto items-center w-full mx-auto relative">
+          <div className="w-1/2 flex items-center justify-center relative h-full">
+            <Image
+              src="/images/workspace/create/circles-graphic.svg"
+              alt="Circles"
+              width={658}
+              height={759}
+              className="absolute -mt-20"
             />
-          )}
-          {activeStep === 'source-of-funding' && (
-            <SourceOfFunding
-              multisigWalletAddress={multisigWalletAddress}
-              setMultisigWalletAddress={setMultisigWalletAddress}
-              networkId={networkId}
-              onNext={() => setActiveStep('success')}
-              setNetworkId={setNetworkId}
-            />
-          )}
-          {activeStep === 'success' && (
-            <Success
-              communityName={communityName}
-              multisigAddress={multisigWalletAddress}
-              networkId={networkId as SupportedNetworkIdType}
-            />
-          )}
-        </div>
+          </div>
+          <div className="w-1/2">
+            {activeStep === 'name' && (
+              <CommunityName
+                communityName={communityName}
+                setCommunityName={setCommunityName}
+                onNext={() => setActiveStep('source-of-funding')}
+              />
+            )}
+            {activeStep === 'source-of-funding' && (
+              <SourceOfFunding
+                multisigWalletAddress={multisigWalletAddress}
+                setMultisigWalletAddress={setMultisigWalletAddress}
+                networkId={networkId}
+                onNext={() => setActiveStep('success')}
+                setNetworkId={setNetworkId}
+              />
+            )}
+            {activeStep === 'success' && (
+              <Success
+                communityName={communityName}
+                multisigAddress={multisigWalletAddress}
+                networkId={networkId as SupportedNetworkIdType}
+              />
+            )}
+          </div>
 
-        <div className="absolute w-1/2 left-[50%] bottom-0">
-          <div
-            className="h-2 rounded-full"
-            style={{
-              background: 'linear-gradient(360deg, #6366F1 0%, #8F91F6 100%)',
-              width: `${Math.min(
-                ((WORKSPACE_STEPS.findIndex((step) => step === activeStep) +
-                  1) *
-                  100) /
-                  WORKSPACE_STEPS.length,
-                100
-              )}%`,
-            }}
-          />
+          <div className="absolute w-1/2 left-[50%] bottom-0">
+            <div
+              className="h-2 rounded-full"
+              style={{
+                background: 'linear-gradient(360deg, #6366F1 0%, #8F91F6 100%)',
+                width: `${Math.min(
+                  ((WORKSPACE_STEPS.findIndex((step) => step === activeStep) +
+                    1) *
+                    100) /
+                    WORKSPACE_STEPS.length,
+                  100
+                )}%`,
+              }}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </Background>
   )
 }
 
