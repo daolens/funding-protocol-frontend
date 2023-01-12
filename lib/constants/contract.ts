@@ -19,6 +19,8 @@ export const CONTRACT_FUNCTION_NAME_MAP = {
     fetchWorkSpaceDetails: 'fetchWorkSpaceDetails',
     /** args: [ipfsHash, multisigAddress, networkId] */
     createWorkspace: 'createWorkspace',
+    /** args: [workspaceId, ipfsHash] */
+    updateWorkspaceMetadata: 'updateWorkspaceMetadata',
   },
   grant: {
     /** args: [workspaceId, ipfsHash, workspaceContractAddress, applicationContractAddress, reviewerAddress[], recommendedAmount, tokenAddress, fundingMethod] */
