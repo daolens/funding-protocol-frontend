@@ -25,9 +25,7 @@ const Index = ({ workspace, grants, stats }: Props) => {
   return (
     <ClientOnly>
       <Background isMaxWidthDisabled>
-        <div className="px-5">
-          <Navbar />
-        </div>
+        <Navbar className="max-w-7xl px-4 sm:px-6 lg:px-8" />
         <div className="w-full">
           <Image
             src="/images/workspace/details/workspace-backdrop.svg"

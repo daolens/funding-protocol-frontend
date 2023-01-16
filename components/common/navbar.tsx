@@ -32,7 +32,9 @@ const LINKS: { link: string; label: string }[] = [
   },
 ]
 
-const Navbar = () => {
+type Props = JSX.IntrinsicElements['nav']
+
+const Navbar = (props: Props) => {
   const router = useRouter()
 
   const { address } = useAccount()
@@ -43,7 +45,13 @@ const Navbar = () => {
 
   return (
     <ClientOnly>
-      <nav className="flex justify-between py-4 items-center">
+      <nav
+        {...props}
+        className={classNames(
+          'flex justify-between py-4 items-center sticky top-0 z-50',
+          props.className
+        )}
+      >
         <Link href="/">
           <Image
             src="/images/logo/logo-white.svg"

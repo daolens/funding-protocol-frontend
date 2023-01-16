@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
 
 const getTimeRemaining = (endTime: string) => {
-  const total = Date.parse(endTime) - Date.parse(new Date().toISOString())
+  const total = Math.max(
+    Date.parse(endTime) - Date.parse(new Date().toISOString()),
+    0
+  )
   const seconds = Math.floor((total / 1000) % 60)
   const minutes = Math.floor((total / 1000 / 60) % 60)
   const hours = Math.floor(total / 1000 / 60 / 60)
