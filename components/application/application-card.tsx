@@ -64,7 +64,7 @@ const ApplicationCard = ({ application }: Props) => {
           <p className="text-gray-500">by {application.workspaceTitle}</p>
         </div>
       </div>
-      <div className="flex flex-nowrap items-center overflow-x-auto max-w-xs md:max-w-lg lg:max-w-4xl">
+      <div className="flex flex-nowrap items-center overflow-x-auto max-w-xs md:max-w-lg lg:max-w-4xl scrollbar-thin scrollbar-thumb-gray-700 hover:scrollbar-thumb-gray-600 scrollbar-thumb-rounded-full pb-3">
         <Pill
           label={`Submitted on ${new Date(
             application.submissionTimestamp
