@@ -1,3 +1,4 @@
+import Navbar from '@components/common/navbar'
 import classNames from 'classnames'
 import Image from 'next/image'
 import React from 'react'
@@ -5,14 +6,15 @@ import React from 'react'
 type Props = {
   children: React.ReactNode | React.ReactNode[]
   isMaxWidthDisabled?: boolean
+  isNavbarHidden?: boolean
 }
-const Background = ({ children, isMaxWidthDisabled }: Props) => {
+const Background = ({
+  children,
+  isMaxWidthDisabled,
+  isNavbarHidden = false,
+}: Props) => {
   return (
-    <div
-      className={classNames('mx-auto min-h-screen relative', {
-        'max-w-7xl px-4 sm:px-6 lg:px-8': !isMaxWidthDisabled,
-      })}
-    >
+    <div className={classNames('mx-auto min-h-screen relative')}>
       <Image
         src="/images/background/top-bg.svg"
         alt="background graphic gradient"
@@ -27,7 +29,16 @@ const Background = ({ children, isMaxWidthDisabled }: Props) => {
         width={500}
         className="bottom-0 inset-x-0 mx-auto fixed w-[1280px] -z-10"
       />
-      <div className="h-full w-full z-10">{children}</div>
+      {!isNavbarHidden && (
+        <Navbar className="max-w-7xl px-4 sm:px-6 lg:px-8 mx-auto" />
+      )}
+      <div
+        className={classNames('h-full w-full z-10', {
+          'max-w-7xl px-4 sm:px-6 lg:px-8 mx-auto': !isMaxWidthDisabled,
+        })}
+      >
+        {children}
+      </div>
     </div>
   )
 }

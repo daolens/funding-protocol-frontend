@@ -1,6 +1,5 @@
 import BackButton from '@components/common/back-button'
 import Background from '@components/common/background'
-import Navbar from '@components/common/navbar'
 import RichTextEditor from '@components/common/rich-text/rich-text-editor'
 import { ArrowRightIcon } from '@heroicons/react/24/solid'
 import { ERROR_MESSAGES } from '@lib/constants/common'
@@ -98,7 +97,6 @@ const MilestoneDetails = ({
 
   return (
     <Background>
-      <Navbar />
       <div className="py-6 flex flex-col gap-3">
         <BackButton onBack={onBack} />
       </div>

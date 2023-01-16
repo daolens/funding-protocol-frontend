@@ -1,6 +1,5 @@
 import Background from '@components/common/background'
 import ClientOnly from '@components/common/client-only'
-import Navbar from '@components/common/navbar'
 import GrantList from '@components/workspace/details/grant-list'
 import ProfileDetails from '@components/workspace/details/profile-details'
 import Stats from '@components/workspace/details/stats'
@@ -25,7 +24,6 @@ const Index = ({ workspace, grants, stats }: Props) => {
   return (
     <ClientOnly>
       <Background isMaxWidthDisabled>
-        <Navbar className="max-w-7xl px-4 sm:px-6 lg:px-8" />
         <div className="w-full">
           <Image
             src="/images/workspace/details/workspace-backdrop.svg"

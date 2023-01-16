@@ -1,6 +1,5 @@
 import Background from '@components/common/background'
 import ForceConnectWallet from '@components/common/force-connect-wallet'
-import Navbar from '@components/common/navbar'
 import CommunityName from '@components/workspace/create/community-name'
 import SourceOfFunding from '@components/workspace/create/source-of-funding'
 import Success from '@components/workspace/create/success'
@@ -20,8 +19,7 @@ const Create = () => {
 
   return (
     <Background>
-      <div className="h-screen flex flex-col">
-        <Navbar />
+      <div className="flex flex-col" style={{ height: 'calc(100vh - 70px)' }}>
         <ForceConnectWallet />
         <div className="flex h-full my-auto items-center w-full mx-auto relative">
           <div className="w-1/2 flex items-center justify-center relative h-full">

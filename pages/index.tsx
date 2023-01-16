@@ -5,7 +5,6 @@ import { GetServerSideProps } from 'next'
 import { WorkspaceCardType } from '@lib/types/home'
 import { useAccount } from 'wagmi'
 import { fetchWorkspaces } from '@lib/utils/workspace'
-import Navbar from '@components/common/navbar'
 import ClientOnly from '@components/common/client-only'
 
 type Props = {
@@ -23,7 +22,6 @@ const HomePage = ({ workspaceCards }: Props) => {
   return (
     <Background>
       <ClientOnly>
-        <Navbar />
         {ownedWorkspaces.length > 0 && (
           <WorkspacesYouOwn workspaceList={ownedWorkspaces} />
         )}

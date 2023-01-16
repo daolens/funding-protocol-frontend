@@ -3,7 +3,6 @@ import Background from '@components/common/background'
 import DatePicker from '@components/common/date-picker'
 import DynamicInputList from '@components/common/dynamic-input-list'
 import Input from '@components/common/input-with-trailing-icon'
-import Navbar from '@components/common/navbar'
 import RichTextEditor from '@components/common/rich-text/rich-text-editor'
 import FundsInput from '@components/grants/apply/funds-input'
 import Milestones from '@components/grants/apply/milestones'
@@ -159,7 +158,6 @@ const ApplicationForm = ({
 
   return (
     <Background>
-      <Navbar />
       <div className="flex flex-col gap-8 py-9 pb-32">
         <BackButton onBack={onBack} />
         <h1 className="text-2xl font-semibold">

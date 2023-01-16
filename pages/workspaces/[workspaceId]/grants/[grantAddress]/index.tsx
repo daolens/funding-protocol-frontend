@@ -1,7 +1,6 @@
 import BackButton from '@components/common/back-button'
 import Background from '@components/common/background'
 import ClientOnly from '@components/common/client-only'
-import Navbar from '@components/common/navbar'
 import Funds from '@components/grants/details/funds'
 import Info from '@components/grants/details/info'
 import Sections from '@components/grants/details/sections'
@@ -53,7 +52,6 @@ const GrantDetails = ({
   return (
     <ClientOnly>
       <Background>
-        <Navbar />
         <div className="py-6 flex flex-col gap-3">
           <BackButton onBack={onBack} />
           <div className="grid grid-cols-3 gap-5">

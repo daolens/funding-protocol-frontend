@@ -9,7 +9,6 @@ import TeamMembers from '@components/application/team-members'
 import BackButton from '@components/common/back-button'
 import Background from '@components/common/background'
 import ClientOnly from '@components/common/client-only'
-import Navbar from '@components/common/navbar'
 import WalletAddress from '@components/common/wallet-address'
 import { AtSymbolIcon } from '@heroicons/react/24/outline'
 import { ApplicationSectionType } from '@lib/types/application'
@@ -72,7 +71,6 @@ const ApplicationDetails = ({
   return (
     <ClientOnly>
       <Background>
-        <Navbar />
         <div className="py-6 flex flex-col gap-3">
           <BackButton
             onBack={() =>
