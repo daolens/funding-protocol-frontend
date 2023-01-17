@@ -11,6 +11,7 @@ import Background from '@components/common/background'
 import ClientOnly from '@components/common/client-only'
 import WalletAddress from '@components/common/wallet-address'
 import { AtSymbolIcon } from '@heroicons/react/24/outline'
+import useOnlyScrollableContainer from '@hooks/useOnlyScrollableContainer'
 import { ApplicationSectionType } from '@lib/types/application'
 import {
   ApplicationStatusType,
@@ -41,6 +42,8 @@ const ApplicationDetails = ({
 }: Props) => {
   const { address } = useAccount()
   const router = useRouter()
+
+  const scrollableContainerRef = useOnlyScrollableContainer()
 
   const workspaceId = router.query.workspaceId as string
   const grantAddress = router.query.grantAddress as string
@@ -100,7 +103,10 @@ const ApplicationDetails = ({
             />
           )}
           <div className="grid grid-cols-3 gap-5">
-            <div className="col-span-2 flex flex-col gap-5">
+            <div
+              className="col-span-2 flex flex-col gap-5"
+              ref={scrollableContainerRef}
+            >
               {activeSection === 'application' && (
                 <>
                   <TeamMembers teamMembers={application.teamMemberDetails} />
