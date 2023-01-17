@@ -48,7 +48,7 @@ const Navbar = (props: Props) => {
       <nav
         {...props}
         className={classNames(
-          'flex justify-between py-4 items-center sticky top-0 z-50 backdrop-blur-md',
+          'flex justify-between py-4 items-center sticky top-0 z-50 backdrop-blur-md navbar',
           props.className
         )}
       >

@@ -30,7 +30,7 @@ const Background = ({
         className="bottom-0 inset-x-0 mx-auto fixed w-[1280px] -z-10"
       />
       {!isNavbarHidden && (
-        <Navbar className="max-w-7xl px-4 sm:px-6 lg:px-8 mx-auto" />
+        <Navbar className="max-w-7xl px-4 sm:px-6 lg:px-8 mx-auto rounded-b-xl" />
       )}
       <div
         className={classNames('h-full w-full z-10', {

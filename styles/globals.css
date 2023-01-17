@@ -16,3 +16,7 @@ body {
 input {
   color-scheme: dark;
 }
+
+.daolens-scroll-bar {
+  @apply scrollbar-thin scrollbar-thumb-gray-700 hover:scrollbar-thumb-gray-600 scrollbar-thumb-rounded-full;
+}
