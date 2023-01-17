@@ -36,7 +36,7 @@ const useOnlyScrollableContainer = () => {
       const listContainerHeight =
         (window?.innerHeight || 0) -
         (listContainerRef.current?.getBoundingClientRect().top || 0) -
-        20
+        30
 
       listContainerRef.current.style.height = `${listContainerHeight}px`
 
