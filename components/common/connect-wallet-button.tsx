@@ -14,7 +14,7 @@ const ConnectWalletButton = () => {
       {!address && (
         <>
           <button
-            className="inline-flex items-center gap-3 justify-center rounded-xl border border-gray-800 bg-gray-800 bg-opacity-20 px-4 py-2 text-sm font-medium text-gray-200 shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 cursor-pointer"
+            className="inline-flex items-center gap-3 justify-center rounded-xl border border-gray-800 bg-gray-800 bg-opacity-50 px-4 py-2 text-sm font-medium text-gray-200 shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 cursor-pointer"
             onClick={() => setIsConnectWalletModalOpen(true)}
           >
             Connect wallet
