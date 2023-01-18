@@ -1,26 +1,34 @@
-import { IS_PROD } from '@lib/constants/common'
-import { ContractType } from '@lib/types/contract'
+import { CONTRACTS } from '@lib/constants/contract'
+import { ContractNameType, ContractType } from '@lib/types/contract'
 import { prepareWriteContract, writeContract, readContract } from '@wagmi/core'
-import { mainnet, polygonMumbai } from 'wagmi/chains'
+import { mainnet, polygon } from 'wagmi/chains'
 
 type CallSmartContractFunctionOptionsType = {
   contractObj: ContractType
   functionName: string
   args?: any[]
   overrides?: any
+  chainId: number
 }
 
 export const writeSmartContractFunction = async ({
   contractObj,
   functionName,
   args,
+  chainId,
 }: CallSmartContractFunctionOptionsType) => {
+  const address =
+    chainId === polygon.id
+      ? contractObj.polygonAddress
+      : chainId === mainnet.id
+      ? contractObj.address
+      : contractObj.polygonMumbaiAddress
   const config = await prepareWriteContract({
-    address: IS_PROD ? contractObj.address : contractObj.polygonMumbaiAddress,
+    address,
     abi: contractObj.abi,
     functionName,
     args,
-    chainId: IS_PROD ? mainnet.id : polygonMumbai.id,
+    chainId,
   })
 
   const data = await writeContract(config)
@@ -33,15 +41,38 @@ export const readSmartContractFunction = async ({
   args,
   functionName,
   overrides,
+  chainId,
 }: CallSmartContractFunctionOptionsType) => {
+  const address =
+    chainId === polygon.id
+      ? contractObj.polygonAddress
+      : chainId === mainnet.id
+      ? contractObj.address
+      : contractObj.polygonMumbaiAddress
   const data = await readContract({
-    address: IS_PROD ? contractObj.address : contractObj.polygonMumbaiAddress,
+    address,
     abi: contractObj.abi,
     functionName,
     args,
-    chainId: IS_PROD ? mainnet.id : polygonMumbai.id,
+    chainId,
     overrides,
   })
 
   return data
+}
+
+export const getContractAddressByNetwork = (
+  contractName: ContractNameType,
+  chainId: number
+) => {
+  const contract = CONTRACTS[contractName]
+
+  switch (chainId) {
+    case polygon.id:
+      return contract.polygonAddress
+    case mainnet.id:
+      return contract.address
+    default:
+      return contract.polygonMumbaiAddress
+  }
 }

@@ -27,7 +27,7 @@ const GrantList = ({ grants, isAdmin }: Props) => {
         {isAdmin && (
           <Link
             href={`/workspaces/${workspaceId}/grants/create`}
-            className="w-full text-center text-indigo-500 bg-indigo-800 hover:bg-indigo-600 hover:bg-opacity-20 bg-opacity-20 rounded-lg border-dashed border border-indigo-800 p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            className="text-center text-indigo-500 bg-indigo-800 hover:bg-indigo-600 hover:bg-opacity-20 bg-opacity-20 rounded-lg border-dashed border border-indigo-800 p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 mx-1"
           >
             + Add new grant
           </Link>

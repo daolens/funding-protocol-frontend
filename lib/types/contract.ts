@@ -5,6 +5,7 @@ export type ContractType = {
   abi: any
   goerliAddress?: string
   polygonMumbaiAddress: string
+  polygonAddress: string
 }
 
 export type ContractNameType = typeof CONTRACT_NAMES[number]

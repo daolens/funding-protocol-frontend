@@ -1,32 +1,6 @@
 import { DEFAULT_TOKENS } from '@lib/constants/common'
 import { WalletAddressType } from '@lib/types/common'
-import { ContractType } from '@lib/types/contract'
-import { writeSmartContractFunction } from '@lib/utils/contract'
-import { uploadToIPFS } from '@lib/utils/ipfs'
 import cogoToast from 'cogo-toast'
-
-type WriteDataOptionsType = {
-  data: string
-  contractObj: ContractType
-  contractFunction: string
-  contractFunctionArgs: any[]
-}
-
-export const writeData = async ({
-  contractFunction,
-  contractFunctionArgs,
-  contractObj: contractObj,
-  data,
-}: WriteDataOptionsType) => {
-  const ipfsHash = (await uploadToIPFS(data)).hash
-  const result = await writeSmartContractFunction({
-    contractObj,
-    args: [ipfsHash, ...contractFunctionArgs],
-    functionName: contractFunction,
-  })
-
-  return result
-}
 
 export const getNumberWithCommas = (num: number) => {
   if (num >= 10 ** 3 && num < 10 ** 6) {

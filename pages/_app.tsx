@@ -10,22 +10,19 @@ import { publicProvider } from 'wagmi/providers/public'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
-import { polygonMumbai } from 'wagmi/chains'
+import { mainnet, polygon, polygonMumbai } from 'wagmi/chains'
 import NProgress from 'nprogress'
 import Router from 'next/router'
 import Head from 'next/head'
+import useNetworkDetection from '@hooks/useNetworkDetection'
+import Spinner from '@components/common/spinner'
 
 const inter = Inter({ subsets: ['latin'] })
 
 const queryClient = new QueryClient()
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [
-    // TODO: uncomment when contract deployed on them
-    // mainnet,
-    // goerli,
-    polygonMumbai,
-  ],
+  [mainnet, polygon, polygonMumbai],
   [publicProvider()]
 )
 
@@ -58,6 +55,8 @@ Router.events.on('routeChangeComplete', () => NProgress.done())
 Router.events.on('routeChangeError', () => NProgress.done())
 
 export default function App({ Component, pageProps }: AppProps) {
+  const { isNetworkDetected } = useNetworkDetection()
+
   return (
     <>
       <Head>
@@ -66,7 +65,13 @@ export default function App({ Component, pageProps }: AppProps) {
       <WagmiConfig client={wagmiClient}>
         <QueryClientProvider client={queryClient}>
           <main className={inter.className}>
-            <Component {...pageProps} />
+            {isNetworkDetected ? (
+              <Component {...pageProps} />
+            ) : (
+              <div className="h-screen w-screen flex items-center justify-center">
+                <Spinner className="w-10" />
+              </div>
+            )}
           </main>
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>

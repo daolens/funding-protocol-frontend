@@ -2,7 +2,10 @@ import BackButton from '@components/common/back-button'
 import Background from '@components/common/background'
 import RichTextEditor from '@components/common/rich-text/rich-text-editor'
 import { ArrowRightIcon } from '@heroicons/react/24/solid'
-import { ERROR_MESSAGES } from '@lib/constants/common'
+import {
+  ACTIVE_CHAIN_ID_COOKIE_KEY,
+  ERROR_MESSAGES,
+} from '@lib/constants/common'
 import { ApplicationMilestoneType, ApplicationType } from '@lib/types/grants'
 import {
   fetchApplicationById,
@@ -11,10 +14,11 @@ import {
 import { useMutation } from '@tanstack/react-query'
 import classNames from 'classnames'
 import cogoToast, { CTReturn } from 'cogo-toast'
+import { getCookie } from 'cookies-next'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import { useRef, useState } from 'react'
-import { useAccount } from 'wagmi'
+import { useAccount, useNetwork } from 'wagmi'
 
 type Props = {
   application: ApplicationType
@@ -28,6 +32,7 @@ const MilestoneDetails = ({
   milestoneIndex,
 }: Props) => {
   const { address } = useAccount()
+  const { chain } = useNetwork()
   const loadingToastRef = useRef<CTReturn | null>(null)
   const router = useRouter()
   const workspaceId = router.query.workspaceId as string
@@ -49,6 +54,7 @@ const MilestoneDetails = ({
         grantAddress,
         milestoneId: milestoneIndex.toString(),
         workspaceId,
+        chainId: chain?.id as number,
       }),
     onMutate: () => {
       loadingToastRef.current = cogoToast.loading(
@@ -135,10 +141,14 @@ const MilestoneDetails = ({
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { query } = ctx
+  const { query, req, res } = ctx
+  const chainId = parseInt(
+    getCookie(ACTIVE_CHAIN_ID_COOKIE_KEY, { req, res }) as string
+  )
+  if (!chainId) return { props: {} }
   const applicationId = query.applicationId as `0x${string}`
   const milestoneId = query.milestoneId as `0x${string}`
-  const application = await fetchApplicationById(applicationId)
+  const application = await fetchApplicationById(applicationId, chainId)
   const milestone = application.milestones.find(
     (milestone) => milestone.id === milestoneId
   )

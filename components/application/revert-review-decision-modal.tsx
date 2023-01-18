@@ -6,7 +6,7 @@ import {
 } from '@lib/utils/application'
 import cogoToast, { CTReturn } from 'cogo-toast'
 import React, { Dispatch, SetStateAction, useRef } from 'react'
-import { useMutation } from 'wagmi'
+import { useMutation, useNetwork } from 'wagmi'
 
 type Props = {
   status: ApplicationStatusType
@@ -24,11 +24,20 @@ const RevertReviewDecisionModal = ({
   setIsOpen,
 }: Props) => {
   const loadingToastRef = useRef<CTReturn | null>(null)
+  const { chain } = useNetwork()
   const revertDecisionMutation = useMutation({
     mutationFn: (currStatus: ApplicationStatusType) =>
       currStatus === 'RejectPending'
-        ? revertRejectDecisionSC(applicationId, grantAddress)
-        : revertApproveDecisionSC(applicationId, grantAddress),
+        ? revertRejectDecisionSC(
+            applicationId,
+            grantAddress,
+            chain?.id as number
+          )
+        : revertApproveDecisionSC(
+            applicationId,
+            grantAddress,
+            chain?.id as number
+          ),
     onMutate: () => {
       loadingToastRef.current = cogoToast.loading(
         `${

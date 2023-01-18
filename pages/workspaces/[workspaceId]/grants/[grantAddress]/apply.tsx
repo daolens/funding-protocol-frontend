@@ -1,13 +1,16 @@
 import ApplicationForm from '@components/application/form'
 import ForceConnectWallet from '@components/common/force-connect-wallet'
+import { ACTIVE_CHAIN_ID_COOKIE_KEY } from '@lib/constants/common'
 import { ApplicationType, FundingMethodType } from '@lib/types/grants'
 import { postApplicationDataAndCallSmartContractFn } from '@lib/utils/grants'
 import { fetchWorkspaceById } from '@lib/utils/workspace'
 import { useMutation } from '@tanstack/react-query'
 import cogoToast, { CTReturn } from 'cogo-toast'
+import { getCookie } from 'cookies-next'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React, { useRef } from 'react'
+import { useNetwork } from 'wagmi'
 
 type Props = {
   grantName: string
@@ -16,6 +19,7 @@ type Props = {
 }
 
 const Apply = ({ grantName, currency = 'USDC', fundingMethod }: Props) => {
+  const { chain } = useNetwork()
   const loadingToastRef = useRef<CTReturn | null>(null)
 
   const router = useRouter()
@@ -24,7 +28,7 @@ const Apply = ({ grantName, currency = 'USDC', fundingMethod }: Props) => {
 
   const applicationMutation = useMutation({
     mutationFn: (data: ApplicationType) =>
-      postApplicationDataAndCallSmartContractFn(data),
+      postApplicationDataAndCallSmartContractFn(data, chain?.id as number),
     onMutate: () => {
       loadingToastRef.current = cogoToast.loading(
         'Submitting application. This may take a while.',
@@ -64,10 +68,14 @@ const Apply = ({ grantName, currency = 'USDC', fundingMethod }: Props) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { query } = ctx
+  const { query, req, res } = ctx
+  const chainId = parseInt(
+    getCookie(ACTIVE_CHAIN_ID_COOKIE_KEY, { req, res }) as string
+  )
+  if (!chainId) return { props: {} }
   const { workspaceId, grantAddress } = query
 
-  const { grants } = await fetchWorkspaceById(workspaceId as any)
+  const { grants } = await fetchWorkspaceById(workspaceId as any, chainId)
   const grant = grants.find((grant) => grant.address === grantAddress)
 
   if (!grant) return { notFound: true }

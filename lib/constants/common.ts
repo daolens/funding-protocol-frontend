@@ -99,3 +99,5 @@ export const ERROR_MESSAGES = {
     "Please enter a valid discord handle. Eg. 'username#0001'.",
   emailNotValid: 'Please enter a valid email',
 }
+
+export const ACTIVE_CHAIN_ID_COOKIE_KEY = 'active-chain-id'

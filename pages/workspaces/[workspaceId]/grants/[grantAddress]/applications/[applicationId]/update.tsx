@@ -1,5 +1,7 @@
 import ApplicationForm from '@components/application/form'
+import ClientOnly from '@components/common/client-only'
 import ForceConnectWallet from '@components/common/force-connect-wallet'
+import { ACTIVE_CHAIN_ID_COOKIE_KEY } from '@lib/constants/common'
 import { ApplicationType } from '@lib/types/grants'
 import {
   fetchApplicationById,
@@ -7,23 +9,27 @@ import {
 } from '@lib/utils/application'
 import { useMutation } from '@tanstack/react-query'
 import cogoToast, { CTReturn } from 'cogo-toast'
+import { getCookie } from 'cookies-next'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React, { useRef } from 'react'
+import { useNetwork } from 'wagmi'
 
 type Props = {
   application: ApplicationType
 }
 
 const Update = ({ application }: Props) => {
+  const { chain } = useNetwork()
+  const router = useRouter()
   const loadingToastRef = useRef<CTReturn | null>(null)
 
-  const router = useRouter()
   const workspaceId = router.query.workspaceId as string
   const grantAddress = router.query.grantAddress as string
 
   const applicationMutation = useMutation({
-    mutationFn: (data: ApplicationType) => updateApplicationMetadataSC(data),
+    mutationFn: (data: ApplicationType) =>
+      updateApplicationMetadataSC(data, chain?.id as number),
     onMutate: () => {
       loadingToastRef.current = cogoToast.loading(
         'Updating application. This may take a while.',
@@ -52,7 +58,7 @@ const Update = ({ application }: Props) => {
     )
 
   return (
-    <>
+    <ClientOnly>
       <ForceConnectWallet />
       <ApplicationForm
         onBack={onBack}
@@ -61,15 +67,19 @@ const Update = ({ application }: Props) => {
         application={application}
         isUpdateForm
       />
-    </>
+    </ClientOnly>
   )
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { query } = ctx
+  const { query, req, res } = ctx
+  const chainId = parseInt(
+    getCookie(ACTIVE_CHAIN_ID_COOKIE_KEY, { req, res }) as string
+  )
+  if (!chainId) return { props: {} }
   const applicationId = query.applicationId as `0x${string}`
 
-  const application = await fetchApplicationById(applicationId)
+  const application = await fetchApplicationById(applicationId, chainId)
 
   if (!application)
     return {

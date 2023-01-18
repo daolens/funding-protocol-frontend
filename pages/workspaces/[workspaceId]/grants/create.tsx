@@ -8,6 +8,9 @@ import { GetServerSideProps } from 'next'
 import { fetchWorkspaceById } from '@lib/utils/workspace'
 import Form from '@components/grants/form'
 import ForceConnectWallet from '@components/common/force-connect-wallet'
+import { useNetwork } from 'wagmi'
+import { ACTIVE_CHAIN_ID_COOKIE_KEY } from '@lib/constants/common'
+import { getCookie } from 'cookies-next'
 
 type Props = {
   workspaceTitle: string
@@ -16,9 +19,11 @@ type Props = {
 const Create = ({ workspaceTitle = 'Workspace' }: Props) => {
   const loadingToastRef = useRef<CTReturn | null>(null)
   const router = useRouter()
+  const { chain } = useNetwork()
   const workspaceId = router.query.workspaceId as string
   const grantMutation = useMutation({
-    mutationFn: (data: GrantType) => postGrantDataAndCallSmartContractFn(data),
+    mutationFn: (data: GrantType) =>
+      postGrantDataAndCallSmartContractFn(data, chain?.id as number),
     onSuccess: () => {
       loadingToastRef.current?.hide?.()
       cogoToast.success('Grant created successfully')
@@ -55,9 +60,13 @@ const Create = ({ workspaceTitle = 'Workspace' }: Props) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { query } = ctx
+  const { query, req, res } = ctx
+  const chainId = parseInt(
+    getCookie(ACTIVE_CHAIN_ID_COOKIE_KEY, { req, res }) as string
+  )
+  if (!chainId) return { props: {} }
   const { workspaceId } = query
-  const { workspace } = await fetchWorkspaceById(workspaceId as any)
+  const { workspace } = await fetchWorkspaceById(workspaceId as any, chainId)
 
   const workspaceTitle = workspace.communityName
 

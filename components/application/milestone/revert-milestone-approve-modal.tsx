@@ -2,7 +2,7 @@ import AlertModal from '@components/common/alert-modal'
 import { revertMilestoneApproveDecisionSC } from '@lib/utils/application'
 import cogoToast, { CTReturn } from 'cogo-toast'
 import React, { Dispatch, SetStateAction, useRef } from 'react'
-import { useMutation } from 'wagmi'
+import { useMutation, useNetwork } from 'wagmi'
 
 type Props = {
   applicationId: string
@@ -20,12 +20,14 @@ const RevertMilestoneApproveModal = ({
   setIsOpen,
 }: Props) => {
   const loadingToastRef = useRef<CTReturn | null>(null)
+  const { chain } = useNetwork()
   const revertDecisionMutation = useMutation({
     mutationFn: () =>
       revertMilestoneApproveDecisionSC(
         applicationId,
         milestoneId,
-        grantAddress
+        grantAddress,
+        chain?.id as number
       ),
     onMutate: () => {
       loadingToastRef.current = cogoToast.loading(

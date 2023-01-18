@@ -1,10 +1,11 @@
-import { DEFAULT_TOKENS, IS_PROD } from '@lib/constants/common'
+import { DEFAULT_TOKENS } from '@lib/constants/common'
 import { CONTRACTS, CONTRACT_FUNCTION_NAME_MAP } from '@lib/constants/contract'
 import { WalletAddressType } from '@lib/types/common'
 import { GrantType } from '@lib/types/grants'
 import { WorkspaceType } from '@lib/types/workspace'
 import { log } from '@lib/utils/common'
 import {
+  getContractAddressByNetwork,
   readSmartContractFunction,
   writeSmartContractFunction,
 } from '@lib/utils/contract'
@@ -14,7 +15,8 @@ import { fetchTransaction } from '@wagmi/core'
 import { ethers } from 'ethers'
 
 export const postDataAndCallSmartContractFunction = async (
-  data: WorkspaceType
+  data: WorkspaceType,
+  chainId: number
 ) => {
   const ipfsHash = (await uploadToIPFS(JSON.stringify(data))).hash
   const args = [
@@ -27,6 +29,7 @@ export const postDataAndCallSmartContractFunction = async (
     args,
     contractObj: CONTRACTS.workspace,
     functionName: 'createWorkspace',
+    chainId,
   })
   if (!result.hash)
     throw new Error('createWorkspace smart contract call failed')
@@ -105,15 +108,14 @@ const getAggregateBalances = async (
   return result
 }
 
-export const fetchWorkspaces = async () => {
-  const args = [
-    IS_PROD ? CONTRACTS.grant.address : CONTRACTS.grant.polygonMumbaiAddress,
-  ]
+export const fetchWorkspaces = async (chainId: number) => {
+  const args = [getContractAddressByNetwork('grant', chainId)]
   log('fetchWorkspaces called with args', args)
   const response = (await readSmartContractFunction({
     contractObj: CONTRACTS.workspace,
     functionName: CONTRACT_FUNCTION_NAME_MAP.workspace.fetchWorkSpaces,
     args,
+    chainId,
   })) as [
     FetchWorkspaceResponseType[],
     /** balance[workspaceIndex][grantIndex] */
@@ -183,14 +185,18 @@ type GrantFetchResponseType = {
   }
 }
 
-export const fetchWorkspaceById = async (workspaceId: `0x${string}`) => {
+export const fetchWorkspaceById = async (
+  workspaceId: `0x${string}`,
+  chainId: number
+) => {
   const response = (await readSmartContractFunction({
     contractObj: CONTRACTS.workspace,
     functionName: CONTRACT_FUNCTION_NAME_MAP.workspace.fetchWorkSpaceDetails,
     args: [
       parseInt(workspaceId, 16),
-      IS_PROD ? CONTRACTS.grant.address : CONTRACTS.grant.polygonMumbaiAddress,
+      getContractAddressByNetwork('grant', chainId),
     ],
+    chainId,
   })) as [FetchWorkspaceResponseType, GrantFetchResponseType[]]
 
   if (!response) throw new Error('response is not defined')

@@ -1,4 +1,4 @@
-import { DEFAULT_TOKENS, ERROR_MESSAGES, IS_PROD } from '@lib/constants/common'
+import { DEFAULT_TOKENS, ERROR_MESSAGES } from '@lib/constants/common'
 import { CONTRACTS, CONTRACT_FUNCTION_NAME_MAP } from '@lib/constants/contract'
 import { APPLICATION_STATUSES } from '@lib/constants/grants'
 import { WalletAddressType } from '@lib/types/common'
@@ -14,12 +14,14 @@ import {
   removeTagsFromHtmlString,
 } from '@lib/utils/common'
 import {
+  getContractAddressByNetwork,
   readSmartContractFunction,
   writeSmartContractFunction,
 } from '@lib/utils/contract'
 import { getFromIPFS, uploadToIPFS } from '@lib/utils/ipfs'
 import { fetchTransaction } from '@wagmi/core'
 import { ethers } from 'ethers'
+import { mainnet, polygon } from 'wagmi/chains'
 
 export const validateGrantData = (grant: GrantType) => {
   const errors: Record<keyof GrantType, string> = {} as any
@@ -43,22 +45,21 @@ export const validateGrantData = (grant: GrantType) => {
   return errors
 }
 
-export const postGrantDataAndCallSmartContractFn = async (data: GrantType) => {
+export const postGrantDataAndCallSmartContractFn = async (
+  data: GrantType,
+  chainId: number
+) => {
   const ipfsHash = (await uploadToIPFS(JSON.stringify(data))).hash
   const workspaceId = parseInt(data.workspaceId!, 16)
 
   const args = [
     workspaceId,
     ipfsHash,
-    IS_PROD
-      ? CONTRACTS.workspace.address
-      : CONTRACTS.workspace.polygonMumbaiAddress,
-    IS_PROD
-      ? CONTRACTS.application.address
-      : CONTRACTS.application.polygonMumbaiAddress,
+    getContractAddressByNetwork('workspace', chainId),
+    getContractAddressByNetwork('application', chainId),
     data.reviewers,
     data.recommendedSeekingAmount,
-    IS_PROD
+    chainId === polygon.id || chainId === mainnet.id
       ? DEFAULT_TOKENS.find((token) => token.name === data.token)?.address
       : // token address in dev
         // Get test tokens from here: https://faucet.polygon.technology/
@@ -72,6 +73,7 @@ export const postGrantDataAndCallSmartContractFn = async (data: GrantType) => {
     contractObj: CONTRACTS.grant,
     args,
     functionName: CONTRACT_FUNCTION_NAME_MAP.grant.createGrant,
+    chainId,
   })
 
   if (!result.hash) throw new Error('createGrant smart contract call failed')
@@ -164,7 +166,8 @@ export const validateGrantApplicationData = (
 }
 
 export const postApplicationDataAndCallSmartContractFn = async (
-  data: ApplicationType
+  data: ApplicationType,
+  chainId: number
 ) => {
   const ipfsHash = (await uploadToIPFS(JSON.stringify(data))).hash
   const workspaceId = parseInt(data.workspaceId!, 16)
@@ -181,6 +184,7 @@ export const postApplicationDataAndCallSmartContractFn = async (
     contractObj: CONTRACTS.application,
     args,
     functionName: CONTRACT_FUNCTION_NAME_MAP.application.submitApplication,
+    chainId,
   })
 
   if (!result.hash)
@@ -214,12 +218,14 @@ type ApplicationFetchResponseType = {
 
 export const fetchApplications = async (
   grantAddress: string,
-  applicationCount: number
+  applicationCount: number,
+  chainId: number
 ) => {
   const response = (await readSmartContractFunction({
     contractObj: CONTRACTS.application,
     functionName: CONTRACT_FUNCTION_NAME_MAP.application.getGrantApplications,
     args: [grantAddress, applicationCount],
+    chainId,
   })) as ApplicationFetchResponseType[]
 
   if (!response) throw new Error('response is not defined')
@@ -263,7 +269,8 @@ export const fetchApplications = async (
 }
 
 export const updateGrantDataAndCallSmartContractFn = async (
-  data: GrantType
+  data: GrantType,
+  chainId: number
 ) => {
   const ipfsHash = (await uploadToIPFS(JSON.stringify(data))).hash
   const workspaceId = parseInt(data.workspaceId!, 16)
@@ -272,9 +279,7 @@ export const updateGrantDataAndCallSmartContractFn = async (
     // Grant address
     data.address,
     workspaceId,
-    IS_PROD
-      ? CONTRACTS.workspace.address
-      : CONTRACTS.workspace.polygonMumbaiAddress,
+    getContractAddressByNetwork('workspace', chainId),
     ipfsHash,
     data.reviewers,
   ]
@@ -284,6 +289,7 @@ export const updateGrantDataAndCallSmartContractFn = async (
     contractObj: CONTRACTS.grant,
     args,
     functionName: CONTRACT_FUNCTION_NAME_MAP.grant.updateGrant,
+    chainId,
   })
 
   if (!result.hash) throw new Error('createGrant smart contract call failed')

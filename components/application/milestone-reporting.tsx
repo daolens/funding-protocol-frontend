@@ -10,7 +10,7 @@ import classNames from 'classnames'
 import cogoToast, { CTReturn } from 'cogo-toast'
 import { useRouter } from 'next/router'
 import { useRef, useState } from 'react'
-import { useAccount, useMutation } from 'wagmi'
+import { useAccount, useMutation, useNetwork } from 'wagmi'
 
 type MilestoneCardProps = {
   milestone: ApplicationMilestoneType
@@ -114,6 +114,7 @@ type Props = {
 
 const MilestoneReporting = ({ milestones, isReviewer, isApplicant }: Props) => {
   const { address } = useAccount()
+  const { chain } = useNetwork()
   const loadingToastRef = useRef<CTReturn | null>(null)
   const router = useRouter()
   const { workspaceId, grantAddress, applicationId } = router.query
@@ -124,6 +125,7 @@ const MilestoneReporting = ({ milestones, isReviewer, isApplicant }: Props) => {
         applicationId: applicationId as string,
         grantAddress: grantAddress as string,
         milestoneId,
+        chainId: chain?.id as number,
         workspaceId: workspaceId as string,
         milestoneFeedbacks: [
           ...(milestones.find((milestone) => milestone.id === milestoneId)

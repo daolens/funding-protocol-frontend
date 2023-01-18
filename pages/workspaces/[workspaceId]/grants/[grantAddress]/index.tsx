@@ -6,6 +6,7 @@ import Info from '@components/grants/details/info'
 import Sections from '@components/grants/details/sections'
 import Stats from '@components/grants/details/stats'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
+import { ACTIVE_CHAIN_ID_COOKIE_KEY } from '@lib/constants/common'
 import { WalletAddressType } from '@lib/types/common'
 import {
   ApplicationType,
@@ -15,6 +16,7 @@ import {
 import { fetchApplications } from '@lib/utils/grants'
 import { fetchWorkspaceById } from '@lib/utils/workspace'
 import classNames from 'classnames'
+import { getCookie } from 'cookies-next'
 import { GetServerSideProps } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -106,10 +108,17 @@ const GrantDetails = ({
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { query } = ctx
+  const { query, req, res } = ctx
+  const chainId = parseInt(
+    getCookie(ACTIVE_CHAIN_ID_COOKIE_KEY, { req, res }) as string
+  )
+  if (!chainId) return { props: {} }
   const { workspaceId, grantAddress } = query
 
-  const { grants, workspace } = await fetchWorkspaceById(workspaceId as any)
+  const { grants, workspace } = await fetchWorkspaceById(
+    workspaceId as any,
+    chainId
+  )
   const grant = grants.find((grant) => grant.address === grantAddress)
 
   if (!grant || !workspace)
@@ -126,7 +135,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const applications = await fetchApplications(
     grant.address!,
-    grant.applicantCount!
+    grant.applicantCount!,
+    chainId
   )
 
   const approvedCount = applications

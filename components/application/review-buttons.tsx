@@ -16,6 +16,7 @@ import classNames from 'classnames'
 import cogoToast, { CTReturn } from 'cogo-toast'
 import { useRouter } from 'next/router'
 import React, { useRef, useState } from 'react'
+import { useNetwork } from 'wagmi'
 
 type Props = {
   status: ApplicationStatusType
@@ -41,6 +42,7 @@ const ReviewButtons = ({
   isReviewer,
 }: Props) => {
   const loadingToastRef = useRef<CTReturn | null>(null)
+  const { chain } = useNetwork()
   const reviewer = reviewers?.[0]
   const router = useRouter()
   const workspaceId = router.query.workspaceId as string
@@ -54,6 +56,7 @@ const ReviewButtons = ({
         grantAddress,
         status: newStatus,
         workspaceId,
+        chainId: chain?.id as number,
       }),
     onMutate: () => {
       loadingToastRef.current = cogoToast.loading(

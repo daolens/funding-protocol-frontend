@@ -11,7 +11,7 @@ import {
 } from '@heroicons/react/24/outline'
 import ClientOnly from '@components/common/client-only'
 import ConnectWalletModal from '@components/common/connect-wallet-modal'
-import { polygonMumbai } from 'wagmi/chains'
+import { mainnet, polygon, polygonMumbai } from 'wagmi/chains'
 import AlertModal from '@components/common/alert-modal'
 
 function classNames(...classes: string[]) {
@@ -29,14 +29,18 @@ export default function WalletDropdown() {
   const [isSwitchNetworkModalOpen, setIsSwitchNetworkModalOpen] =
     useState(false)
 
-  const isPolygonMumbai = chain?.id === polygonMumbai.id
+  const isSupportedChain =
+    chain?.id === polygonMumbai.id ||
+    chain?.id === polygon.id ||
+    chain?.id === mainnet.id
+
   const canSwitchChains = !!connector?.switchChain
   const chainDetails = chain?.id ? getChainDetails(chain?.id) : null
   const blockExplorerLink = chainDetails?.blockExplorers?.default?.url
 
   useEffect(() => {
-    if (!isPolygonMumbai) setIsSwitchNetworkModalOpen(true)
-  }, [isPolygonMumbai])
+    if (!isSupportedChain) setIsSwitchNetworkModalOpen(true)
+  }, [isSupportedChain])
 
   const onSwitchToPolygonMumbai = () => {
     connector?.switchChain?.(polygonMumbai.id)
@@ -97,7 +101,7 @@ export default function WalletDropdown() {
                         {chainDetails?.name}
                       </span>
                     </div>
-                    {!isPolygonMumbai && (
+                    {!isSupportedChain && (
                       <div className="flex border border-gray-800 rounded-lg p-2 gap-2 items-center">
                         <ExclamationTriangleIcon
                           className="h-8 w-8 text-red-600"

@@ -7,13 +7,18 @@ import { fetchCurrentUserApplications } from '@lib/utils/application'
 import { useQuery } from '@tanstack/react-query'
 import cogoToast from 'cogo-toast'
 import React from 'react'
-import { useAccount } from 'wagmi'
+import { useAccount, useNetwork } from 'wagmi'
 
 const MyProposals = () => {
   const { address } = useAccount()
+  const { chain } = useNetwork()
   const { data, isLoading } = useQuery({
     queryKey: ['fetch-my-applications', address],
-    queryFn: () => fetchCurrentUserApplications(address as WalletAddressType),
+    queryFn: () =>
+      fetchCurrentUserApplications(
+        address as WalletAddressType,
+        chain?.id as number
+      ),
     enabled: !!address,
     onError: (error) => {
       console.error(error)

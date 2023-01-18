@@ -25,6 +25,7 @@ type UpdateApplicationStatusSCOptions = {
   status: ApplicationStatusType
   grantAddress: string
   reason?: string
+  chainId: number
 }
 
 export const updateApplicationStatusSC = async ({
@@ -33,6 +34,7 @@ export const updateApplicationStatusSC = async ({
   status,
   workspaceId,
   reason,
+  chainId,
 }: UpdateApplicationStatusSCOptions) => {
   const ipfsHash = reason
     ? (await uploadToIPFS(JSON.stringify({ reason }))).hash
@@ -49,6 +51,7 @@ export const updateApplicationStatusSC = async ({
     contractObj: CONTRACTS.application,
     args,
     functionName: CONTRACT_FUNCTION_NAME_MAP.application.updateApplicationState,
+    chainId,
   })
 
   if (!result.hash)
@@ -78,11 +81,15 @@ type FetchMilestoneResponseType = {
   applicantHash: string
 }
 
-export const fetchApplicationById = async (applicationId: `0x${string}`) => {
+export const fetchApplicationById = async (
+  applicationId: `0x${string}`,
+  chainId: number
+) => {
   const response = (await readSmartContractFunction({
     contractObj: CONTRACTS.application,
     functionName: CONTRACT_FUNCTION_NAME_MAP.application.getApplicationDetail,
     args: [applicationId],
+    chainId,
   })) as [
     FetchApplicationResponseType,
     WalletAddressType[],
@@ -181,6 +188,7 @@ type SubmitMilestoneDetailsSCOptions = {
   milestoneDetails: ApplicationMilestoneStateDetailType[]
   workspaceId: string
   grantAddress: string
+  chainId: number
 }
 
 export const submitMilestoneDetailsSC = async ({
@@ -189,6 +197,7 @@ export const submitMilestoneDetailsSC = async ({
   milestoneDetails,
   milestoneId,
   workspaceId,
+  chainId,
 }: SubmitMilestoneDetailsSCOptions) => {
   const ipfsHash = (await uploadToIPFS(JSON.stringify({ milestoneDetails })))
     .hash
@@ -199,6 +208,7 @@ export const submitMilestoneDetailsSC = async ({
     args,
     functionName:
       CONTRACT_FUNCTION_NAME_MAP.application.requestMilestoneApproval,
+    chainId,
   })
 
   if (!result.hash)
@@ -215,6 +225,7 @@ type ApproveMilestoneSCOptions = {
   workspaceId: string
   grantAddress: string
   milestoneFeedbacks?: ApplicationMilestoneStateDetailType[]
+  chainId: number
 }
 
 export const approveMilestoneSC = async ({
@@ -223,6 +234,7 @@ export const approveMilestoneSC = async ({
   milestoneId,
   workspaceId,
   milestoneFeedbacks,
+  chainId,
 }: ApproveMilestoneSCOptions) => {
   const ipfsHash = (await uploadToIPFS(JSON.stringify({ milestoneFeedbacks })))
     .hash
@@ -232,6 +244,7 @@ export const approveMilestoneSC = async ({
     contractObj: CONTRACTS.application,
     args,
     functionName: CONTRACT_FUNCTION_NAME_MAP.application.approveMilestone,
+    chainId,
   })
 
   if (!result.hash)
@@ -248,6 +261,7 @@ export const sendFeedbackMilestoneSC = async ({
   milestoneId,
   workspaceId,
   milestoneFeedbacks,
+  chainId,
 }: ApproveMilestoneSCOptions) => {
   const ipfsHash = (await uploadToIPFS(JSON.stringify({ milestoneFeedbacks })))
     .hash
@@ -258,6 +272,7 @@ export const sendFeedbackMilestoneSC = async ({
     args,
     functionName:
       CONTRACT_FUNCTION_NAME_MAP.application.submitMilestoneFeedback,
+    chainId,
   })
 
   if (!result.hash)
@@ -269,12 +284,14 @@ export const sendFeedbackMilestoneSC = async ({
 }
 
 export const fetchCurrentUserApplications = async (
-  address: WalletAddressType
+  address: WalletAddressType,
+  chainId: number
 ) => {
   const response = (await readSmartContractFunction({
     contractObj: CONTRACTS.application,
     functionName: CONTRACT_FUNCTION_NAME_MAP.application.fetchMyApplications,
     overrides: { from: address },
+    chainId,
   })) as [FetchApplicationResponseType[], string[], string[]]
 
   if (!response) throw new Error('response is not defined')
@@ -321,13 +338,17 @@ export const fetchCurrentUserApplications = async (
   return applications
 }
 
-export const updateApplicationMetadataSC = async (data: ApplicationType) => {
+export const updateApplicationMetadataSC = async (
+  data: ApplicationType,
+  chainId: number
+) => {
   const ipfsHash = (await uploadToIPFS(JSON.stringify(data))).hash
   const args = [data.id, ipfsHash, data.milestones.length]
   log('updateApplicationMetadata called', { args })
   const result = await writeSmartContractFunction({
     contractObj: CONTRACTS.application,
     args,
+    chainId,
     functionName:
       CONTRACT_FUNCTION_NAME_MAP.application.updateApplicationMetadata,
   })
@@ -342,11 +363,13 @@ export const updateApplicationMetadataSC = async (data: ApplicationType) => {
 
 export const revertRejectDecisionSC = async (
   applicationId: string,
-  grantAddress: string
+  grantAddress: string,
+  chainId: number
 ) => {
   const args = [applicationId, grantAddress]
   log('application.revertTransactions called', { args })
   const result = await writeSmartContractFunction({
+    chainId,
     contractObj: CONTRACTS.application,
     args,
     functionName: CONTRACT_FUNCTION_NAME_MAP.application.revertTransactions,
@@ -362,7 +385,8 @@ export const revertRejectDecisionSC = async (
 
 export const revertApproveDecisionSC = async (
   applicationId: string,
-  grantAddress: string
+  grantAddress: string,
+  chainId: number
 ) => {
   const args = [applicationId]
   log('individualGrant.revertTransactions called', { args })
@@ -372,9 +396,11 @@ export const revertApproveDecisionSC = async (
       address: grantAddress,
       polygonMumbaiAddress: grantAddress,
       goerliAddress: grantAddress,
+      polygonAddress: grantAddress,
     },
     args,
     functionName: CONTRACT_FUNCTION_NAME_MAP.individualGrant.revertTransactions,
+    chainId,
   })
 
   if (!result.hash)
@@ -392,7 +418,8 @@ export const revertApproveDecisionSC = async (
 export const revertMilestoneApproveDecisionSC = async (
   applicationId: string,
   milestoneId: string,
-  grantAddress: string
+  grantAddress: string,
+  chainId: number
 ) => {
   const args = [applicationId, milestoneId]
   log('individualGrant.revertMilestoneTransactions called', { args })
@@ -402,10 +429,12 @@ export const revertMilestoneApproveDecisionSC = async (
       address: grantAddress,
       polygonMumbaiAddress: grantAddress,
       goerliAddress: grantAddress,
+      polygonAddress: grantAddress,
     },
     args,
     functionName:
       CONTRACT_FUNCTION_NAME_MAP.individualGrant.revertMilestoneTransactions,
+    chainId,
   })
 
   if (!result.hash)

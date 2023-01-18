@@ -12,6 +12,7 @@ import ClientOnly from '@components/common/client-only'
 import WalletAddress from '@components/common/wallet-address'
 import { AtSymbolIcon } from '@heroicons/react/24/outline'
 import useOnlyScrollableContainer from '@hooks/useOnlyScrollableContainer'
+import { ACTIVE_CHAIN_ID_COOKIE_KEY } from '@lib/constants/common'
 import { ApplicationSectionType } from '@lib/types/application'
 import {
   ApplicationStatusType,
@@ -22,6 +23,7 @@ import { WorkspaceType } from '@lib/types/workspace'
 import { fetchApplicationById } from '@lib/utils/application'
 import { addDays } from '@lib/utils/common'
 import { fetchWorkspaceById } from '@lib/utils/workspace'
+import { getCookie } from 'cookies-next'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
@@ -169,14 +171,22 @@ const ApplicationDetails = ({
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { query } = ctx
+  const { query, req, res } = ctx
+  const chainId = parseInt(
+    getCookie(ACTIVE_CHAIN_ID_COOKIE_KEY, { req, res }) as string
+  )
+  if (!chainId) return { props: {} }
+
   const applicationId = query.applicationId as `0x${string}`
   const { workspaceId, grantAddress } = query
 
-  const { grants, workspace } = await fetchWorkspaceById(workspaceId as any)
+  const { grants, workspace } = await fetchWorkspaceById(
+    workspaceId as any,
+    chainId
+  )
   const grant = grants.find((grant) => grant.address === grantAddress)
 
-  const application = await fetchApplicationById(applicationId)
+  const application = await fetchApplicationById(applicationId, chainId)
 
   if (!grant || !workspace || !application)
     return {

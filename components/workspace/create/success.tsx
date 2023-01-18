@@ -9,7 +9,7 @@ import React, { useRef } from 'react'
 import confettiAnimation from '@public/animations/confetti.json'
 import { WorkspaceType } from '@lib/types/workspace'
 import { ethers } from 'ethers'
-import { useSignMessage } from 'wagmi'
+import { useNetwork, useSignMessage } from 'wagmi'
 import { getSafeDetails } from '@lib/utils/safe'
 import SUPPORTED_SAFES_INFO from '@lib/constants/common'
 import cogoToast, { CTReturn } from 'cogo-toast'
@@ -26,10 +26,11 @@ type Props = {
 
 const Success = ({ communityName, multisigAddress, networkId }: Props) => {
   const loadingToastRef = useRef<CTReturn | null>(null)
+  const { chain } = useNetwork()
   const router = useRouter()
   const workspaceMutation = useMutation({
     mutationFn: (data: WorkspaceType) =>
-      postDataAndCallSmartContractFunction(data),
+      postDataAndCallSmartContractFunction(data, chain?.id as number),
     onSuccess: () => {
       loadingToastRef.current?.hide?.()
       cogoToast.success('Workspace created!')

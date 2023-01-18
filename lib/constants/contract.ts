@@ -3,6 +3,7 @@ import GrantContractAbi from '@lib/abi/GrantsAbi.json'
 import ApplicationContractAbi from '@lib/abi/ApplicationAbi.json'
 import IndiviaulGrantAbi from '@lib/abi/IndividualGrantAbi.json'
 import { ContractNameType, ContractType } from '@lib/types/contract'
+import { mainnet, polygon, polygonMumbai } from 'wagmi/chains'
 
 export const CONTRACT_NAMES = [
   'workspace',
@@ -81,22 +82,28 @@ export const CONTRACTS: Record<ContractNameType, ContractType> = {
   workspace: {
     address: '0x2dFf55913e013dFD95820EB1d28045daF765A025',
     polygonMumbaiAddress: '0x2dFf55913e013dFD95820EB1d28045daF765A025',
+    polygonAddress: '0x7C3f503E4C19ee26b190114c5f63F6a834aFF05E',
     abi: WorkspaceContractAbi,
   },
   application: {
     address: '0xA6CbC144e22bd1944ac3E5f360A3aD0df98ed0D9',
     polygonMumbaiAddress: '0xA6CbC144e22bd1944ac3E5f360A3aD0df98ed0D9',
+    polygonAddress: '0xB0631354E8DCE6454f131a4Fb18f38C64908352A',
     abi: ApplicationContractAbi,
   },
   grant: {
     address: '0x160De3DCEEC1146ACA7aeEd5811BBD46b71f8610',
     polygonMumbaiAddress: '0x160De3DCEEC1146ACA7aeEd5811BBD46b71f8610',
+    polygonAddress: '0x168cA1c267E68cC7Ab86e53ABc4Bc6FB6220C6ce',
     abi: GrantContractAbi,
   },
   // address will be the grantAddress of the grant
   individualGrant: {
     address: '',
     polygonMumbaiAddress: '',
+    polygonAddress: '',
     abi: IndiviaulGrantAbi,
   },
 }
+
+export const SUPPORTED_CHAINS = [polygon, polygonMumbai, mainnet]
