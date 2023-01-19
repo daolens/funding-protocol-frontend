@@ -9,12 +9,16 @@ import { useState } from 'react'
 import { getFilteredCommunities } from '@lib/utils/home'
 import classNames from 'classnames'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 type Props = {
   workspaceList: WorkspaceCardType[]
 }
 
 const Discover = ({ workspaceList }: Props) => {
+  const router = useRouter()
+  const chainId = router.query.chainId
+
   const [filterType, setFilterType] = useState<FilterType>('all')
 
   const [searchCommunity, setSearchCommunity] = useState('')
@@ -86,7 +90,7 @@ const Discover = ({ workspaceList }: Props) => {
       </div>
       <div className="grid grid-cols-2 gap-5 ">
         <Link
-          href="/workspaces/create"
+          href={`/${chainId}/workspaces/create`}
           className="bg-indigo-800 hover:bg-indigo-700 hover:bg-opacity-20 bg-opacity-20 flex gap-2 items-center rounded-2xl col-span-2 p-5 mb-2 mt-6 border border-dashed border-indigo-500"
         >
           <PlusCircleIcon className="w-12 h-12 text-indigo-400 " />

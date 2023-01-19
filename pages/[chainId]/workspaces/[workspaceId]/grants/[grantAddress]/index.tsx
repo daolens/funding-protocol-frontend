@@ -6,7 +6,6 @@ import Info from '@components/grants/details/info'
 import Sections from '@components/grants/details/sections'
 import Stats from '@components/grants/details/stats'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
-import { ACTIVE_CHAIN_ID_COOKIE_KEY } from '@lib/constants/common'
 import { SUPPORTED_CHAINS } from '@lib/constants/contract'
 import { WalletAddressType } from '@lib/types/common'
 import {
@@ -17,7 +16,6 @@ import {
 import { fetchApplications } from '@lib/utils/grants'
 import { fetchWorkspaceById } from '@lib/utils/workspace'
 import classNames from 'classnames'
-import { getCookie } from 'cookies-next'
 import { GetServerSideProps } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -44,12 +42,13 @@ const GrantDetails = ({
 
   const workspaceId = router.query.workspaceId as string
   const grantAddress = router.query.grantAddress as string
+  const chainId = router.query.chainId as string
 
   const isApplied = applications.some(
     (application) => application.owner === address
   )
 
-  const onBack = () => router.push(`/workspaces/${workspaceId}`)
+  const onBack = () => router.push(`/${chainId}/workspaces/${workspaceId}`)
   const isAdmin = workspaceOwner === address
 
   return (
@@ -80,7 +79,7 @@ const GrantDetails = ({
                   href={
                     isApplied
                       ? '#'
-                      : `/workspaces/${workspaceId}/grants/${grantAddress}/apply`
+                      : `/${chainId}/workspaces/${workspaceId}/grants/${grantAddress}/apply`
                   }
                   className={classNames(
                     'inline-flex items-center rounded-xl border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 justify-center',
@@ -109,10 +108,8 @@ const GrantDetails = ({
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { query, req, res } = ctx
-  const chainId = parseInt(
-    getCookie(ACTIVE_CHAIN_ID_COOKIE_KEY, { req, res }) as string
-  )
+  const { query } = ctx
+  const chainId = parseInt(query.chainId as string)
   if (!chainId || !SUPPORTED_CHAINS.map((chain) => chain.id).includes(chainId))
     return { props: {} }
   const { workspaceId, grantAddress } = query

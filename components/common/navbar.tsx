@@ -37,6 +37,8 @@ type Props = JSX.IntrinsicElements['nav']
 const Navbar = (props: Props) => {
   const router = useRouter()
 
+  const chainId = router.query.chainId
+
   const { address } = useAccount()
 
   const isMyProposalPage = router.pathname
@@ -52,7 +54,7 @@ const Navbar = (props: Props) => {
           props.className
         )}
       >
-        <Link href="/">
+        <Link href={`/${chainId}`}>
           <Image
             src="/images/logo/logo-white.svg"
             width={124}
@@ -63,14 +65,14 @@ const Navbar = (props: Props) => {
         <div className="flex gap-8">
           <NavLinkItem
             key={LINKS[0].link}
-            link={LINKS[0].link}
+            link={`/${chainId}` + LINKS[0].link}
             label={LINKS[0].label}
             isActive={!isMyProposalPage}
           />
           {address && (
             <NavLinkItem
               key={LINKS[1].link}
-              link={LINKS[1].link}
+              link={`/${chainId}` + LINKS[1].link}
               label={LINKS[1].label}
               isActive={isMyProposalPage}
             />

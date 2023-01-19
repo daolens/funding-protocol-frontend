@@ -22,6 +22,7 @@ const Info = ({ grant, workspaceName, isAdmin }: Props) => {
 
   const workspaceId = router.query.workspaceId
   const grantAddress = router.query.grantAddress
+  const chainId = router.query.chainId
 
   const fundingMethodData = {
     heading:
@@ -53,7 +54,7 @@ const Info = ({ grant, workspaceName, isAdmin }: Props) => {
           </button>
           {isAdmin && (
             <Link
-              href={`/workspaces/${workspaceId}/grants/${grantAddress}/update`}
+              href={`/${chainId}/workspaces/${workspaceId}/grants/${grantAddress}/update`}
               className="border border-gray-800 py-2 px-3 rounded-lg hover:border-indigo-800 flex items-center gap-2 text-sm"
               type="button"
             >

@@ -4,15 +4,17 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useAccount, useDisconnect, useEnsName, useNetwork } from 'wagmi'
 import { getTruncatedWalletAddress } from '@lib/utils/common'
 import { CreditCardIcon } from '@heroicons/react/24/solid'
-import { Chain as getChainDetails } from '@lib/utils/wallet'
+import { getChainDetails as getChainDetails } from '@lib/utils/wallet'
 import {
   ArrowTopRightOnSquareIcon,
   ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline'
 import ClientOnly from '@components/common/client-only'
 import ConnectWalletModal from '@components/common/connect-wallet-modal'
-import { mainnet, polygon, polygonMumbai } from 'wagmi/chains'
+import { polygon } from 'wagmi/chains'
 import AlertModal from '@components/common/alert-modal'
+import { SUPPORTED_CHAINS } from '@lib/constants/contract'
+import { useRouter } from 'next/router'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -23,16 +25,16 @@ export default function WalletDropdown() {
   const { data: ensName } = useEnsName({ address })
   const { chain } = useNetwork()
   const { disconnect } = useDisconnect()
+  const router = useRouter()
 
   const [isConnectWalletModalOpen, setIsConnectWalletModalOpen] =
     useState(false)
   const [isSwitchNetworkModalOpen, setIsSwitchNetworkModalOpen] =
     useState(false)
 
-  const isSupportedChain =
-    chain?.id === polygonMumbai.id ||
-    chain?.id === polygon.id ||
-    chain?.id === mainnet.id
+  const isSupportedChain = SUPPORTED_CHAINS.map((chain) => chain.id).includes(
+    chain?.id || -1
+  )
 
   const canSwitchChains = !!connector?.switchChain
   const chainDetails = chain?.id ? getChainDetails(chain?.id) : null
@@ -42,9 +44,10 @@ export default function WalletDropdown() {
     if (!isSupportedChain) setIsSwitchNetworkModalOpen(true)
   }, [isSupportedChain])
 
-  const onSwitchToPolygonMumbai = () => {
-    connector?.switchChain?.(polygonMumbai.id)
+  const onSwitchToPolygon = async () => {
+    connector?.switchChain?.(polygon.id)
     setIsSwitchNetworkModalOpen(false)
+    router.push(`/${polygon.id}`)
   }
 
   return (
@@ -108,15 +111,16 @@ export default function WalletDropdown() {
                           aria-hidden="true"
                         />
                         <div className="flex flex-col items-start gap-1">
-                          <p className="whitespace-nowrap">
-                            Only Polygon Mumbai support currently.
+                          <p>
+                            Only Ethereum Mainnet, Polygon and Polygon Mumbai
+                            are supported currently.
                           </p>
                           {canSwitchChains && (
                             <button
                               className="hover:underline text-indigo-500"
-                              onClick={onSwitchToPolygonMumbai}
+                              onClick={onSwitchToPolygon}
                             >
-                              Switch to Polygon Mumbai
+                              Switch to Polygon
                             </button>
                           )}
                         </div>
@@ -154,13 +158,13 @@ export default function WalletDropdown() {
       <AlertModal
         isOpen={isSwitchNetworkModalOpen}
         setIsOpen={setIsSwitchNetworkModalOpen}
-        ctaText={canSwitchChains ? 'Switch to Polygon Mumbai' : 'Okay'}
+        ctaText={canSwitchChains ? 'Switch to Polygon' : 'Okay'}
         onCtaClick={() =>
           canSwitchChains
-            ? onSwitchToPolygonMumbai()
+            ? onSwitchToPolygon()
             : setIsSwitchNetworkModalOpen(false)
         }
-        text="Current version of the product only supports Polygon Mumbai. Please switch the network for the ideal experience."
+        text="Current version of the product only supports Ethereum Mainnet, Polygon and Polygon Mumbai. Please switch the network for the ideal experience."
         title={`${chainDetails?.name} is not supported`}
       />
     </ClientOnly>

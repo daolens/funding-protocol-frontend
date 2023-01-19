@@ -9,8 +9,6 @@ import { fetchWorkspaceById } from '@lib/utils/workspace'
 import Form from '@components/grants/form'
 import ForceConnectWallet from '@components/common/force-connect-wallet'
 import { useNetwork } from 'wagmi'
-import { ACTIVE_CHAIN_ID_COOKIE_KEY } from '@lib/constants/common'
-import { getCookie } from 'cookies-next'
 import { SUPPORTED_CHAINS } from '@lib/constants/contract'
 
 type Props = {
@@ -20,6 +18,9 @@ type Props = {
 
 const UpdateGrant = ({ workspaceTitle = 'Workspace', grant }: Props) => {
   const { chain } = useNetwork()
+  const router = useRouter()
+
+  const chainId = router.query.chainId
 
   const loadingToastRef = useRef<CTReturn | null>(null)
   const grantMutation = useMutation({
@@ -28,7 +29,9 @@ const UpdateGrant = ({ workspaceTitle = 'Workspace', grant }: Props) => {
     onSuccess: () => {
       loadingToastRef.current?.hide?.()
       cogoToast.success('Grant updated successfully')
-      router.push(`/workspaces/${workspaceId}/grants/${grantAddress}`)
+      router.push(
+        `/${chainId}/workspaces/${workspaceId}/grants/${grantAddress}`
+      )
     },
     onError: (error) => {
       loadingToastRef.current?.hide?.()
@@ -41,12 +44,11 @@ const UpdateGrant = ({ workspaceTitle = 'Workspace', grant }: Props) => {
       })
     },
   })
-  const router = useRouter()
   const workspaceId = router.query.workspaceId as string
   const grantAddress = router.query.grantAddress
 
   const onBack = () =>
-    router.push(`/workspaces/${workspaceId}/grants/${grantAddress}`)
+    router.push(`/${chainId}/workspaces/${workspaceId}/grants/${grantAddress}`)
 
   return (
     <>
@@ -64,10 +66,8 @@ const UpdateGrant = ({ workspaceTitle = 'Workspace', grant }: Props) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { query, req, res } = ctx
-  const chainId = parseInt(
-    getCookie(ACTIVE_CHAIN_ID_COOKIE_KEY, { req, res }) as string
-  )
+  const { query } = ctx
+  const chainId = parseInt(query.chainId as string)
   if (!chainId || !SUPPORTED_CHAINS.map((chain) => chain.id).includes(chainId))
     return { props: {} }
   const { workspaceId, grantAddress } = query

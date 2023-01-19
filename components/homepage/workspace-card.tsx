@@ -4,17 +4,20 @@ import { WorkspaceCardType } from '@lib/types/home'
 import CommunityAvatar from '@components/common/community-avatar'
 import Link from 'next/link'
 import { getNumberWithCommas } from '@lib/utils/common'
+import { useRouter } from 'next/router'
 
 type Props = {
   workspaceList: WorkspaceCardType[]
 }
 
 const WorkspaceCardList = ({ workspaceList }: Props) => {
+  const router = useRouter()
+  const chainId = router.query.chainId
   return (
     <>
       {workspaceList?.map((workspace) => (
         <Link
-          href={`/workspaces/${workspace.id}`}
+          href={`/${chainId}/workspaces/${workspace.id}`}
           key={workspace.id}
           className="border border-transparent hover:border-indigo-500 rounded-2xl"
         >

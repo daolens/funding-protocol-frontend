@@ -3,12 +3,10 @@ import ClientOnly from '@components/common/client-only'
 import GrantList from '@components/workspace/details/grant-list'
 import ProfileDetails from '@components/workspace/details/profile-details'
 import Stats from '@components/workspace/details/stats'
-import { ACTIVE_CHAIN_ID_COOKIE_KEY } from '@lib/constants/common'
 import { SUPPORTED_CHAINS } from '@lib/constants/contract'
 import { GrantType } from '@lib/types/grants'
 import { WorkspaceStatsType, WorkspaceType } from '@lib/types/workspace'
 import { fetchWorkspaceById } from '@lib/utils/workspace'
-import { getCookie } from 'cookies-next'
 import { GetServerSideProps } from 'next'
 import Image from 'next/image'
 import React from 'react'
@@ -49,10 +47,8 @@ const Index = ({ workspace, grants, stats }: Props) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { query, req, res } = ctx
-  const chainId = parseInt(
-    getCookie(ACTIVE_CHAIN_ID_COOKIE_KEY, { req, res }) as string
-  )
+  const { query } = ctx
+  const chainId = parseInt(query.chainId as string)
   if (!chainId || !SUPPORTED_CHAINS.map((chain) => chain.id).includes(chainId))
     return { props: {} }
   const { workspaceId } = query

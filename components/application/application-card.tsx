@@ -3,6 +3,7 @@ import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid'
 import { ApplicationType } from '@lib/types/grants'
 import classNames from 'classnames'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React from 'react'
 
 type PillProps = {
@@ -44,6 +45,8 @@ type Props = {
 
 /** Applicant facing */
 const ApplicationCard = ({ application }: Props) => {
+  const router = useRouter()
+  const chainId = router.query.chainId as string
   // TODO: subtract 3 days from this
   const reviewTimeString = application.revertDeadline
     ? new Date(application.revertDeadline).toDateString()
@@ -52,7 +55,7 @@ const ApplicationCard = ({ application }: Props) => {
   const grantAddress = application.grantAddress
   return (
     <Link
-      href={`/workspaces/${workspaceId}/grants/${grantAddress}/applications/${application.id}`}
+      href={`/${chainId}/workspaces/${workspaceId}/grants/${grantAddress}/applications/${application.id}`}
       className="p-5 bg-gray-800 bg-opacity-20 border border-gray-800 flex flex-col rounded-xl gap-5 hover:border-indigo-500"
     >
       <div className="flex gap-4 items-center">

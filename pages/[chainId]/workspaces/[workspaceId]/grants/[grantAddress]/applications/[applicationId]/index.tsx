@@ -12,7 +12,6 @@ import ClientOnly from '@components/common/client-only'
 import WalletAddress from '@components/common/wallet-address'
 import { AtSymbolIcon } from '@heroicons/react/24/outline'
 import useOnlyScrollableContainer from '@hooks/useOnlyScrollableContainer'
-import { ACTIVE_CHAIN_ID_COOKIE_KEY } from '@lib/constants/common'
 import { SUPPORTED_CHAINS } from '@lib/constants/contract'
 import { ApplicationSectionType } from '@lib/types/application'
 import {
@@ -24,7 +23,6 @@ import { WorkspaceType } from '@lib/types/workspace'
 import { fetchApplicationById } from '@lib/utils/application'
 import { addDays } from '@lib/utils/common'
 import { fetchWorkspaceById } from '@lib/utils/workspace'
-import { getCookie } from 'cookies-next'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
@@ -50,6 +48,7 @@ const ApplicationDetails = ({
 
   const workspaceId = router.query.workspaceId as string
   const grantAddress = router.query.grantAddress as string
+  const chainId = router.query.chainId as string
 
   const grantBalance = grant.balance
   const grantBalanceInUsd = grant.balanceInUsd
@@ -80,7 +79,7 @@ const ApplicationDetails = ({
         <div className="py-6 flex flex-col gap-3">
           <BackButton
             onBack={() =>
-              router.push(`/workspaces/${workspaceId}/grants/${grantAddress}`)
+              router.push(`/${chainId}/workspaces/${workspaceId}/grants/${grantAddress}`)
             }
           />
           <h1 className="text-2xl font-bold">{application.name}</h1>
@@ -172,10 +171,8 @@ const ApplicationDetails = ({
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { query, req, res } = ctx
-  const chainId = parseInt(
-    getCookie(ACTIVE_CHAIN_ID_COOKIE_KEY, { req, res }) as string
-  )
+  const { query } = ctx
+  const chainId = parseInt(query.chainId as string)
   if (!chainId || !SUPPORTED_CHAINS.map((chain) => chain.id).includes(chainId))
     return { props: {} }
 

@@ -12,6 +12,9 @@ type Props = {
   setIsOpen: Dispatch<SetStateAction<boolean>>
   ctaText: string
   isLoading?: boolean
+  onCancel?: () => void
+  cancelText?: string
+  isCloseButtonHidden?: boolean
 }
 
 const AlertModal = ({
@@ -22,9 +25,16 @@ const AlertModal = ({
   text,
   ctaText,
   isLoading,
+  cancelText = 'Cancel',
+  onCancel,
+  isCloseButtonHidden = false,
 }: Props) => {
   return (
-    <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
+    <Modal
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
+      isCloseButtonHidden={isCloseButtonHidden}
+    >
       <div>
         <div className="sm:flex sm:items-start">
           <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-800 bg-opacity-20 sm:mx-0 sm:h-10 sm:w-10">
@@ -59,9 +69,9 @@ const AlertModal = ({
           <button
             type="button"
             className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-800 bg-gray-800 px-4 py-2 text-base font-medium shadow-sm text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
-            onClick={() => setIsOpen(false)}
+            onClick={() => (onCancel ? onCancel() : setIsOpen(false))}
           >
-            Cancel
+            {cancelText}
           </button>
         </div>
       </div>

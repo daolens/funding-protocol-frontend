@@ -2,10 +2,7 @@ import BackButton from '@components/common/back-button'
 import Background from '@components/common/background'
 import RichTextEditor from '@components/common/rich-text/rich-text-editor'
 import { ArrowRightIcon } from '@heroicons/react/24/solid'
-import {
-  ACTIVE_CHAIN_ID_COOKIE_KEY,
-  ERROR_MESSAGES,
-} from '@lib/constants/common'
+import { ERROR_MESSAGES } from '@lib/constants/common'
 import { SUPPORTED_CHAINS } from '@lib/constants/contract'
 import { ApplicationMilestoneType, ApplicationType } from '@lib/types/grants'
 import {
@@ -15,7 +12,6 @@ import {
 import { useMutation } from '@tanstack/react-query'
 import classNames from 'classnames'
 import cogoToast, { CTReturn } from 'cogo-toast'
-import { getCookie } from 'cookies-next'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import { useRef, useState } from 'react'
@@ -39,6 +35,7 @@ const MilestoneDetails = ({
   const workspaceId = router.query.workspaceId as string
   const applicationId = router.query.applicationId as string
   const grantAddress = router.query.grantAddress as string
+  const chainId = router.query.chainId as string
 
   const milestoneSubmissionMutation = useMutation({
     mutationFn: (milestoneDetails: string) =>
@@ -69,7 +66,7 @@ const MilestoneDetails = ({
       loadingToastRef.current?.hide?.()
       cogoToast.success('Milestone submitted successfully')
       router.push(
-        `/workspaces/${workspaceId}/grants/${grantAddress}/applications/${application.id}`
+        `/${chainId}/workspaces/${workspaceId}/grants/${grantAddress}/applications/${application.id}`
       )
     },
     onError: (error) => {
@@ -89,7 +86,7 @@ const MilestoneDetails = ({
 
   const onBack = () =>
     router.push(
-      `/workspaces/${workspaceId}/grants/${grantAddress}/applications/${application.id}`
+      `/${chainId}/workspaces/${workspaceId}/grants/${grantAddress}/applications/${application.id}`
     )
 
   const onSubmit = () => {
@@ -142,10 +139,8 @@ const MilestoneDetails = ({
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { query, req, res } = ctx
-  const chainId = parseInt(
-    getCookie(ACTIVE_CHAIN_ID_COOKIE_KEY, { req, res }) as string
-  )
+  const { query } = ctx
+  const chainId = parseInt(query.chainId as string)
   if (!chainId || !SUPPORTED_CHAINS.map((chain) => chain.id).includes(chainId))
     return { props: {} }
   const applicationId = query.applicationId as `0x${string}`

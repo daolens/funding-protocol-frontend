@@ -23,13 +23,14 @@ const ApplicationCard = ({
 
   const workspaceId = router.query.workspaceId
   const grantAddress = router.query.grantAddress
+  const chainId = router.query.chainId
 
   const statusColor = APPLICATION_STATUS_OBJ[status].color
   const statusLabel = APPLICATION_STATUS_OBJ[status].label
 
   return (
     <Link
-      href={`/workspaces/${workspaceId}/grants/${grantAddress}/applications/${id}`}
+      href={`/${chainId}/workspaces/${workspaceId}/grants/${grantAddress}/applications/${id}`}
       className="flex flex-col p-5 gap-3 bg-gray-800 rounded-xl border border-gray-800 hover:border-indigo-500"
     >
       <p className="text-gray-600 text-xs">

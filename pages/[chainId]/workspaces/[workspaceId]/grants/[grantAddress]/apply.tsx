@@ -1,39 +1,37 @@
 import ApplicationForm from '@components/application/form'
-import ClientOnly from '@components/common/client-only'
 import ForceConnectWallet from '@components/common/force-connect-wallet'
-import { ACTIVE_CHAIN_ID_COOKIE_KEY } from '@lib/constants/common'
 import { SUPPORTED_CHAINS } from '@lib/constants/contract'
-import { ApplicationType } from '@lib/types/grants'
-import {
-  fetchApplicationById,
-  updateApplicationMetadataSC,
-} from '@lib/utils/application'
+import { ApplicationType, FundingMethodType } from '@lib/types/grants'
+import { postApplicationDataAndCallSmartContractFn } from '@lib/utils/grants'
+import { fetchWorkspaceById } from '@lib/utils/workspace'
 import { useMutation } from '@tanstack/react-query'
 import cogoToast, { CTReturn } from 'cogo-toast'
-import { getCookie } from 'cookies-next'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React, { useRef } from 'react'
 import { useNetwork } from 'wagmi'
 
 type Props = {
-  application: ApplicationType
+  grantName: string
+  currency?: string
+  fundingMethod: FundingMethodType
 }
 
-const Update = ({ application }: Props) => {
+const Apply = ({ grantName, currency = 'USDC', fundingMethod }: Props) => {
   const { chain } = useNetwork()
-  const router = useRouter()
   const loadingToastRef = useRef<CTReturn | null>(null)
 
+  const router = useRouter()
   const workspaceId = router.query.workspaceId as string
   const grantAddress = router.query.grantAddress as string
+  const chainId = router.query.chainId as string
 
   const applicationMutation = useMutation({
     mutationFn: (data: ApplicationType) =>
-      updateApplicationMetadataSC(data, chain?.id as number),
+      postApplicationDataAndCallSmartContractFn(data, chain?.id as number),
     onMutate: () => {
       loadingToastRef.current = cogoToast.loading(
-        'Updating application. This may take a while.',
+        'Submitting application. This may take a while.',
         {
           hideAfter: 0,
         }
@@ -41,60 +39,54 @@ const Update = ({ application }: Props) => {
     },
     onSuccess: () => {
       loadingToastRef.current?.hide?.()
-      cogoToast.success('Updated successfully')
+      cogoToast.success('Applied successfully')
       router.push(
-        `/workspaces/${workspaceId}/grants/${grantAddress}/applications/${application.id}`
+        `/${chainId}/workspaces/${workspaceId}/grants/${grantAddress}`
       )
     },
     onError: (error) => {
       loadingToastRef.current?.hide?.()
       console.error(error)
-      cogoToast.error('Something went wrong while updating.')
+      cogoToast.error('Something went wrong while applying.')
     },
   })
 
   const onBack = () =>
-    router.push(
-      `/workspaces/${workspaceId}/grants/${grantAddress}/applications/${application.id}`
-    )
+    router.push(`/${chainId}/workspaces/${workspaceId}/grants/${grantAddress}`)
 
   return (
-    <ClientOnly>
+    <>
       <ForceConnectWallet />
       <ApplicationForm
         onBack={onBack}
         isLoading={applicationMutation.isLoading}
         onSubmit={(application) => applicationMutation.mutate(application)}
-        application={application}
-        isUpdateForm
+        currency={currency}
+        fundingMethod={fundingMethod}
+        grantName={grantName}
       />
-    </ClientOnly>
+    </>
   )
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { query, req, res } = ctx
-  const chainId = parseInt(
-    getCookie(ACTIVE_CHAIN_ID_COOKIE_KEY, { req, res }) as string
-  )
+  const { query } = ctx
+  const chainId = parseInt(query.chainId as string)
   if (!chainId || !SUPPORTED_CHAINS.map((chain) => chain.id).includes(chainId))
     return { props: {} }
-  const applicationId = query.applicationId as `0x${string}`
+  const { workspaceId, grantAddress } = query
 
-  const application = await fetchApplicationById(applicationId, chainId)
+  const { grants } = await fetchWorkspaceById(workspaceId as any, chainId)
+  const grant = grants.find((grant) => grant.address === grantAddress)
 
-  if (!application)
-    return {
-      notFound: true,
-    }
+  if (!grant) return { notFound: true }
 
   const props: Props = {
-    application,
+    fundingMethod: grant?.fundingMethod,
+    grantName: grant?.title,
   }
 
-  return {
-    props,
-  }
+  return { props }
 }
 
-export default Update
+export default Apply

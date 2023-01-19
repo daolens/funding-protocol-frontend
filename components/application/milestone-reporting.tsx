@@ -117,7 +117,7 @@ const MilestoneReporting = ({ milestones, isReviewer, isApplicant }: Props) => {
   const { chain } = useNetwork()
   const loadingToastRef = useRef<CTReturn | null>(null)
   const router = useRouter()
-  const { workspaceId, grantAddress, applicationId } = router.query
+  const { workspaceId, grantAddress, applicationId, chainId } = router.query
 
   const approveMilestoneMutation = useMutation({
     mutationFn: (milestoneId: string) =>
@@ -198,7 +198,7 @@ const MilestoneReporting = ({ milestones, isReviewer, isApplicant }: Props) => {
         ? cogoToast.error('Please wait for applicant to submit proof of work')
         : isApplicant
         ? router.push(
-            `/workspaces/${workspaceId}/grants/${grantAddress}/applications/${applicationId}/milestones/${milestone.id}`
+            `/${chainId}/workspaces/${workspaceId}/grants/${grantAddress}/applications/${applicationId}/milestones/${milestone.id}`
           )
         : null
       return
@@ -206,7 +206,7 @@ const MilestoneReporting = ({ milestones, isReviewer, isApplicant }: Props) => {
 
     if (isApplicant && milestone.status === 'Resubmit') {
       router.push(
-        `/workspaces/${workspaceId}/grants/${grantAddress}/applications/${applicationId}/milestones/${milestone.id}`
+        `/${chainId}/workspaces/${workspaceId}/grants/${grantAddress}/applications/${applicationId}/milestones/${milestone.id}`
       )
       return
     }

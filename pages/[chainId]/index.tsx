@@ -6,8 +6,6 @@ import { WorkspaceCardType } from '@lib/types/home'
 import { useAccount } from 'wagmi'
 import { fetchWorkspaces } from '@lib/utils/workspace'
 import ClientOnly from '@components/common/client-only'
-import { getCookie } from 'cookies-next'
-import { ACTIVE_CHAIN_ID_COOKIE_KEY } from '@lib/constants/common'
 import { SUPPORTED_CHAINS } from '@lib/constants/contract'
 
 type Props = {
@@ -34,10 +32,8 @@ const HomePage = ({ workspaceCards }: Props) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const chainId = parseInt(
-    getCookie(ACTIVE_CHAIN_ID_COOKIE_KEY, { req, res }) as string
-  )
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const chainId = parseInt(query.chainId as string)
   if (!chainId || !SUPPORTED_CHAINS.map((chain) => chain.id).includes(chainId))
     return { props: { workspaceCards: [] } }
   const workspaces = await fetchWorkspaces(chainId)

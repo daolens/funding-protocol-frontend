@@ -6,6 +6,7 @@ import {
 import { GrantType } from '@lib/types/grants'
 import { getNumberWithCommas } from '@lib/utils/common'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React from 'react'
 
 type InfoProps = {
@@ -37,9 +38,11 @@ const GrantCard = ({
   workspaceId,
   address,
 }: GrantType) => {
+  const router = useRouter()
+  const chainId = router.query.chainId
   return (
     <Link
-      href={`/workspaces/${workspaceId}/grants/${address}`}
+      href={`/${chainId}/workspaces/${workspaceId}/grants/${address}`}
       className="flex flex-col bg-gray-800 bg-opacity-50 border-gray-800 border hover:border-indigo-500 p-5 rounded-xl gap-3"
       type="button"
     >

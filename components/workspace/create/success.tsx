@@ -28,13 +28,14 @@ const Success = ({ communityName, multisigAddress, networkId }: Props) => {
   const loadingToastRef = useRef<CTReturn | null>(null)
   const { chain } = useNetwork()
   const router = useRouter()
+  const { chainId } = router.query
   const workspaceMutation = useMutation({
     mutationFn: (data: WorkspaceType) =>
       postDataAndCallSmartContractFunction(data, chain?.id as number),
     onSuccess: () => {
       loadingToastRef.current?.hide?.()
       cogoToast.success('Workspace created!')
-      router.push(`/`)
+      router.push(`/${chainId}`)
     },
     onError: (error) => {
       loadingToastRef.current?.hide?.()
