@@ -11,7 +11,6 @@ import Background from '@components/common/background'
 import ClientOnly from '@components/common/client-only'
 import WalletAddress from '@components/common/wallet-address'
 import { AtSymbolIcon } from '@heroicons/react/24/outline'
-import useOnlyScrollableContainer from '@hooks/useOnlyScrollableContainer'
 import { SUPPORTED_CHAINS } from '@lib/constants/contract'
 import { ApplicationSectionType } from '@lib/types/application'
 import {
@@ -43,8 +42,6 @@ const ApplicationDetails = ({
 }: Props) => {
   const { address } = useAccount()
   const router = useRouter()
-
-  const scrollableContainerRef = useOnlyScrollableContainer()
 
   const workspaceId = router.query.workspaceId as string
   const grantAddress = router.query.grantAddress as string
@@ -79,7 +76,9 @@ const ApplicationDetails = ({
         <div className="py-6 flex flex-col gap-3">
           <BackButton
             onBack={() =>
-              router.push(`/${chainId}/workspaces/${workspaceId}/grants/${grantAddress}`)
+              router.push(
+                `/${chainId}/workspaces/${workspaceId}/grants/${grantAddress}`
+              )
             }
           />
           <h1 className="text-2xl font-bold">{application.name}</h1>
@@ -105,10 +104,7 @@ const ApplicationDetails = ({
             />
           )}
           <div className="grid grid-cols-3 gap-5">
-            <div
-              className="col-span-2 flex flex-col gap-5"
-              ref={scrollableContainerRef}
-            >
+            <div className="col-span-2 flex flex-col gap-5">
               {activeSection === 'application' && (
                 <>
                   <TeamMembers teamMembers={application.teamMemberDetails} />
