@@ -82,19 +82,19 @@ export const CONTRACTS: Record<ContractNameType, ContractType> = {
   workspace: {
     address: '0x2dFf55913e013dFD95820EB1d28045daF765A025',
     polygonMumbaiAddress: '0x2dFf55913e013dFD95820EB1d28045daF765A025',
-    polygonAddress: '0x7C3f503E4C19ee26b190114c5f63F6a834aFF05E',
+    polygonAddress: '0xFf8A37aB53F50E81AB8c881d7DF98cD39Cb974b8',
     abi: WorkspaceContractAbi,
   },
   application: {
     address: '0xA6CbC144e22bd1944ac3E5f360A3aD0df98ed0D9',
     polygonMumbaiAddress: '0xA6CbC144e22bd1944ac3E5f360A3aD0df98ed0D9',
-    polygonAddress: '0xB0631354E8DCE6454f131a4Fb18f38C64908352A',
+    polygonAddress: '0x30a475B7d5b68f0D2D5Cae6aa57bC8dad60C722E',
     abi: ApplicationContractAbi,
   },
   grant: {
     address: '0x160De3DCEEC1146ACA7aeEd5811BBD46b71f8610',
     polygonMumbaiAddress: '0x160De3DCEEC1146ACA7aeEd5811BBD46b71f8610',
-    polygonAddress: '0x168cA1c267E68cC7Ab86e53ABc4Bc6FB6220C6ce',
+    polygonAddress: '0xB297117501E716721890669238fa16613167dfb8',
     abi: GrantContractAbi,
   },
   // address will be the grantAddress of the grant

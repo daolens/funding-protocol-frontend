@@ -9,6 +9,7 @@ export type TokenType = {
   image: string
   symbol: string
   address: `0x${string}`
+  polygonAddress: `0x${string}`
   /** Taken from v2.info.uniswap.org */
   pair: `0x${string}`
 }

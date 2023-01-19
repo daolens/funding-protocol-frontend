@@ -52,6 +52,17 @@ export const postGrantDataAndCallSmartContractFn = async (
   const ipfsHash = (await uploadToIPFS(JSON.stringify(data))).hash
   const workspaceId = parseInt(data.workspaceId!, 16)
 
+  // token address in dev
+  // Get test tokens from here: https://faucet.polygon.technology/
+  // Select Mumbai & Test ERC20 PoS
+  let tokenAddress = '0xfe4f5145f6e09952a5ba9e956ed0c25e3fa4c7f1'
+
+  if (chainId === polygon.id || chainId === mainnet.id) {
+    const token = DEFAULT_TOKENS.find((token) => token.name === data.token)
+    if (!token) throw new Error(`Token not found with name: ${data.token}`)
+    tokenAddress = chainId === polygon.id ? token.polygonAddress : token.address
+  }
+
   const args = [
     workspaceId,
     ipfsHash,
@@ -59,12 +70,7 @@ export const postGrantDataAndCallSmartContractFn = async (
     getContractAddressByNetwork('application', chainId),
     data.reviewers,
     data.recommendedSeekingAmount,
-    chainId === polygon.id || chainId === mainnet.id
-      ? DEFAULT_TOKENS.find((token) => token.name === data.token)?.address
-      : // token address in dev
-        // Get test tokens from here: https://faucet.polygon.technology/
-        // Select Mumbai & Test ERC20 PoS
-        '0xfe4f5145f6e09952a5ba9e956ed0c25e3fa4c7f1',
+    tokenAddress,
     data.fundingMethod,
   ]
 
