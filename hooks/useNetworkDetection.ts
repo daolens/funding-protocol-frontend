@@ -28,9 +28,9 @@ const updateCookie = ({
   }
   const chainIdFromCookie = getCookie(ACTIVE_CHAIN_ID_COOKIE_KEY)
   if (!chainIdFromCookie) {
-    if (SUPPORTED_CHAINS.map((chain) => chain.id).includes(chainId))
+    if (SUPPORTED_CHAINS.map((chain) => chain.id).includes(chainId)) {
       onSetCookie(chainId)
-    else onSetCookie(DEFAULT_CHAIN_ID)
+    } else onSetCookie(DEFAULT_CHAIN_ID)
   } else {
     if (
       !SUPPORTED_CHAINS.map((chain) => chain.id).includes(
@@ -40,9 +40,7 @@ const updateCookie = ({
       onSetCookie(DEFAULT_CHAIN_ID)
     else if (
       chainId &&
-      SUPPORTED_CHAINS.map((chain) => chain.id).includes(
-        parseInt(chainIdFromCookie as string)
-      ) &&
+      SUPPORTED_CHAINS.map((chain) => chain.id).includes(chainId) &&
       parseInt(chainIdFromCookie as string) !== chainId
     ) {
       onSetCookie(chainId)

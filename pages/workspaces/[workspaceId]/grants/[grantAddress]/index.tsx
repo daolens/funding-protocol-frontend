@@ -7,6 +7,7 @@ import Sections from '@components/grants/details/sections'
 import Stats from '@components/grants/details/stats'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import { ACTIVE_CHAIN_ID_COOKIE_KEY } from '@lib/constants/common'
+import { SUPPORTED_CHAINS } from '@lib/constants/contract'
 import { WalletAddressType } from '@lib/types/common'
 import {
   ApplicationType,
@@ -112,7 +113,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const chainId = parseInt(
     getCookie(ACTIVE_CHAIN_ID_COOKIE_KEY, { req, res }) as string
   )
-  if (!chainId) return { props: {} }
+  if (!chainId || !SUPPORTED_CHAINS.map((chain) => chain.id).includes(chainId))
+    return { props: {} }
   const { workspaceId, grantAddress } = query
 
   const { grants, workspace } = await fetchWorkspaceById(

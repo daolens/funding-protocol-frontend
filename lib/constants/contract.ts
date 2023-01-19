@@ -80,19 +80,19 @@ export const CONTRACT_FUNCTION_NAME_MAP = {
 
 export const CONTRACTS: Record<ContractNameType, ContractType> = {
   workspace: {
-    address: '0x2dFf55913e013dFD95820EB1d28045daF765A025',
+    address: '0xBe8798Eca09463B75B32D722C87c0B74ea1b383E',
     polygonMumbaiAddress: '0x2dFf55913e013dFD95820EB1d28045daF765A025',
     polygonAddress: '0xFf8A37aB53F50E81AB8c881d7DF98cD39Cb974b8',
     abi: WorkspaceContractAbi,
   },
   application: {
-    address: '0xA6CbC144e22bd1944ac3E5f360A3aD0df98ed0D9',
+    address: '0xE39d992aA742CDcb9bb458AB16be8082cAb01888',
     polygonMumbaiAddress: '0xA6CbC144e22bd1944ac3E5f360A3aD0df98ed0D9',
     polygonAddress: '0x30a475B7d5b68f0D2D5Cae6aa57bC8dad60C722E',
     abi: ApplicationContractAbi,
   },
   grant: {
-    address: '0x160De3DCEEC1146ACA7aeEd5811BBD46b71f8610',
+    address: '0x45eF4E00A71ddB7A6e04a1eebdF1344bbD076ada',
     polygonMumbaiAddress: '0x160De3DCEEC1146ACA7aeEd5811BBD46b71f8610',
     polygonAddress: '0xB297117501E716721890669238fa16613167dfb8',
     abi: GrantContractAbi,

@@ -13,6 +13,7 @@ import WalletAddress from '@components/common/wallet-address'
 import { AtSymbolIcon } from '@heroicons/react/24/outline'
 import useOnlyScrollableContainer from '@hooks/useOnlyScrollableContainer'
 import { ACTIVE_CHAIN_ID_COOKIE_KEY } from '@lib/constants/common'
+import { SUPPORTED_CHAINS } from '@lib/constants/contract'
 import { ApplicationSectionType } from '@lib/types/application'
 import {
   ApplicationStatusType,
@@ -175,7 +176,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const chainId = parseInt(
     getCookie(ACTIVE_CHAIN_ID_COOKIE_KEY, { req, res }) as string
   )
-  if (!chainId) return { props: {} }
+  if (!chainId || !SUPPORTED_CHAINS.map((chain) => chain.id).includes(chainId))
+    return { props: {} }
 
   const applicationId = query.applicationId as `0x${string}`
   const { workspaceId, grantAddress } = query

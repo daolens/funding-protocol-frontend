@@ -11,6 +11,7 @@ import ForceConnectWallet from '@components/common/force-connect-wallet'
 import { useNetwork } from 'wagmi'
 import { ACTIVE_CHAIN_ID_COOKIE_KEY } from '@lib/constants/common'
 import { getCookie } from 'cookies-next'
+import { SUPPORTED_CHAINS } from '@lib/constants/contract'
 
 type Props = {
   workspaceTitle: string
@@ -67,7 +68,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const chainId = parseInt(
     getCookie(ACTIVE_CHAIN_ID_COOKIE_KEY, { req, res }) as string
   )
-  if (!chainId) return { props: {} }
+  if (!chainId || !SUPPORTED_CHAINS.map((chain) => chain.id).includes(chainId))
+    return { props: {} }
   const { workspaceId, grantAddress } = query
   const { workspace, grants } = await fetchWorkspaceById(
     workspaceId as any,

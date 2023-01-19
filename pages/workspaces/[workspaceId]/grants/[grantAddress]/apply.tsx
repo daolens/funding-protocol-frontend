@@ -1,6 +1,7 @@
 import ApplicationForm from '@components/application/form'
 import ForceConnectWallet from '@components/common/force-connect-wallet'
 import { ACTIVE_CHAIN_ID_COOKIE_KEY } from '@lib/constants/common'
+import { SUPPORTED_CHAINS } from '@lib/constants/contract'
 import { ApplicationType, FundingMethodType } from '@lib/types/grants'
 import { postApplicationDataAndCallSmartContractFn } from '@lib/utils/grants'
 import { fetchWorkspaceById } from '@lib/utils/workspace'
@@ -72,7 +73,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const chainId = parseInt(
     getCookie(ACTIVE_CHAIN_ID_COOKIE_KEY, { req, res }) as string
   )
-  if (!chainId) return { props: {} }
+  if (!chainId || !SUPPORTED_CHAINS.map((chain) => chain.id).includes(chainId))
+    return { props: {} }
   const { workspaceId, grantAddress } = query
 
   const { grants } = await fetchWorkspaceById(workspaceId as any, chainId)
