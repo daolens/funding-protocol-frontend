@@ -15,7 +15,7 @@ export const getNumberWithCommas = (num: number) => {
     const newNum = num / 10 ** 9
     return newNum.toFixed().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + 'B'
   }
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  return typeof num === 'string' ? parseInt(num)?.toFixed() : num.toFixed(3)
 }
 
 export const getTokenSymbol = (tokenName: string) =>
@@ -57,4 +57,9 @@ export const removeTagsFromHtmlString = (html = '') => {
   if (!html) return ''
   const regex = /(<([^>]+)>)/gi
   return html.replace(regex, '')
+}
+
+export const getNormalisedTokenValue = (tokenValue: number) => {
+  const factor = 1000000000000000000
+  return tokenValue / factor
 }

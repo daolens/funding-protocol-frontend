@@ -3,7 +3,7 @@ import { CONTRACTS, CONTRACT_FUNCTION_NAME_MAP } from '@lib/constants/contract'
 import { WalletAddressType } from '@lib/types/common'
 import { GrantType } from '@lib/types/grants'
 import { WorkspaceType } from '@lib/types/workspace'
-import { log } from '@lib/utils/common'
+import { getNormalisedTokenValue, log } from '@lib/utils/common'
 import {
   getContractAddressByNetwork,
   readSmartContractFunction,
@@ -94,7 +94,9 @@ const getAggregateBalances = async (
       const rate =
         rateTokenMap[_tokenAddress] ||
         (await getUSDConversionRate(
-          DEFAULT_TOKENS.find((token) => token.address === _tokenAddress)?.pair
+          DEFAULT_TOKENS.find((token) =>
+            [token.address, token.polygonAddress].includes(_tokenAddress)
+          )?.pair
         ))
 
       rateTokenMap[_tokenAddress] = rate
@@ -135,10 +137,10 @@ export const fetchWorkspaces = async (chainId: number) => {
   const [, hexBalances, hexBalancesSpent, tokenAddress] = response
 
   const numBalances = hexBalances.map((grantBalances) =>
-    grantBalances.map((bal) => parseInt(bal._hex, 16))
+    grantBalances.map((bal) => getNormalisedTokenValue(parseInt(bal._hex, 16)))
   )
   const numBalancesSpent = hexBalancesSpent.map((grantBalances) =>
-    grantBalances.map((bal) => parseInt(bal._hex, 16))
+    grantBalances.map((bal) => getNormalisedTokenValue(parseInt(bal._hex, 16)))
   )
 
   const { balances, balancesSpent } = await getAggregateBalances(
@@ -189,17 +191,20 @@ export const fetchWorkspaceById = async (
   workspaceId: `0x${string}`,
   chainId: number
 ) => {
+  const args = [
+    parseInt(workspaceId, 16),
+    getContractAddressByNetwork('grant', chainId),
+  ]
+  log('fetchWorkSpaceDetails called with args', args)
   const response = (await readSmartContractFunction({
     contractObj: CONTRACTS.workspace,
     functionName: CONTRACT_FUNCTION_NAME_MAP.workspace.fetchWorkSpaceDetails,
-    args: [
-      parseInt(workspaceId, 16),
-      getContractAddressByNetwork('grant', chainId),
-    ],
+    args,
     chainId,
   })) as [FetchWorkspaceResponseType, GrantFetchResponseType[]]
 
   if (!response) throw new Error('response is not defined')
+  log('fetchWorkSpaceDetails response', response)
 
   const workspaceFromContract = response[0]
   const workspace: WorkspaceType = JSON.parse(
@@ -221,7 +226,9 @@ export const fetchWorkspaceById = async (
     grant.applicantCount = parseInt(grantFromContract.numApplicants._hex, 16)
     grant.address = grantFromContract.grantAddress
     grant.workspaceId = workspaceFromContract.id._hex
-    grant.balance = parseInt(grantFromContract.balance._hex, 16)
+    grant.balance = getNormalisedTokenValue(
+      parseInt(grantFromContract.balance._hex, 16)
+    )
     grant.status =
       new Date() < new Date(grant.proposalDeadline) ? 'open' : 'close'
     grant.recommendedSeekingAmountInUsd = await calculateUSDValue(
