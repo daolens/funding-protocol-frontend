@@ -11,7 +11,7 @@ import {
 } from '@heroicons/react/24/outline'
 import ClientOnly from '@components/common/client-only'
 import ConnectWalletModal from '@components/common/connect-wallet-modal'
-import { polygon } from 'wagmi/chains'
+import { mainnet } from 'wagmi/chains'
 import AlertModal from '@components/common/alert-modal'
 import { SUPPORTED_CHAINS } from '@lib/constants/contract'
 import { useRouter } from 'next/router'
@@ -44,10 +44,10 @@ export default function WalletDropdown() {
     if (!isSupportedChain) setIsSwitchNetworkModalOpen(true)
   }, [isSupportedChain])
 
-  const onSwitchToPolygon = async () => {
-    connector?.switchChain?.(polygon.id)
+  const onSwitchToMainnet = async () => {
+    connector?.switchChain?.(mainnet.id)
     setIsSwitchNetworkModalOpen(false)
-    router.push(`/${polygon.id}`)
+    router.push(`/${mainnet.id}`)
   }
 
   return (
@@ -118,9 +118,9 @@ export default function WalletDropdown() {
                           {canSwitchChains && (
                             <button
                               className="hover:underline text-indigo-500"
-                              onClick={onSwitchToPolygon}
+                              onClick={onSwitchToMainnet}
                             >
-                              Switch to Polygon
+                              Switch to Ethereum Mainnet
                             </button>
                           )}
                         </div>
@@ -158,10 +158,10 @@ export default function WalletDropdown() {
       <AlertModal
         isOpen={isSwitchNetworkModalOpen}
         setIsOpen={setIsSwitchNetworkModalOpen}
-        ctaText={canSwitchChains ? 'Switch to Polygon' : 'Okay'}
+        ctaText={canSwitchChains ? 'Switch to Ethereum Mainnet' : 'Okay'}
         onCtaClick={() =>
           canSwitchChains
-            ? onSwitchToPolygon()
+            ? onSwitchToMainnet()
             : setIsSwitchNetworkModalOpen(false)
         }
         text="Current version of the product only supports Ethereum Mainnet, Polygon and Polygon Mumbai. Please switch the network for the ideal experience."

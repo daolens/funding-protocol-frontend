@@ -2,11 +2,11 @@ import { SUPPORTED_CHAINS } from '@lib/constants/contract'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useAccount, useNetwork } from 'wagmi'
-import { Chain, polygon } from 'wagmi/chains'
+import { Chain, mainnet } from 'wagmi/chains'
 import { getChainDetails } from '@lib/utils/wallet'
 import AlertModal from '@components/common/alert-modal'
 
-export const DEFAULT_CHAIN_ID = polygon.id
+export const DEFAULT_CHAIN_ID = mainnet.id
 
 const NetworkDetection = () => {
   const { chain } = useNetwork()
