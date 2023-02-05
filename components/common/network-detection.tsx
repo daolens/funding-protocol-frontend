@@ -17,6 +17,7 @@ const NetworkDetection = () => {
     useState(false)
 
   const chainIdFromParams = router.query?.chainId as string
+  // undefined when wallet is not connected
   const chainIdFromWallet = chain?.id.toString()
 
   const activeParamChainName = getChainDetails(
@@ -29,10 +30,8 @@ const NetworkDetection = () => {
   const canSwitchChains = !!connector?.switchChain
 
   useEffect(() => {
-    // Early return is wallet not connected
-    if (!address) return
-    // Early return if chainId on wallet and app are the same
-    if (chainIdFromWallet === chainIdFromParams) {
+    // Early return if chainId on wallet and app are the same OR wallet is not connected
+    if (!address || chainIdFromWallet === chainIdFromParams) {
       setIsChainMismatchModalOpen(false)
       return
     }
@@ -50,9 +49,9 @@ const NetworkDetection = () => {
     // It shows a modal asking user switch to a supported chain
   }, [address, chainIdFromWallet, chainIdFromParams, isChainMismatchModalOpen])
 
-  const onSwitchChain = (chain: Chain) => {
+  const onSwitchChain = async (chain: Chain) => {
     if (!canSwitchChains) return
-    connector?.switchChain?.(chain.id)
+    await connector?.switchChain?.(chain.id)
   }
 
   return (
